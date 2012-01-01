@@ -42,8 +42,8 @@ class RequestController:
 				print "Request Failed"
 
 		except LookupError as e:
-			print "The requested URL does not exist. uri = %s " % self.uri
-			self.response = Response("The requested URL does not exist. uri = %s " % self.uri, 404)
+			print "The requested resource does not exist. uri = %s " % self.uri
+			self.response = Response("The requested resource does not exist. uri = %s " % self.uri, 404)
 
 	def __importRequest(self, uri):
 		"""

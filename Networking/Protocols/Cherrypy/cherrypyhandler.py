@@ -41,12 +41,8 @@ class CherrypyHandler(RESTResource):
 
         response = self.datahandler.handleIt(0, retval, None)
 
-        if response.code is StatusCodes.SERVER_ERROR:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
-        else:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson(response.data)
+        cherrypy.response.status = response.code
+        return response.json
 
     def handle_POST(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
@@ -56,12 +52,8 @@ class CherrypyHandler(RESTResource):
 
         response = self.datahandler.handleIt(1, retval, params['data'])
 
-        if response.code is StatusCodes.SERVER_ERROR:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
-        else:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson(response.data)
+        cherrypy.response.status = response.code
+        return response.json
 
     def handle_PUT(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
@@ -71,24 +63,14 @@ class CherrypyHandler(RESTResource):
 
         response = self.datahandler.handleIt(2, retval, params['data'])
 
-        if response.code is StatusCodes.SERVER_ERROR:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
-        else:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson(response.data)
+        cherrypy.response.status = response.code
+        return response.json
 
     def handle_DELETE(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
 
         if retval == "//":
           retval = "/"
-
-        response = self.datahandler.handleIt(3, retval, None)
-
-        if response.code is StatusCodes.SERVER_ERROR:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
-        else:
-          cherrypy.response.status = response.code
-          return JsonEncoder.toJson(response.data)
+        
+        cherrypy.response.status = response.code
+        return response.json
