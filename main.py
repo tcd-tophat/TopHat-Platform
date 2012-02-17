@@ -1,6 +1,6 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
-from tophat.controllers.requests import Requests
+from tophat.controller.requests import Requests
 
 #                 o  o
 #      oMMMMMMMMMMMMMMMMMMMMMMoo

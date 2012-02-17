@@ -7,6 +7,9 @@ import getrequest, postrequest, deleterequest, putrequest
 class Requests(resource.Resource):
     numberRequests = 0
 
+    # For some reason this line is vital - I removed it and it caused the server to crash. Strange.
+    isLeaf = True
+
     def __init__(resource):
     	return
     
