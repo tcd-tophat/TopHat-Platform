@@ -1,6 +1,12 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
-from tophat.controller.requests import Requests
+from twisted.web.resource import Resource  
+from twisted.web.server import Site
+
+# Import the controllers.
+from tophat.controller.rootrequests import RootRequests
+from tophat.controller.userrequests import UserRequests
+from tophat.controller.gamerequests import GameRequests
 
 #                 o  o
 #      oMMMMMMMMMMMMMMMMMMMMMMoo
@@ -38,5 +44,16 @@ from tophat.controller.requests import Requests
 # 
 
 
-reactor.listenTCP(8080, server.Site(Requests()))
+#root = RootRequests()
+root = Resource()
+
+# Set the basic URLs we have
+root.putChild("", RootRequests())
+root.putChild("user", UserRequests())
+root.putChild("game", GameRequests())
+
+factory = Site(root)
+reactor.listenTCP(8000, factory)
 reactor.run()
+
+print "TopHat-Service started successfully."
