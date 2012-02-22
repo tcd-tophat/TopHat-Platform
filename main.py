@@ -4,6 +4,9 @@ from twisted.internet import reactor
 from twisted.web.resource import Resource  
 from twisted.web.server import Site
 from os import getuid, setuid, setgid
+from pwd import getpwnam
+from grp import getgrnam
+from sys import exit
 #Import the controllers.
 from tophat.controller.rootrequests import RootRequests
 from tophat.controller.userrequests import UserRequests
@@ -59,21 +62,36 @@ root.putChild("game", GameRequests())
 
 factory = Site(root)
 reactor.listenTCP(443, factory)
+
+
+
+
+
+uidNumber= getpwnam('tophat')[2]
+gidNumber= getgrnam('tophat')[2]
 try:
-	setgid(999)
+	setgid(uidNumber)
 except OSError:
 	print "Failed to drop privileges to group tophat"
-	print "[TopHat-Serivce failed to start]"
-	from sys import exit
-	exit(1)
+	print "Attempting to drop to group \"nobody\""
+	try:
+		setgid(getgrnam('nobody')[2])
+	except OSError:
+		print "Unable to drop to group \"nobody\", bailing out from crazy town."
+		print "[TopHat-Serivce failed to start]"
+		exit(1)
 
 try:
-	setuid(999)
+	setuid(gidNumber)
 except OSError:
 	print "Failed to drop privileges to user tophat"
-	print "[TopHat-Serivce failed to start]"
-	from sys import exit
-	exit(1)
+	print "Attempting to drop to user \"nobody\""
+	try:
+		setuid(getpwnam('nobody')[2])
+	except OSError:
+		print "Unable to drop to user \"nobody\", this system is a mess, bailing out."
+		print "[TopHat-Serivce failed to start]"
+		exit(1)
 print "[TopHat-Service started successfully]"
 reactor.run()
 
