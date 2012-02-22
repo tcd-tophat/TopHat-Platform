@@ -1,9 +1,9 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python2.6
 from twisted.web import server, resource
 from twisted.internet import reactor
 from twisted.web.resource import Resource  
 from twisted.web.server import Site
-
+from os import getuid, setuid, setgid
 #Import the controllers.
 from tophat.controller.rootrequests import RootRequests
 from tophat.controller.userrequests import UserRequests
@@ -43,6 +43,11 @@ print "              oM\"\"                            oMMMM"
 print "                                              oMMMM"
 print "                                              oMMM"""
 
+if getuid() is not 0:
+	print "The TopHat-service must be started as root to bind to port 443"
+	print "[TopHat-Serivce failed to start]"
+	from sys import exit
+	exit(1)
 
 printroot = RootRequests()
 root = Resource()
@@ -53,7 +58,22 @@ root.putChild("user", UserRequests())
 root.putChild("game", GameRequests())
 
 factory = Site(root)
-reactor.listenTCP(40013, factory)
+reactor.listenTCP(443, factory)
+try:
+	setgid(999)
+except OSError:
+	print "Failed to drop privileges to group tophat"
+	print "[TopHat-Serivce failed to start]"
+	from sys import exit
+	exit(1)
+
+try:
+	setuid(999)
+except OSError:
+	print "Failed to drop privileges to user tophat"
+	print "[TopHat-Serivce failed to start]"
+	from sys import exit
+	exit(1)
 print "[TopHat-Service started successfully]"
 reactor.run()
 
