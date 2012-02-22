@@ -7,11 +7,14 @@ from os import getuid, setuid, setgid
 from pwd import getpwnam
 from grp import getgrnam
 from sys import exit
+from twisted.internet.error import CannotListenError
+
+
+
 #Import the controllers.
 from tophat.controller.rootrequests import RootRequests
 from tophat.controller.userrequests import UserRequests
 from tophat.controller.gamerequests import GameRequests
-
 print "                 o  o          "
 print "      oMMMMMMMMMMMMMMMMMMMMMMoo"
 print "      MMMMMMMMMMMMMMMMMMMMMMMMM"
@@ -61,37 +64,45 @@ root.putChild("user", UserRequests())
 root.putChild("game", GameRequests())
 
 factory = Site(root)
-reactor.listenTCP(443, factory)
-
-
-
-
-
-uidNumber= getpwnam('tophat')[2]
-gidNumber= getgrnam('tophat')[2]
 try:
-	setgid(uidNumber)
-except OSError:
-	print "Failed to drop privileges to group tophat"
-	print "Attempting to drop to group \"nobody\""
-	try:
-		setgid(getgrnam('nobody')[2])
-	except OSError:
-		print "Unable to drop to group \"nobody\", bailing out from crazy town."
-		print "[TopHat-Serivce failed to start]"
-		exit(1)
+	reactor.listenTCP(443, factory)
+except CannotListenError:
+	print "The port 443 is already bound, please kill the process using that before launching the Tophat-Service."
+	print "[TopHat-Serivce failed to start]"
+	exit(1)
+
+print "Listening on port 443, deadly."
+
 
 try:
-	setuid(gidNumber)
-except OSError:
-	print "Failed to drop privileges to user tophat"
-	print "Attempting to drop to user \"nobody\""
+	uidNumber= getpwnam('tophat')[2]
+	print "Dropped privileges to user 'tophat'. Cool pops."
+except KeyError:
+        print "Failed to drop privileges to user 'tophat'. Uh-oh."
+        print "Attempting to drop to user 'nobody'"
 	try:
-		setuid(getpwnam('nobody')[2])
-	except OSError:
-		print "Unable to drop to user \"nobody\", this system is a mess, bailing out."
+		uidNumber= getpwnam('nobody')[2]
+		print "Dropped privileges to 'nobody'. Phew!"
+	except:
+		print "No user 'nobody' on this system, bit mad, I'm outta here so."
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
+try:
+	gidNumber= getgrnam('tophat')[2]
+	print "Dropped privileges to group 'tophat'. Nice."
+except KeyError:
+	print "Failed to drop privileges to group 'tophat'. :-S"
+        print "Attempting to drop to group 'daemon'"
+	try:
+		gidNumber= getgrnam('daemon')[2]
+		print "Dropped privileges to group 'daemon'. It seems we're in the clear, for now."
+	except:
+                print "No group 'nobody' on this system, I'm not going to let you run me as root. Sorry."
+                print "[TopHat-Serivce failed to start]"
+		exit(1)
+
+setgid(uidNumber)
+setuid(gidNumber)
 print "[TopHat-Service started successfully]"
 reactor.run()
 
