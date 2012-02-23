@@ -16,40 +16,9 @@ from Controllers.rootrequests import RootRequests
 from Controllers.userrequests import UserRequests
 from Controllers.gamerequests import GameRequests
 from Controllers.TopHatProtocal import *
-print "                 o  o          "
-print "      oMMMMMMMMMMMMMMMMMMMMMMoo"
-print "      MMMMMMMMMMMMMMMMMMMMMMMMM"
-print "      \"MMMMMMMMMMMMMMMMMMMMMMMo"
-print "      \"MMMMMMMMMMMMMMMMMMMMMMMo"
-print "      \"MMMMMMMMMMMMMMMMMMMMMMMo"
-print "      \"MMMMMMMMMMMMMMMMMMMMMMM"
-print "      \"MMMMMMMMMMMMMMMMMMMMMMM\""
-print "      oMMMMMMMMMMMMMMMMMMMMMMM"
-print "       MMMMMMMMMMMMMMMMMMMMMMM"
-print "       MMMMMMMMMMMMMMMMMMMMMMM"
-print "       MMMMMMMMMMMMMMMMMMMMMMM"
-print "       MMMMMMMMMMMMMMMMMMMMMMM"
-print "      \"\"\"\"MMMMMMMMMMMMMMM\"\"\""
-print "ooMMoo        \" \" \" \"        oMMMoo"
-print "oMMMMMMMo                   oMMMMMMMM"
-print "\"MMMMMMMMMMooooooooooooMoMMMMMMMMM\"                                ooooo        ooooo"
-print "  \"\"MMMMMMMMMMMMMMMMMMMMMMMMMMMM\"                                  MMMMM       \"MMMMo                         ooMo\""
-print "      \"\"\"\"\"MMMMMMMMMMMMMM\"\"\"                                       MMMMM       \"MMMMo                        MMMMM"
-print "              oMMMMMo          o o o             o    o o          MMMMM       \"MMMM\"          o o o         MMMMM o"
-print "              oMMMMMo       oMMMMMMMMMo       MMMMMoMMMMMMMo       MMMMM       \"MMMMM     ooMMMMMMMMMMo    \"MMMMMMMMMM"
-print "              oMMMMM\"      MMMMM\"\"\"MMMMMM     oMMMMMMM\"MMMMMMo     MMMMMMooooooMMMMMo     MMMMM\"M\"MMMMMo   \"\"MMMMM"
-print "              oMMMMMM     MMMMM     \"MMMMo    oMMMM\"     MMMMM     MMMMMMMMMMMMMMMMM\"      \"\"      MMMMM     MMMMM"
-print "              oMMMMMo    oMMMMM      MMMMM    oMMMM      MMMMMM    MMMMM\"\"\"\"\"\"\"MMMMMM        ooooooMMMMo     oMMMMo"
-print "              oMMMMM\"    \"MMMMM      MMMMMo   oMMMMo     \"MMMMo    MMMMMo      \"MMMMo     oMMMMMMMMMMMMM     MMMMM"
-print "              \"MMMMMM    \"MMMMM     oMMMMM    oMMMM      MMMMMo    MMMMM       \"MMMM\"    MMMMM\"\" \" MMMMo     oMMMM"
-print "              \"MMMMMo     MMMMM     oMMMMM    oMMMMo     MMMMM     MMMMM       \"MMMMM    MMMMM     MMMM\"     MMMMM"
-print "              \"MMMMMo     \"MMMMMooooMMMM\"     oMMMMMoooMMMMMM\"     MMMMM       MMMMMo    MMMMMMo oMMMMMM     oMMMMMo o"
-print "              MMMMMM\"       \"MMMMMMMMMM\"      oMMMMMMMMMMMM\"       MMMMMo      oMMMM\"     MMMMMMMMMMMMMMM     MMMMMMMMo"
-print "              oMMMMM\"          \" \"\"\"          oMMMM \"\"\"\"\"           \" \"         \" \" \"       \"\"\"\"\"\"    "
-print "              oM\"\"                            oMMMM"
-print "                                              oMMMM"
-print "                                              oMMM"""
+from Common.Miscellaneous import printTopHat
 
+printTopHat()
 if getuid() is not 0:
 	print "The TopHat-service must be started as root to bind to port 443"
 	print "[TopHat-Serivce failed to start]"
@@ -63,10 +32,9 @@ root = Resource()
 #root.putChild("", RootRequests())
 #root.putChild("user", UserRequests())
 #root.putChild("game", GameRequests())
-
 factory = TopHatFactory() 
 try:
-	reactor.listenSSL(443, factory, ssl.DefaultOpenSSLContextFactory('/etc/ssl/private/tophat.key', '/etc/ssl/certs/tophat.crt'))
+	reactor.listenSSL(443, factory, ssl.DefaultOpenSSLContextFactory('/etc/ssl/private/tophat.key', '/etc/ssl/certs/tophat.crt'), interface='0.0.0.0')
 except CannotListenError:
 	print "The port 443 is already bound, please kill the process using that before launching the Tophat-Service."
 	print "[TopHat-Serivce failed to start]"

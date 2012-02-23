@@ -1,4 +1,4 @@
-from twisted.web import server, resource
+from twisted.web import server
 from twisted.web.resource import Resource
 from twisted.internet import reactor
 
@@ -7,7 +7,7 @@ import postrequest, deleterequest, putrequest
 from getrequest import GetRequest
 
 # Simple Counter Main method to get us started with programming.
-class UserRequests(resource.Resource):
+class UserRequests(Resource):
     numberRequests = 0
 
     # For some reason this line is vital - I removed it and it caused the server to crash. Strange.
