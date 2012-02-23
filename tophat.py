@@ -1,6 +1,6 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 from twisted.web import server, resource
-from twisted.internet import reactor
+from twisted.internet import reactor, ssl
 from twisted.web.resource import Resource  
 from twisted.web.server import Site
 from os import getuid, setuid, setgid
@@ -15,6 +15,7 @@ from twisted.internet.error import CannotListenError
 from Controllers.rootrequests import RootRequests
 from Controllers.userrequests import UserRequests
 from Controllers.gamerequests import GameRequests
+from Controllers.TopHatProtocal import *
 print "                 o  o          "
 print "      oMMMMMMMMMMMMMMMMMMMMMMoo"
 print "      MMMMMMMMMMMMMMMMMMMMMMMMM"
@@ -34,17 +35,17 @@ print "oMMMMMMMo                   oMMMMMMMM"
 print "\"MMMMMMMMMMooooooooooooMoMMMMMMMMM\"                                ooooo        ooooo"
 print "  \"\"MMMMMMMMMMMMMMMMMMMMMMMMMMMM\"                                  MMMMM       \"MMMMo                         ooMo\""
 print "      \"\"\"\"\"MMMMMMMMMMMMMM\"\"\"                                       MMMMM       \"MMMMo                        MMMMM"
-print "              oMMMMMo          o o o             o    o o          MMMMM       \"MMMM\"          o o o         MMMMM o           ooo o"
-print "              oMMMMMo       oMMMMMMMMMo       MMMMMoMMMMMMMo       MMMMM       \"MMMMM     ooMMMMMMMMMMo    \"MMMMMMMMMM\"    oMMMMMMMMMMo"
-print "              oMMMMM\"      MMMMM\"\"\"MMMMMM     oMMMMMMM\"MMMMMMo     MMMMMMooooooMMMMMo     MMMMM\"M\"MMMMMo   \"\"MMMMM\"\"\"    oMMMMM\"\"\"\"\"MM\""
-print "              oMMMMMM     MMMMM     \"MMMMo    oMMMM\"     MMMMM     MMMMMMMMMMMMMMMMM\"      \"\"      MMMMM     MMMMM       oMMMMM"
-print "              oMMMMMo    oMMMMM      MMMMM    oMMMM      MMMMMM    MMMMM\"\"\"\"\"\"\"MMMMMM        ooooooMMMMo     oMMMMo      \"MMMMMMoooo"
-print "              oMMMMM\"    \"MMMMM      MMMMMo   oMMMMo     \"MMMMo    MMMMMo      \"MMMMo     oMMMMMMMMMMMMM     MMMMM        \"MMMMMMMMMMMo"
-print "              \"MMMMMM    \"MMMMM     oMMMMM    oMMMM      MMMMMo    MMMMM       \"MMMM\"    MMMMM\"\" \" MMMMo     oMMMM           \"\"\"\"\"MMMMMM"
-print "              \"MMMMMo     MMMMM     oMMMMM    oMMMMo     MMMMM     MMMMM       \"MMMMM    MMMMM     MMMM\"     MMMMM                \"MMMMM"
-print "              \"MMMMMo     \"MMMMMooooMMMM\"     oMMMMMoooMMMMMM\"     MMMMM       MMMMMo    MMMMMMo oMMMMMM     oMMMMMo o   oMMooo oooMMMM\""
-print "              MMMMMM\"       \"MMMMMMMMMM\"      oMMMMMMMMMMMM\"       MMMMMo      oMMMM\"     MMMMMMMMMMMMMMM     MMMMMMMMo \"\"MMMMMMMMMMM\"\""
-print "              oMMMMM\"          \" \"\"\"          oMMMM \"\"\"\"\"           \" \"         \" \" \"       \"\"\"\"\"\"    \"\"        \"\"\"\"\"       \"\"\"\"\"\"\""
+print "              oMMMMMo          o o o             o    o o          MMMMM       \"MMMM\"          o o o         MMMMM o"
+print "              oMMMMMo       oMMMMMMMMMo       MMMMMoMMMMMMMo       MMMMM       \"MMMMM     ooMMMMMMMMMMo    \"MMMMMMMMMM"
+print "              oMMMMM\"      MMMMM\"\"\"MMMMMM     oMMMMMMM\"MMMMMMo     MMMMMMooooooMMMMMo     MMMMM\"M\"MMMMMo   \"\"MMMMM"
+print "              oMMMMMM     MMMMM     \"MMMMo    oMMMM\"     MMMMM     MMMMMMMMMMMMMMMMM\"      \"\"      MMMMM     MMMMM"
+print "              oMMMMMo    oMMMMM      MMMMM    oMMMM      MMMMMM    MMMMM\"\"\"\"\"\"\"MMMMMM        ooooooMMMMo     oMMMMo"
+print "              oMMMMM\"    \"MMMMM      MMMMMo   oMMMMo     \"MMMMo    MMMMMo      \"MMMMo     oMMMMMMMMMMMMM     MMMMM"
+print "              \"MMMMMM    \"MMMMM     oMMMMM    oMMMM      MMMMMo    MMMMM       \"MMMM\"    MMMMM\"\" \" MMMMo     oMMMM"
+print "              \"MMMMMo     MMMMM     oMMMMM    oMMMMo     MMMMM     MMMMM       \"MMMMM    MMMMM     MMMM\"     MMMMM"
+print "              \"MMMMMo     \"MMMMMooooMMMM\"     oMMMMMoooMMMMMM\"     MMMMM       MMMMMo    MMMMMMo oMMMMMM     oMMMMMo o"
+print "              MMMMMM\"       \"MMMMMMMMMM\"      oMMMMMMMMMMMM\"       MMMMMo      oMMMM\"     MMMMMMMMMMMMMMM     MMMMMMMMo"
+print "              oMMMMM\"          \" \"\"\"          oMMMM \"\"\"\"\"           \" \"         \" \" \"       \"\"\"\"\"\"    "
 print "              oM\"\"                            oMMMM"
 print "                                              oMMMM"
 print "                                              oMMM"""
@@ -59,13 +60,13 @@ printroot = RootRequests()
 root = Resource()
 
 # Set the basic URLs we have
-root.putChild("", RootRequests())
-root.putChild("user", UserRequests())
-root.putChild("game", GameRequests())
+#root.putChild("", RootRequests())
+#root.putChild("user", UserRequests())
+#root.putChild("game", GameRequests())
 
-factory = Site(root)
+factory = TopHatFactory() 
 try:
-	reactor.listenTCP(443, factory)
+	reactor.listenSSL(443, factory, ssl.DefaultOpenSSLContextFactory('/etc/ssl/private/tophat.key', '/etc/ssl/certs/tophat.crt'))
 except CannotListenError:
 	print "The port 443 is already bound, please kill the process using that before launching the Tophat-Service."
 	print "[TopHat-Serivce failed to start]"
