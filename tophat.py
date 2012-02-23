@@ -12,9 +12,9 @@ from twisted.internet.error import CannotListenError
 
 
 #Import the controllers.
-from tophat.controller.rootrequests import RootRequests
-from tophat.controller.userrequests import UserRequests
-from tophat.controller.gamerequests import GameRequests
+from Controllers.rootrequests import RootRequests
+from Controllers.userrequests import UserRequests
+from Controllers.gamerequests import GameRequests
 print "                 o  o          "
 print "      oMMMMMMMMMMMMMMMMMMMMMMoo"
 print "      MMMMMMMMMMMMMMMMMMMMMMMMM"
