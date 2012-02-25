@@ -17,11 +17,11 @@ class LogFile:
 		else: open(self.filename,'a').close()
 
 		if self.path.size >= 524288: #512KB
-			dirlist = listdir(self.realpath.parent.path)
-			if filename in dirlist:
-				i=0
+			dirlist = listdir(self.path.realpath.parent.path)
+			if self.path.basename in dirlist:
+				i=1
 				while True:
-					new_name = self.realpath.parent.path + filename + '.' + str(i) +'gz'
+					new_name = self.path.realpath.parent.path +'/'+ self.path.basename + '.' + str(i) +'.'+'gz'
 					if new_name in dirlist:
 						pass
 					else:
@@ -31,12 +31,12 @@ class LogFile:
 						uncmp.close()
 						zipped.close()
 						break
-				outfile = open(filename, 'w')
+				outfile = open(self.filename, 'w')
 				outfile.write(messege)
 				outfile.close()
 				return
 			else: 
-				outfile = open(filename, 'a')
+				outfile = open(self.filename, 'a')
 				outfile.write(messege)
 				outfile.close()
 				return
