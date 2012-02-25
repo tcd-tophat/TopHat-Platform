@@ -15,14 +15,13 @@ from twisted.internet.error import CannotListenError
 from Controllers.rootrequests import RootRequests
 from Controllers.userrequests import UserRequests
 from Controllers.gamerequests import GameRequests
-from Controllers.TopHatProtocal import *
+from Controllers.TopHatProtocol import *
 from Common.Miscellaneous import printTopHat
 
 printTopHat()
 if getuid() is not 0:
 	print "The TopHat-service must be started as root to bind to port 443"
 	print "[TopHat-Serivce failed to start]"
-	from sys import exit
 	exit(1)
 
 printroot = RootRequests()
