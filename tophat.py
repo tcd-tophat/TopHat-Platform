@@ -53,7 +53,7 @@ except KeyError:
 		print "Dropped privileges to 'nobody'. Phew!"
 	except:
 		print "No user 'nobody' on this system, bit mad, I'm outta here so."
-		print "[TopHat-Serivce failed to start]"
+		print "[TopHat-Service failed to start]"
 		exit(1)
 try:
 	gidNumber= getgrnam('tophat')[2]
