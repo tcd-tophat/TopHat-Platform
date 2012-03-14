@@ -14,17 +14,21 @@ class Database:
 		
 
 	def connect(self):
-		""" Makes a connection to"""
+		""" Makes a connection to the database"""
 		try:
-
 			self.con = mdb.connect(self.hostname, self.user, self.password, self.dbname)
 			
-		except mdb.Error, e:
-		  
+		except mdb.Error, e:	  
 			print "Database Error: %d: %s" % (e.args[0], e.args[1])
 			sys.exit(1)
 
 		finally:
+			self.close()
 			
-			if con:
-				con.close()
+	def close(self):
+		if con:
+			# make all changes to DB before closing it
+			_ObjectWatcher.magicSaveAll()
+
+			# close the connection
+			con.close()

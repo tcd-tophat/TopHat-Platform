@@ -1,9 +1,5 @@
 from abc import ABCMeta, abstractmethod
 
-#import objectwatcher
-#import database
-#import mappererror
-
 class Mapper:
 	__metaclass__ = ABCMeta
 
@@ -26,7 +22,7 @@ class Mapper:
 
 		return obj
 
-	def createObject(data):
+	def createObject(self, data):
 		old = getFromWatcher(XXXXXidXXXXX)
 		if old:
 			return old
@@ -39,8 +35,11 @@ class Mapper:
 
 		return obj
 
+	def findAll(self):
+		pass
 
-	def delete(obj):
+
+	def delete(self, bj):
 		if isinstance(obj, DomainObject):
 			raise MapperError("This function expects a DomainObject object as the input parameter")
 
@@ -49,7 +48,7 @@ class Mapper:
 		return self.doDelete(obj)				
 
 
-	def update(obj):
+	def update(self, obj):
 		if isinstance(obj, DomainObject) is not:
 			raise MapperError("This function expects a DomainObject object as the input parameter")
 
@@ -59,7 +58,7 @@ class Mapper:
 		return self.doUpdate(obj)
 
 
-	def insert(obj):
+	def insert(self, obj):
 		if isinstance(obj, DomainObject) is not:
 			raise MapperError("This function expects a DomainObject object as the input parameter")
 
@@ -85,25 +84,25 @@ class Mapper:
 		pass
 
 	@abstractmethod
-	def selectStmt(self):
+	def __selectStmt(self):
 		pass
 
 	@abstractmethod 
-	def selectAllStmt(self):
+	def __selectAllStmt(self, start, number):
 		pass
 
 	@abstractmethod 
-	def doUpdate(self, obj):
+	def __doUpdate(self, obj):
 		pass
 
 	@abstractmethod 
-	def doDelete(self, obj):
+	def __doDelete(self, obj):
 		pass
 
 	@abstractmethod 
-	def doInsert(self, obj):
+	def __doInsert(self, obj):
 		pass
 
 	@abstractmethod 
-	def doCreateObject(self, data):
+	def __doCreateObject(self, data):
 		pass
