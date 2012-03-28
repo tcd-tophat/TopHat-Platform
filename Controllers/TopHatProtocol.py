@@ -11,10 +11,9 @@ class TopHat(Protocol):
 		self.factory = factory()
 
 	def connectionMade(self):
-		self.factory.appendClient(self.transport.getHost().host)
+		self.factory.appendClient(self.transport)
 		
 		q=Resolver()
-		
 		q.lifetime=2.0
 		
 		addr = reversename.from_address(self.transport.getPeer().host)
@@ -37,15 +36,30 @@ class TopHat(Protocol):
 		HTTPParser(self, data)
 
 	def connectionLost(self, reason):
-		diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost: '+str(reason.getErrorMessage())
-		self.factory.log.write(diagMessege+'\n')
-		print diagMessege
+		address= self.transport.getPeer().host
+                q=Resolver()
+                q.lifetime=2.0
+    
+                addr = reversename.from_address(address)
+    
+                host = str(q.query(addr, 'PTR')[0])
+		if host is not None:
+			diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + host.rstrip('.') +' ('+address+')'+ ': '+str(reason.getErrorMessage())
+			self.factory.log.write(diagMessege+'\n')
+			print diagMessege
+			self.factory.popClient(self.transport)
+		else:
+                        diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + address+ ': '+str(reason.getErrorMessage())
+                        self.factory.log.write(diagMessege+'\n')
+                        print diagMessege
+                        self.factory.popClient(self.transport)
+
 class TopHatFactory(Factory):
 	log = LogFile('/var/log/tophat/tophat.log')
 	protocal = TopHat
 	clients = list()
-	def popClient(self):
-		self.clients.pop()
+	def popClient(self, client):
+		self.clients.remove(client)
 	def appendClient(self, client):
 		self.clients.append(client)
 		self.numClients = len(self.clients)

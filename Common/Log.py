@@ -4,7 +4,6 @@ import gzip
 class LogFile:
 
 	def __init__(self, filename='/var/log/tophat/tophat.log'):
-		print "Creating log object"
 		self.filename = filename
 		self.path = path(filename)
 	
