@@ -3,16 +3,19 @@ from TopHatHTTPParser import HTTPParser
 from subprocess import check_output
 from dns.resolver import NXDOMAIN, NoAnswer, Resolver, query, Timeout
 from dns import reversename
-from sys import path
-path.append('..')
+from Model.TophatClient import TophatClient
 from Common.Log import LogFile
 class TopHat(Protocol):
 	def __init__(self, factory):
 		self.factory = factory()
 
 	def connectionMade(self):
-		self.factory.appendClient(self.transport)
-		
+		client = TophatClient(self.transport)
+		for x in TophatClient:
+			print x
+
+		print "ok"
+		print len(TophatClient)
 		q=Resolver()
 		q.lifetime=2.0
 		
@@ -47,12 +50,10 @@ class TopHat(Protocol):
 			diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + host.rstrip('.') +' ('+address+')'+ ': '+str(reason.getErrorMessage())
 			self.factory.log.write(diagMessege+'\n')
 			print diagMessege
-			self.factory.popClient(self.transport)
 		else:
                         diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + address+ ': '+str(reason.getErrorMessage())
                         self.factory.log.write(diagMessege+'\n')
                         print diagMessege
-                        self.factory.popClient(self.transport)
 
 class TopHatFactory(Factory):
 	log = LogFile('/var/log/tophat/tophat.log')
