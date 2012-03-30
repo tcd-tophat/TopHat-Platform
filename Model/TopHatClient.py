@@ -9,12 +9,14 @@ class TophatClient:
 		if tmp in TophatClient:
 
 			self.port = tmp.port
-			self.port = tmp.addr
+			self.addr = tmp.addr
+			self.state = tmp.state
 			return
 			
 		else:
 			self.port = tmp.port
 			self.addr = tmp.addr
+			self.state = tmp.state
 			self.clientlist.append(self)
 			return
 
@@ -61,6 +63,7 @@ class TophatClientState:
 	def set_state(self, new_state):
 		if new_state in self.__allowedstates:
 			self.state = new_state
+			return
 		else:
 			raise Exception("Bad state %s" %new_state)
 	def __str__(self):
