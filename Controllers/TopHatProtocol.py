@@ -10,12 +10,11 @@ class TopHat(Protocol):
 		self.factory = factory()
 
 	def connectionMade(self):
-		client = TophatClient(self.transport)
+		client = TophatClient(transport=self.transport)
+
 		for x in TophatClient:
 			print x
-
-		print "ok"
-		print len(TophatClient)
+			print x.state
 		q=Resolver()
 		q.lifetime=2.0
 		
