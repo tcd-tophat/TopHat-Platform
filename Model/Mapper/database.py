@@ -1,5 +1,6 @@
 import MySQLdb as mdb
 import sys
+import gc
 
 class Database:
 	con = None
@@ -10,25 +11,27 @@ class Database:
 		self.password = password
 		self.dbname = dbname
 
-		self.connect()
-		
+		self.__connect()
+	
+	def __del__(self):
+		self.__close()	
 
-	def connect(self):
+	def __connect(self):
 		""" Makes a connection to the database"""
+		gc.collect()		# runs the python garbage collector to close and possible open but unused MySQL connections
+		
 		try:
-			self.con = mdb.connect(self.hostname, self.user, self.password, self.dbname)
-			
+			self.con = mdb.connect(host=self.hostname, user=self.user, passwd=self.password, db=self.dbname, use_unicode = True, charset = "utf8")
+
 		except mdb.Error, e:	  
 			print "Database Error: %d: %s" % (e.args[0], e.args[1])
 			sys.exit(1)
-
-		finally:
-			self.close()
 			
-	def close(self):
-		if con:
-			# make all changes to DB before closing it
-			_ObjectWatcher.magicSaveAll()
-
+	def __close(self):
+		""" Closes the connection to the database if it still exists """
+		if self.con is not None:
 			# close the connection
-			con.close()
+			self.con.close()
+
+	def getCursor(self):
+		return self.con.cursor(cursorclass=mdb.cursors.DictCursor)

@@ -1,34 +1,63 @@
+import mapper
+import sys
+import User
 
-class UserMapper(Mapper):
+class UserMapper(mapper.Mapper):
 
 	def __init__(self):
-		pass
+		super(UserMapper, self).__init__()
 
 	def targetClass(self):
 		return "User"
 
-	def __selectStmt(self):
-		return "SELECT * FROM users WHERE id = ?"
+	def _selectStmt(self):
+		return "SELECT * FROM users WHERE id = %s LIMIT 1"
 
-	def __selectAllStmt(self, start, number):
-		if(start < 1)
-			print "The start point must be a positive int"
-			start = 1
+	def _selectAllStmt(self):
+		return "SELECT * FROM users LIMIT %s, %s"	
 
-		if(number > 50)
-			print "You cannot select more than 50 rows at one time"
-			start = 50
+	def _doCreateObject(self, data):
+		user = User.User(data["id"])
 
-		return "SELECT * FROM users LIMIT " + start + ", " + number	
+		user.name = data["name"]
+		user.photo = data["photo"]
+		user.email = data["email"]
 
-	def __doCreateObject(self, data):
-		pass
+		return user
 
-	def __doInsert(self, obj):
-		print "Inserting new user object " + obj.id
+	def _doInsert(self, obj):
+		print "Inserting new User object " + str(obj.id)
 
-	def __doDelete(self, obj):
-		print "Deleting user " + obj.id
+		# build query
+		query = "INSERT INTO users VALUES(NULL, %s, %s, %s)"
+		params = (obj.name, obj.photo, obj.email)
 
-	def __doUpdate(self, obj):
-		print "Updating user " + obj.id
+		# run the query
+		cursor = self.db.getCursor()
+		rowsAffected = cursor.execute(query, params)
+		cursor.close()
+
+		if rowsAffected > 0:
+			return True
+		else:
+			return False
+
+	def _doDelete(self, obj):
+		print "Deleting User " + str(obj.id)
+
+	def _doUpdate(self, obj):
+		print "Updating User " + str(obj.id)
+
+		# build the query
+		query = "UPDATE users SET id = %s, name = %s, email = %s, photo = %s WHERE id = %s"
+		params = (obj.id, obj.name, obj.email, obj.photo, obj.id)
+
+		# run the query
+		cursor = self.db.getCursor()
+		rowsAffected = cursor.execute(query, params)
+		cursor.close()
+
+		if rowsAffected > 0:
+			return True
+		else:
+			return False
