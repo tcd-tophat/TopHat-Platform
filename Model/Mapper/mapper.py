@@ -103,9 +103,9 @@ class Mapper:
 		if not isinstance(obj, DomainObject.DomainObject):
 			raise MapperError.MapperError("This function expects a DomainObject object as the input parameter")
 
-		result = self._doInsert(obj)
+		result = self._doInsert(obj)					# do the insertion details
 
-		self.addToWatcher(obj)							# warning I need to update the insert id to the obj somewhere
+		self.addToWatcher(obj)							# add the new object to the object watcher
 
 		return result
 

@@ -35,6 +35,11 @@ class UserMapper(mapper.Mapper):
 		# run the query
 		cursor = self.db.getCursor()
 		rowsAffected = cursor.execute(query, params)
+
+		# get insert id
+		id = cursor.lastrowid
+		obj.id = id
+
 		cursor.close()
 
 		if rowsAffected > 0:
