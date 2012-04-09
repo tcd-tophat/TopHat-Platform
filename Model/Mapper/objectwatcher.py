@@ -35,7 +35,7 @@ class _Objectwatcher:
 
 	def getGlobalName(self, obj) :
 		""" Gets the global name of this object to be used as the key in the hash map """
-		return str(obj.__class__) + "." + str(obj.id)
+		return str(obj.__class__.__name__) + "." + str(obj.id)
 
 	def addNew(self, obj):
 		""" Marks an object new so that it can be inserted into the database """

@@ -55,6 +55,7 @@ class Mapper:
 
 	def findAll(self, start = 0, number = 50):
 		""" Finds all the objects in such a table from start to (start + number) """
+		# check that the limit params are not off the wall
 		if start < 0:
 			print "The start point must be a positive int"
 			start = 0
@@ -65,7 +66,7 @@ class Mapper:
 
 		# build the query
 		query = self._selectAllStmt()
-		params = (start, number)
+		params = (start, start+number)
 
 		# run the qurery
 		cursor = self.db.getCursor()
@@ -73,10 +74,10 @@ class Mapper:
 		data = cursor.fetchall()
 		cursor.close()
 
-		# create a collection object for the results
-		coll = collection.Collection(data,  self)
-
-		return coll
+		if rowsAffected > 0:								# check if there are results to be returned
+			return collection.Collection(data,  self) 		# create a collection object for the results
+		else:
+			return None
 
 	def delete(self, obj):
 		if not isinstance(obj, DomainObject.DomainObject):
@@ -108,6 +109,61 @@ class Mapper:
 
 		return result
 
+	def selectIdentity(self, identityObject, allFields = True, limitStart = 0, limitDistance = 50):
+		""" Builds a dynamic query using the identityObject to collect the parameters """
+		# Check the parameters are valid
+		if limitStart < 0:
+			raise MapperError.MapperError("The start point must be a positive int")
+
+		if limitDistance > 50:
+			raise MapperError.MapperError("You cannot select more than 50 rows at one time")
+
+		# =======================================
+		# build the query from the identityObject's data
+		query = "SELECT "
+
+		# build the fields section
+		if not allFields:
+			", ".join(identityObject.fields)
+		else:
+			query += "*"
+
+		query += " FROM " + self.tableName() + " WHERE "
+
+		params = []															# create a list to store all the parameters in
+
+		# build the WHERE clause of the query
+		for field in identityObject.fields:
+			first = True
+			for comp in identityObject.fields[field].comps:
+				if not first:
+					query += " OR "											# join clauses for the same column using OR operator
+				query += comp['name'] + " " + comp['operator'] + " %s"		# add placeholder for the value
+				params.append(comp['value'])								# add the value to a list of params
+				first = False
+			query += " AND "												# join clauses for different columns using AND operator
+
+		query = query[:-5]			# remove the final AND from the query
+
+		query += " LIMIT %s, %s"
+
+		# finish preparing all the params
+		params.append(limitStart)							# add the two limit params to the list
+		params.append(limitStart + limitDistance)
+		paramsTuple = tuple(params)							# convert the list of params into a tuple for the query exectuion
+
+		#========================================
+		# run the query and pull the results into a collection object
+		cursor = self.db.getCursor()						# get the database cursor
+		rowsAffected = cursor.execute(query, paramsTuple)	# run the query storing the number of rows affected
+		data = cursor.fetchall()							# fetch the data from the server
+		cursor.close()										# close the cursor to the database
+
+		if rowsAffected > 0:								# check there were results to be returned
+			return collection.Collection(data, self)		# return a collection of the objects
+		else:
+			return None										# otherwise return nada
+
 
 	def getFromWatcher(self, id):
 		""" Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does """
@@ -121,6 +177,10 @@ class Mapper:
 	# Abstract methods to be implemented by the concrete children of this class 
 	@abc.abstractmethod
 	def targetClass(self):
+		pass
+
+	@abc.abstractmethod
+	def tableName(self):
 		pass
 
 	@abc.abstractmethod

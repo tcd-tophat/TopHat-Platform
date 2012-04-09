@@ -11,6 +11,7 @@ class Collection(object):
 	def __init__(self, raw = None, mapper = None):
 		self.mapper = mapper
 		self.raw = raw
+		self.objects = []
 
 		if raw is not None:
 			self.total = len(raw)
@@ -50,6 +51,7 @@ class Collection(object):
 	def next(self):
 		""" Gets the next row """
 		row = self.__getRow(self.pointer) # gets the latest row
+
 		if row is None:					
 			raise StopIteration			# tells the iterator that we are done and to stop iterating
 		else:

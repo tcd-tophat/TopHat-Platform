@@ -8,3 +8,6 @@ class User(DomainObject.DomainObject):
 	
 	def __init__(self, id = None):
 		super(User, self).__init__(id)
+
+	def __str__(self):
+		return str(self.id) + " " + self.name + " " + self.email + " " + self.photo

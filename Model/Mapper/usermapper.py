@@ -10,6 +10,9 @@ class UserMapper(mapper.Mapper):
 	def targetClass(self):
 		return "User"
 
+	def tableName(self):
+		return "users"
+
 	def _selectStmt(self):
 		return "SELECT * FROM users WHERE id = %s LIMIT 1"
 
