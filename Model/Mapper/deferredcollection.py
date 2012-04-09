@@ -12,7 +12,7 @@ class DeferredCollection(Collection):
 		self.query = query
 		self.params = params
 
-	def notifyAccess(self):
+	def _notifyAccess(self):
 		# check if the query has been run before
 		if self.run == False:
 			# run the query and build results in a collection
