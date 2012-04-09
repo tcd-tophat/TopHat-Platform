@@ -3,6 +3,7 @@ import database
 import mappererror as MapperError
 import objectwatcher as OW
 import DomainObject
+import collection
 
 class Mapper:
 	__metaclass__ = abc.ABCMeta
@@ -72,15 +73,13 @@ class Mapper:
 		data = cursor.fetchall()
 		cursor.close()
 
-		# create a list of objects from the results
-		objects = []
-		for row in data:
-			objects.append(self.createObject(row))
+		# create a collection object for the results
+		coll = collection.Collection(data,  self)
 
-		return objects
+		return coll
 
 	def delete(self, obj):
-		if isinstance(obj, DomainObject.DomainObject):
+		if not isinstance(obj, DomainObject.DomainObject):
 			raise MapperError.MapperError("This function expects a DomainObject object as the input parameter")
 
 		if obj.id is -1:
