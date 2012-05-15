@@ -19,19 +19,19 @@ class TopHat(Protocol):
 		host = str(q.query(addr, 'PTR')[0])
 		
 		if host is not None:
-			diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() + ']' + ': connection made from: ' + host.rstrip('.') + ' (' + str(self.transport.getPeer().host)+')'
-			self.factory.log.write(diagMessege+'\n')
-			print diagMessege
+			diagMessage = "[" + check_output(['date', '+%T:%D']).rstrip() + ']' + ': connection made from: ' + host.rstrip('.') + ' (' + str(self.transport.getPeer().host)+')'
+			self.factory.log.write(diagMessage+'\n')
+			print diagMessage
 		else:
-			diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection made from: ' + str(self.transport.getPeer().host)  
-			print diagMessege
-			self.factory.log.write(diagMessege+'\n')
+			diagMessage = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection made from: ' + str(self.transport.getPeer().host)  
+			print diagMessage
+			self.factory.log.write(diagMessage+'\n')
 	
 	
 	def dataReceived(self, data):
-		diagMessege =  "["+ check_output(['date', '+%T:%D']).rstrip() + ']' + ': received ' + data.rstrip()
-		self.factory.log.write(diagMessege+'\n')
-		print diagMessege
+		diagMessage =  "["+ check_output(['date', '+%T:%D']).rstrip() + ']' + ': received ' + data.rstrip()
+		self.factory.log.write(diagMessage+'\n')
+		print diagMessage
 		HTTPParser(self, data, self.client)
 
 	def connectionLost(self, reason):
@@ -41,13 +41,13 @@ class TopHat(Protocol):
                 addr = reversename.from_address(address)
 		host = str(q.query(addr, 'PTR')[0])
 		if host is not None:
-			diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + host.rstrip('.') +' ('+address+')'+ ': '+str(reason.getErrorMessage())
-			self.factory.log.write(diagMessege+'\n')
-			print diagMessege
+			diagMessage = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + host.rstrip('.') +' ('+address+')'+ ': '+str(reason.getErrorMessage())
+			self.factory.log.write(diagMessage+'\n')
+			print diagMessage
 		else:
-                        diagMessege = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + address+ ': '+str(reason.getErrorMessage())
-                        self.factory.log.write(diagMessege+'\n')
-                        print diagMessege
+                        diagMessage = "[" + check_output(['date', '+%T:%D']).rstrip() +']'+ ': connection lost from ' + address+ ': '+str(reason.getErrorMessage())
+                        self.factory.log.write(diagMessage+'\n')
+                        print diagMessage
 
 class TopHatFactory(Factory):
 	log = LogFile('/var/log/tophat/tophat.log')
