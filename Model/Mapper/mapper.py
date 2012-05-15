@@ -10,7 +10,7 @@ class Mapper:
 	db = None
 
 	def __init__(self):
-		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database access handler
+		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database class handler
 
 	def find(self, id):
 		""" Gets the object for that database id """
@@ -28,16 +28,17 @@ class Mapper:
 
 		cursor = self.db.getCursor()
 		rowsAffected = cursor.execute(query, parameters)	# bind the id to the query and run it
-		data = cursor.fetchone()
+		data = cursor.fetchone()							# fetch the one row from the DB
 		cursor.close()
 
-		if rowsAffected > 0:
+		if rowsAffected > 0:								# if a row was returned then build and object from it
 			return self.createObject(data)
 		else:
 			return None
 
 	def createObject(self, data):
 		""" Turns results from the database into objects that the rest of the program understands """
+		# Check if we have made this object before - no need to make it twice
 		old = self.getFromWatcher(data["id"])
 		if old is not None:
 			return old
@@ -128,6 +129,7 @@ class Mapper:
 		else:
 			query += "*"
 
+		# sets what table we are selecting from
 		query += " FROM " + self.tableName() + " WHERE "
 
 		params = []															# create a list to store all the parameters in

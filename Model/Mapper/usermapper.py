@@ -20,6 +20,7 @@ class UserMapper(mapper.Mapper):
 		return "SELECT * FROM users LIMIT %s, %s"	
 
 	def _doCreateObject(self, data):
+		""" Specifics required to build a User object given persistent storage data """
 		user = User.User(data["id"])
 
 		user.name = data["name"]

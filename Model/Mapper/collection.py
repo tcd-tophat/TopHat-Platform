@@ -14,7 +14,7 @@ class Collection(object):
 		self.objects = []
 
 		if raw is not None:
-			self.total = len(raw)
+			self.total = len(raw)		# set total to the number of rows of data
 
 	def __iter__(self):
 		return self

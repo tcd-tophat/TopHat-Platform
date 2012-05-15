@@ -3,6 +3,7 @@ import sys
 import gc
 
 class Database:
+	""" Class that handles the connection handler to the database """
 	con = None
 
 	def __init__(self, hostname, username, password, dbname):
@@ -14,7 +15,7 @@ class Database:
 		self.__connect()
 	
 	def __del__(self):
-		self.__close()	
+		self.__close()	 # on detruction of object close the connection to the DB
 
 	def __connect(self):
 		""" Makes a connection to the database"""
@@ -34,4 +35,5 @@ class Database:
 			self.con.close()
 
 	def getCursor(self):
+		""" Returns the cursor handler to the database with the setting of data being returned as an assoc array on """
 		return self.con.cursor(cursorclass=mdb.cursors.DictCursor)

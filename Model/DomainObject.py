@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from Mapper import objectwatcher
 
 class DomainObject(object):
+	""" Abstract base class for any object that is compatible with the Mapper for storage in the persistent storage """
 	__metaclass__ = ABCMeta
 
 	id = -1				# setup deafult id outside db storage range
@@ -11,11 +12,12 @@ class DomainObject(object):
 		if id is not None:
 			self.id = id
 		else:
-			self.__markNew()			# when the object is created without an id it is marked for insertion
+			self.__markNew()			# when the object is created without an id it is marked new / for insertion into persistent storage
 
 		self.__markClean()				# during setup we have updated some of the attributes, make sure we don't update DB without any changes
 
 	def __setattr__(self, attr, value):
+		""" Whenever an attribute of this object is changed the object is marked dirty and needs to be updated in persistent storage """
 		if attr in self.__dict__:					# check the attr exists
 			prevValue = self.__dict__[attr]			# if so set the prevValue to its value
 		else:
@@ -29,6 +31,7 @@ class DomainObject(object):
 	def __str__(self):
 		return str(self.__class__) + str(self.id)
 
+	# Object Watcher Functions #
 	def __markDirty(self):
 		ow = objectwatcher._Objectwatcher()
 		ow.addDirty(self)

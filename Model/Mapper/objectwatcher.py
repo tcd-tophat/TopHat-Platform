@@ -1,6 +1,7 @@
 import DomainObject
 
 class _Objectwatcher:
+	""" Singleton class that keeps track of every instance of a DomainObject in this system """
 
 	_instance = None
 
@@ -19,6 +20,7 @@ class _Objectwatcher:
 		return cls._instance
 
 	def add(self, obj):
+		""" Add an object to the watchers list """
 		if isinstance(obj, DomainObject.DomainObject):
 			key = self.getGlobalName(obj)
 			self.objects[key] = obj
@@ -27,6 +29,7 @@ class _Objectwatcher:
 			raise Exception("Only DomainObjects can be stored in the ObjectWatcher's list, not " + t)
 
 	def exists(self, classname, id):
+		""" Check if an object exists given its classname and id """
 		name = classname + "." + str(id)
 		if name in self.objects:
 			return self.objects[name]
@@ -67,7 +70,7 @@ class _Objectwatcher:
 
 		# insert new objects
 		for newObj in self.new:
-			M = newObj.mapperClass()
+			M = newObj.mapperClass()	# gets the specific mapper this object needs to be added to storage
 			if M is not None:
 				M.insert(newObj)
 			else:
@@ -75,7 +78,7 @@ class _Objectwatcher:
 
 		# update changed objects
 		for changedObj in self.dirty:
-			M = changedObj.mapperClass()
+			M = changedObj.mapperClass() # get specific mapper for this object
 			if M is not None:
 				M.update(changedObj)
 			else:
@@ -89,7 +92,7 @@ class _Objectwatcher:
 			else:
 				print "Unable to finder mapper for " + str(delObj) + ". Object not being deleted."
 
-		# reset all lists to empty
+		# reset all lists to empty - don't want to repeat all of these actions again
 		self.new = []
 		self.dirty = []
 		self.delete = []
