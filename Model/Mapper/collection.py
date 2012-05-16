@@ -15,9 +15,24 @@ class Collection(object):
 
 		if raw is not None:
 			self.total = len(raw)
+		else:
+			self.total = 0
 
 	def __iter__(self):
+		""" Makes the class iterable """
 		return self
+
+	def __getitem__(self, key):
+		""" Allows users to access collection items using indexs """
+		row = self.__getRow(key)
+
+		if row is not None:
+			return row
+		else:
+			raise IndexError
+
+	def __setitem__(self, key):
+		raise Exception("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
 
 	def add(self, obj):
 		""" Non-type safe method to add objects to this collection """
@@ -49,7 +64,7 @@ class Collection(object):
 			return None
 
 	def next(self):
-		""" Gets the next row """
+		""" Gets the next row - main part of what makes this class iterable """
 		row = self.__getRow(self.pointer) # gets the latest row
 
 		if row is None:					

@@ -7,9 +7,9 @@ class IdentityObject:
 	__and = None
 	__enforce = []
 
-	def __init__(self, field = None, enforce = None):
-		if enforce is not None:
-			self.__enforce = enforce
+	def __init__(self, field = None, obj = None):
+		if obj is not None:
+			self.__enforce = vars(obj).keys()		# list of the object properties
 
 		if field is not None:
 			self.field(field)
@@ -41,7 +41,7 @@ class IdentityObject:
 
 	def enforeField(self, name):
 		""" Checks if a given field name is on the enforce whitelist, if any such list exists """
-		if not self.fields:																				# check any such list exists
+		if self.__enforce:																				# check any such list not empty
 			if name not in self.__enforce:																# check if fieldname is on the 
 				enforceString = ', '.join(self.__enforce)												# implode the key names together
 				raise Exception("Field " + name + " is not a valid fieldname (" + enforceString + ")")

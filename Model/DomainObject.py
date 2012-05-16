@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from Mapper import objectwatcher
 
 class DomainObject(object):
+	""" Abstract base class for any object that wishes to implement the Mapper's ability to map objects to the database """
 	__metaclass__ = ABCMeta
 
 	id = -1				# setup deafult id outside db storage range
