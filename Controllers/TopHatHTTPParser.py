@@ -3,7 +3,7 @@ import re as Regex
 path.append('..')
 from Common.Miscellaneous import writeTopHatToInstance
 
-def HTTPParser(instance,data,client):
+def HTTPParser(instance, data, client):
 
 	data = data.lower()
 	if data.find('heya') is not -1 or data.find('hiya') is not -1:

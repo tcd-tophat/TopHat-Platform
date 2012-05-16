@@ -9,7 +9,7 @@ class LogFile:
 	
 
 
-	def write(self, messege):
+	def write(self, message):
 		if  path(self.filename).exists:
 
 			pass
@@ -31,15 +31,15 @@ class LogFile:
 						zipped.close()
 						break
 				outfile = open(self.filename, 'w')
-				outfile.write(messege)
+				outfile.write(message)
 				outfile.close()
 				return
 			else: 
 				outfile = open(self.filename, 'a')
-				outfile.write(messege)
+				outfile.write(message)
 				outfile.close()
 				return
 		else:
 			outfile = open(self.filename, 'a')
-			outfile.write(messege)
+			outfile.write(message)
 			outfile.close()

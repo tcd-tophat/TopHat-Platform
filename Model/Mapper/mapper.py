@@ -11,7 +11,7 @@ class Mapper:
 	db = None
 
 	def __init__(self):
-		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database access handler
+		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database class handler
 
 	def find(self, id):
 		""" Gets the object for that database id """
@@ -29,16 +29,17 @@ class Mapper:
 
 		cursor = self.db.getCursor()
 		rowsAffected = cursor.execute(query, parameters)	# bind the id to the query and run it
-		data = cursor.fetchone()
+		data = cursor.fetchone()							# fetch the one row from the DB
 		cursor.close()
 
-		if rowsAffected > 0:
+		if rowsAffected > 0:								# if a row was returned then build and object from it
 			return self.createObject(data)
 		else:
 			return None
 
 	def createObject(self, data):
 		""" Turns results from the database into objects that the rest of the program understands """
+		# Check if we have made this object before - no need to make it twice
 		old = self.getFromWatcher(data["id"])
 		if old is not None:
 			return old
@@ -130,7 +131,20 @@ class Mapper:
 
 		# =======================================
 		# build the query from the identityObject's data
+<<<<<<< HEAD
 		query = "SELECT * FROM " + self.tableName() + " WHERE "
+=======
+		query = "SELECT "
+
+		# build the fields section
+		if not allFields:
+			", ".join(identityObject.fields)
+		else:
+			query += "*"
+
+		# sets what table we are selecting from
+		query += " FROM " + self.tableName() + " WHERE "
+>>>>>>> 424b48a5b97611c4e982e25ef3beb470bd024647
 
 		params = []															# create a list to store all the parameters in
 
