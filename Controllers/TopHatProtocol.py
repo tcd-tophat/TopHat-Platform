@@ -5,15 +5,18 @@ from dns.resolver import NXDOMAIN, NoAnswer, Resolver, query, Timeout
 from dns import reversename
 from Model.TopHatClient import TophatClient
 from Common.Log import LogFile
+import getrequest, postrequest, putrequest, deleterequest
 
 class TopHat(Protocol):
+	
 	def __init__(self, factory):
 		self.factory = factory()
-		client =None
+		client = None
+	
 	def connectionMade(self):
 		self.client = TophatClient(transport=self.transport)
-		q=Resolver()
-		q.lifetime=2.0
+		q = Resolver()
+		q.lifetime = 2.0
 		
 		addr = reversename.from_address(self.transport.getPeer().host)
 		
@@ -39,16 +42,21 @@ class TopHat(Protocol):
 		
 		# not implemented
 		if (self.client == 'get'):
-			getrequest(self, data, client)
+			getRequest(self, data, client)
 		elif (self.client == 'put'):
-			putrequest(self, data, client)
+			putPequest(self, data, client)
 		elif (self.client == 'post'):
-			postrequest(self, data, client)
+			postRequest(self, data, client)
 		elif (self.client == 'delete'):
-			deleterequest(self, data, client)
+			deleteRequest(self, data, client)
 		else:
-			# HTTP error!! TODO
+			self.respondToClient("HTTP/1.1 400 Bad Request")
 			return
+
+	def respondToClient (self, message):
+		self.factory.log.write(message + "\n")
+		self.transport.write (message + "\n")
+		return
 
 
 
