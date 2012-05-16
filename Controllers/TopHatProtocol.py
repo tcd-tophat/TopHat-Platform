@@ -5,6 +5,7 @@ from dns.resolver import NXDOMAIN, NoAnswer, Resolver, query, Timeout
 from dns import reversename
 from Model.TopHatClient import TophatClient
 from Common.Log import LogFile
+
 class TopHat(Protocol):
 	def __init__(self, factory):
 		self.factory = factory()
@@ -29,10 +30,27 @@ class TopHat(Protocol):
 	
 	
 	def dataReceived(self, data):
+		# Basically the main controller for everything to do with data/requests.
+
 		diagMessage =  "["+ check_output(['date', '+%T:%D']).rstrip() + ']' + ': received ' + data.rstrip()
 		self.factory.log.write(diagMessage+'\n')
 		print diagMessage
 		HTTPParser(self, data, self.client)
+		
+		# not implemented
+		if (self.client == 'get'):
+			getrequest(self, data, client)
+		elif (self.client == 'put'):
+			putrequest(self, data, client)
+		elif (self.client == 'post'):
+			postrequest(self, data, client)
+		elif (self.client == 'delete'):
+			deleterequest(self, data, client)
+		else:
+			# HTTP error!! TODO
+			return
+
+
 
 	def connectionLost(self, reason):
 		address= self.transport.getPeer().host
@@ -53,6 +71,7 @@ class TopHatFactory(Factory):
 	log = LogFile('/var/log/tophat/tophat.log')
 	protocal = TopHat
 	clients = list()
+	
 	def popClient(self, client):
 		self.clients.remove(client)
 	def appendClient(self, client):

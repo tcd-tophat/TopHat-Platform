@@ -1,7 +1,7 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
 
-# Simple Counter Main method to get us started with programming.
-class Deleterequest(resource.Resource):
-    def __init__(resource):
-    	return
+def deleteRequest (instance, data, client):
+
+	data.split('\n', 1)
+	request_path[0].split()
