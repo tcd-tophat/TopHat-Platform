@@ -11,10 +11,7 @@ class JsonParser(resource.Resource):
     def __init__(self):
     	self.log = LogFile()
 
-
-
-    # Get JSON as object, if not StringType, returns None.
-    # Causes a ValueError to rise if invalid JSON is supplied
+    # Get JSON as object, if fails, returns None.
     def getObject(self, data):
 
     	mapped = None
@@ -23,8 +20,8 @@ class JsonParser(resource.Resource):
     		assert type(data) is StringType
 
     		toParse = StringIO(data)
-    		mapped = json.load(toParse)
 
+    		mapped = json.load(toParse)
     	except AssertionError:
     		self.log.write("Invalid type into the JSON Parser. Expecting StringType")
 
