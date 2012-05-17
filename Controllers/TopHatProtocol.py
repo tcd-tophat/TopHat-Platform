@@ -63,7 +63,7 @@ class TopHat(Protocol):
 
 	def respondToClient (self, message):
 
-		print '['+ check_output(['date', '+%T:%D']).rstrip() + ']:' + message + '\n\r'
+		print '['+ check_output(['date', '+%T:%D']).rstrip() + ']: ' + message + '\n\r'
 		self.factory.log.write('['+ check_output(['date', '+%T:%D']).rstrip() + ']:' + message + '\n\r')
 		self.transport.write (message + '\n\r')
 		return
