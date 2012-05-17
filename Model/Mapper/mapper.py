@@ -131,20 +131,7 @@ class Mapper:
 
 		# =======================================
 		# build the query from the identityObject's data
-<<<<<<< HEAD
 		query = "SELECT * FROM " + self.tableName() + " WHERE "
-=======
-		query = "SELECT "
-
-		# build the fields section
-		if not allFields:
-			", ".join(identityObject.fields)
-		else:
-			query += "*"
-
-		# sets what table we are selecting from
-		query += " FROM " + self.tableName() + " WHERE "
->>>>>>> 424b48a5b97611c4e982e25ef3beb470bd024647
 
 		params = []															# create a list to store all the parameters in
 
