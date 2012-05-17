@@ -4,7 +4,7 @@ import mappererror as MapperError
 import objectwatcher as OW
 import DomainObject
 import collection
-import identityObject
+import identityobject
 
 class Mapper:
 	__metaclass__ = abc.ABCMeta
@@ -119,7 +119,7 @@ class Mapper:
 		""" Builds a dynamic query using the identityObject to collect the parameters """
 
 		# check we get an instance of identityObject
-		if not isinstance(identityObj, identityObject.identityObject):
+		if not isinstance(identityObj, identityobject.IdentityObject):
 			raise MapperError.MapperError("Must pass in an identityObject")
 
 		# Check the range parameters are valid
@@ -129,11 +129,14 @@ class Mapper:
 		if limitDistance > 50:
 			raise MapperError.MapperError("You cannot select more than 50 rows at one time")
 
+		if limitDistance < 1:
+			raise MapperError.MapperError("You must select at least one row")
+
 		# =======================================
 		# build the query from the identityObject's data
 		query = "SELECT * FROM " + self.tableName() + " WHERE "
 
-		params = []															# create a list to store all the parameters in
+		params = []													# create a list to store all the parameters in
 
 		# build the WHERE clause of the query
 		for field in identityObj.fields:
@@ -141,14 +144,13 @@ class Mapper:
 			for comp in identityObj.fields[field].comps:
 				if not first:
 					query += " OR "											# join clauses for the same column using OR operator
-				query += comp['name'] + " " + comp['operator'] + " %s"		# add placeholder for the value
+				query += comp['name'] + " " + comp['operator'] + " %s"		# add placeholder for the column name and value
 				params.append(comp['value'])								# add the value to a list of params
 				first = False
-			
-			if first is False:
-				query += " AND "											# join clauses for different columns using AND operator
 
-		query = query[:-5]			# remove the final AND from the query
+			query += " AND "									# join clauses for different columns using AND operator
+
+		query = query[:-5]											# remove the final AND from the query
 
 		query += " LIMIT %s, %s"
 
@@ -157,8 +159,7 @@ class Mapper:
 		# finish preparing all the params
 		params.append(limitStart)							# add the two limit params to the list
 		params.append(limitStart + limitDistance)
-		paramsTuple = tuple(params)							# convert the list of params into a tuple for the query exectuion
-
+		paramsTuple = tuple(params)								# convert the list of params into a tuple for the query exectuion
 
 		#========================================
 		# run the query and pull the results into a collection object
