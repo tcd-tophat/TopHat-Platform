@@ -6,12 +6,11 @@ from dns import reversename
 from Model.TopHatClient import TophatClient
 from Common.Log import LogFile
 import getrequest, postrequest, putrequest, deleterequest
-
+config=None
 class TopHat(Protocol):
 	
 	def __init__(self, factory):
-		
-		self.factory = factory()
+		self.factory = factory(config)
 		client = None
 	
 	def connectionMade(self):
@@ -73,9 +72,9 @@ class TopHat(Protocol):
 	def connectionLost(self, reason):
 		
 		address = self.transport.getPeer().host
-        q = Resolver()
-        q.lifetime = 2.0
-        addr = reversename.from_address(address)
+		q = Resolver()
+		q.lifetime = 2.0
+		addr = reversename.from_address(address)
 		host = str(q.query(addr, 'PTR')[0])
 		
 		if host is not None:
@@ -84,18 +83,19 @@ class TopHat(Protocol):
 			print diagMessage
 		
 		else:
-            diagMessage = '[' + check_output(['date', '+%T:%D']).rstrip() + ']' + ': connection lost from ' + address + ': ' + str(reason.getErrorMessage())
-            self.factory.log.write(diagMessage + '\n')
-            print diagMessage
+				diagMessage = '[' + check_output(['date', '+%T:%D']).rstrip() + ']' + ': connection lost from ' + address + ': ' + str(reason.getErrorMessage())
+				self.factory.log.write(diagMessage + '\n')
+				print diagMessage
 
 class TopHatFactory(Factory):
 	
-	def __init__(self, LogFilePath):
-		
-		self.LogFilePath = LogFilePath
+	def __init__(self, ConfigObject):
+		global config
+		config=ConfigObject
+		self.LogFilePath = ConfigObject.LogFile
 		self.protocal = TopHat
 		self.clients = list()
-		self.log = LogFile(LogFilePath)
+		self.log = LogFile(self.LogFilePath)
 	
 	def popClient(self, client):
 		
