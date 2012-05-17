@@ -8,7 +8,7 @@ def HTTPParser(instance, data, client):
 	data = data.lower()
 	data = data.split('\n', 1)
 	
-	if data[0].find('heya') is not -1 or data.find('hiya') is not -1:
+	if data[0].find('heya') is not -1 or data[0].find('hiya') is not -1:
 	
 		writeTopHatToInstance(instance)
 	
