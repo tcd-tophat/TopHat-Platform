@@ -64,3 +64,5 @@ def loadConfig(path):
 		if not hasattr(conf, 'LogFile'):
 				raise Exception('Please specify where TopHat will log to:\nLogFile = \'/path/to/logfile\'')
 				exit(1)
+		
+		return conf

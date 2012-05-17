@@ -76,10 +76,11 @@ class TopHat(Protocol):
                         print diagMessage
 
 class TopHatFactory(Factory):
-	log = LogFile('/var/log/tophat/tophat.log')
-	protocal = TopHat
-	clients = list()
-	
+	def __init__(self,LogFilePath):
+			self.LogFilePath = LogFilePath
+			self.protocal = TopHat
+			self.clients = list()
+			self.log = LogFile(LogFilePath)
 	def popClient(self, client):
 		self.clients.remove(client)
 	def appendClient(self, client):
