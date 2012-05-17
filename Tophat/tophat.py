@@ -24,8 +24,8 @@ def TophatMain(config_path):
 	factory = TopHatFactory(config.LogFile) 
 	try:
 		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
-	except CannotListenError:
-		print "The port %s is already bound, please kill the process using that before launching the Tophat-Service." % config.Port
+	except CannotListenError as test:
+		print "Cannot listen on port %s:\n%s" % (config.Port,test)
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
 
@@ -53,7 +53,7 @@ def TophatMain(config_path):
 		print "Attempting to drop to group 'daemon'"
 		try:
 			gidNumber= getgrnam('daemon')[2]
-			j
+			
 			print "Dropped privileges to group 'daemon'. It seems we're in the clear, for now."
 		except:
 			print "No group 'nobody' on this system, I'm not going to let you run me as root. Sorry."

@@ -6,8 +6,10 @@ if __name__ == '__main__':
 		
 		parser = OptionParser()
 		parser.add_option("-c", "--config",help="Specify the location of the TopHat config file", dest='config')
+		parser.add_option("-d", "--dry-run",help="Test config and quit")
 		(opts, args) = parser.parse_args()
 		if opts.config is None:
+				print args
 				print parser.print_help()
 				print 'ERROR: No config file specified.'
 				exit(1)
