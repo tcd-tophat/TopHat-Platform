@@ -6,14 +6,14 @@ from pwd import getpwnam
 from grp import getgrnam
 from sys import exit,path
 from twisted.internet.error import CannotListenError
-from Controllers.TopHatProtocol import *
-from Common.Miscellaneous import printTopHat
-from Common.Config import loadConfig
+from Controllers.tophatprotocol import *
+from Common.miscellaneous import printTopHat
+from Common.config import loadConfig
 
-
+config=None
 
 def TophatMain(config_path):
-	
+	global config
 	config=loadConfig(config_path)
 	printTopHat()
 	if getuid() is not 0:
@@ -21,7 +21,7 @@ def TophatMain(config_path):
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
 	
-	factory = TopHatFactory(config.LogFile) 
+	factory = TopHatFactory(config) 
 	try:
 		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
 	except CannotListenError as test:

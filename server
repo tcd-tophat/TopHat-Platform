@@ -2,8 +2,9 @@
 from Tophat.tophat import TophatMain
 from optparse import OptionParser
 from sys import exit
+
 if __name__ == '__main__':
-		
+		global config
 		parser = OptionParser()
 		parser.add_option("-c", "--config",help="Specify the location of the TopHat config file", dest='config')
 		parser.add_option("-d", "--dry-run",help="Test config and quit")

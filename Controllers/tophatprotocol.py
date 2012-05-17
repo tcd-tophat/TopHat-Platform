@@ -1,10 +1,10 @@
 from twisted.internet.protocol import Protocol, Factory
-from TopHatHTTPParser import HTTPParser
+from tophathttpparser import HTTPParser
 from subprocess import check_output
 from dns.resolver import NXDOMAIN, NoAnswer, Resolver, query, Timeout
 from dns import reversename
-from Model.TopHatClient import TophatClient
-from Common.Log import LogFile
+from Model.tophatclient import TophatClient
+from Common.log import LogFile
 import getrequest, postrequest, putrequest, deleterequest
 config=None
 class TopHat(Protocol):

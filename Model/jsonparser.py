@@ -1,7 +1,7 @@
 from types import StringType
 from twisted.web import server, resource
 from twisted.internet import reactor
-from Common.Log import LogFile
+from Common.log import LogFile
 from StringIO import StringIO
 import json
 
