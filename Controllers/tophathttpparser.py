@@ -1,6 +1,4 @@
-from sys import path
 import re as Regex
-path.append('..')
 from Common.miscellaneous import writeTopHatToInstance
 
 def HTTPParser(instance, data, client):
