@@ -1,6 +1,6 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
-from Common.Log import LogFile
+from Common.log import LogFile
 import json
 
 # This class takes in Objects and encoes them
