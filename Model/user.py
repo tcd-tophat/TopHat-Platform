@@ -7,8 +7,8 @@ class User(domainobject.DomainObject):
 	__photo = None
 	__email = None
 	
-	def __init__(self, id=None):
-		super(User, self).__init__(id)
+	def __init__(self, ids=None):
+		super(User, self).__init__(ids)
 
 	def __str__(self):
 		return str(self.getId()) + " " + self.__name + " " + self.__email + " " + self.__photo

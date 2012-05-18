@@ -9,8 +9,8 @@ class Kill(domainobject.DomainObject):
 	__verified = False
 	__time = 0
 
-	def __init__(self, id=None):
-		super(Kill, self).__init__(id)
+	def __init__(self, id_=None):
+		super(Kill, self).__init__(id_)
 
 	def __str__(self):
 		string = self.__killer.__name + " killed " + self.__victim.__name + " the kill is "
@@ -44,7 +44,7 @@ class Kill(domainobject.DomainObject):
 	def setTime(self, time):
 		try:
 			time = int(time)
-		except NameError:
+		except ValueError:
 			raise domainexception.DomainException("Time must be UTC in seconds from 1972")
 
 		self.__time = time

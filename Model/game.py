@@ -4,13 +4,13 @@ import domainexception
 
 class Game(domainobject.DomainObject):
 
-	__name = None				# public name of the game     (255 characters)
+	__name = ""				# public name of the game     (255 characters)
 	__creator = None 			# user who created the game   (User Object)
 	__gameTypeId = None			# type of game by id  		  (smallint(5) unsigned)
-	__sgameTypeName = None		# public name of game type    (50 chars)
+	__sgameTypeName = ""		# public name of game type    (50 chars)
 
-	def __init__(self, id=None):
-		super(Game, self).__init__(id)
+	def __init__(self, id_=None):
+		super(Game, self).__init__(id_)
 
 	def __str__(self):
 		return str(self.__id) + " " + self.__gameTypeName + ": " + self.__name + "  created by " + self.__creator.__name + " (" + self.__creator.__id + ")"
@@ -37,11 +37,11 @@ class Game(domainobject.DomainObject):
 		if is not isinstance(creator, user.User):
 			raise domainexception.DomainException("Creator must be an instance of the User object")
 
-	def setGameTypeId(self, id):
-		if id > 99999 or id < 0:
+	def setGameTypeId(self, id_):
+		if id_ > 99999 or id_ < 0:
 			raise domainexception.DomainException("Game Type id must be a positive int less than 99999")
 
-		self.__gameTypeId = id
+		self.__gameTypeId = id_
 
 	def setGameTypeName(self, name):
 		if len(name) > 50:

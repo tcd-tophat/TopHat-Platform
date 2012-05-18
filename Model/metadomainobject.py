@@ -5,10 +5,10 @@ import domainexception
 class MetaDomainObject(domainobject.DomainObject):
 	__metaclass__ = ABCMeta
 
-	__data[]					# dictionary of meta data objects
+	__data = {}					# dictionary of meta data objects
 
-	def __init__(self, id=None):
-		super(MetaDomainObject, self).__init__(id)
+	def __init__(self, id_=None):
+		super(MetaDomainObject, self).__init__(id_)
 
 	def __getattr__(self, attr):
 		""" Searches through the object dictionary and the data dictionary to find the variable """

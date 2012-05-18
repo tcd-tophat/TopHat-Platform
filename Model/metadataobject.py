@@ -6,11 +6,11 @@ class MetaDataObject(domainobject.DomainObject):
 	""" Abstract container that extends DomainObject for meta data records for Domain Model objects. Objects are used instead of straight variables so that it intergrates with Mapper better """"
 	__metaclass__ = ABCMeta
 
-	__key = None				# 30 char
-	__value = None			# text
+	__key = ""				# 30 char
+	__value = ""			# text
 
-	def _init__(self, id=None, key=None, value=None):
-		super(MetaDataObject, self)._init(id)
+	def _init__(self, id_=None, key=None, value=None):
+		super(MetaDataObject, self)._init(id_)
 
 	def setKey(self, value):
 		# Check length

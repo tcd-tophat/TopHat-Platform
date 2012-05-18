@@ -6,11 +6,11 @@ class UserMetaData(metadatobject.MetaDataObject):
 
 	__user = None # reference to the User object to which this object is attached
 
-	def __init__(self, id=None, user=None):
+	def __init__(self, id_=None, user=None):
 		if type(user) is not user.User:
 			self.__user = user
 
-		super(UserMetaData, self).__init__(id)
+		super(UserMetaData, self).__init__(id_)
 
 	def setUser(self, user):
 		if is not isinstance(user, user.User):

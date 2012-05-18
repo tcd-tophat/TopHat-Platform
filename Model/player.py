@@ -14,8 +14,8 @@ class Player(domainobject.DomainObject):
 	__score = 0			
 	__time = 0 		
 
-	def __init__(self, id=None):
-		super(Player, self).__init__(id)
+	def __init__(self, id_=None):
+		super(Player, self).__init__(id_)
 
 	def __str__(self):
 		return self.__name + " in game " + self.__game.__name + " is user " self.__user.__name + " has a score of " + self.__time
@@ -54,7 +54,7 @@ class Player(domainobject.DomainObject):
 	def setScore(self, score):
 		try:
 			score = int(score)
-		except TypeError:
+		except ValueError:
 			raise domainexception.DomainException("Score must be an integer")
 
 		if score > 99999 or score < -99999:
@@ -65,7 +65,7 @@ class Player(domainobject.DomainObject):
 	def setTime(self, time):
 		try:
 			time = int(time)
-		except TypeError:
+		except ValueError:
 			raise domainexception.DomainExceptionm("Time must be an int - of seconds since Jan 1st 1972 UTC")
 
 	# Getters #

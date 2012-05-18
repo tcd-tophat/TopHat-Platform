@@ -8,10 +8,10 @@ class DomainObject(object):
 
 	__id = -1				# setup deafult id outside db storage range
 
-	def __init__(self, id=None):
+	def __init__(self, ids=None):
 		# check valid id value (pos int)
-		if id is not None:
-			self.__id = id
+		if ids is not None:
+			self.__id = ids
 		else:
 			self.__markNew()			# when the object is created without an id it is marked new / for insertion into persistent storage
 
@@ -39,13 +39,13 @@ class DomainObject(object):
 	def setId(self, value):
 		try:
 			value = int(value)
-		except TypeError:
+		except ValueError:
 			raise domainexception.DomainException("The id must be an integer")
 
 		if value < 0:
 			raise domainexception.DomainException("The id must be greater than one")
 
-		self.__id = id
+		self.__id = value
 
 	# Object Watcher Functions #
 	def __markDirty(self):
