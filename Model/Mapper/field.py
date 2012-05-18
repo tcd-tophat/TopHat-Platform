@@ -9,9 +9,11 @@ class Field(object):
 		self.name = name
 
 	def addTest(self, operator, value):
-		self.comps.append( {'name':self.name, 'operator':operator, 'value':value} )
+		"""Adds a comparison test using the given operator and value against this instance of the filed object"""
+		self.comps.append({'name':self.name, 'operator':operator, 'value':value})
 
 	def isIncomplete(self):
+		"""Test that some components to the test exist"""
 		if not self.comps:
 			return True
 		else:

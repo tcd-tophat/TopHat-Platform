@@ -2,13 +2,22 @@
 from Tophat.tophat import TophatMain
 from optparse import OptionParser
 from sys import exit
+
 if __name__ == '__main__':
-		
+		global config
 		parser = OptionParser()
 		parser.add_option("-c", "--config",help="Specify the location of the TopHat config file", dest='config')
+		parser.add_option("-d", "--dry-run",help="Test config and quit", dest='d', default=False,action='store_true')
 		(opts, args) = parser.parse_args()
 		if opts.config is None:
+				print args
 				print parser.print_help()
 				print 'ERROR: No config file specified.'
 				exit(1)
-		TophatMain(opts.config)
+		elif opts.d:
+				from Common.config import loadConfig
+				loadConfig(opts.config)
+				print "No syntax errors found in %s." % opts.config
+				exit()
+		else:
+				TophatMain(opts.config)

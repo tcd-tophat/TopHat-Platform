@@ -1,6 +1,6 @@
 import collection
 
-class DeferredCollection(Collection):
+class DeferredCollection(collection.Collection):
 
 	run = False
 	query = ""
@@ -14,11 +14,11 @@ class DeferredCollection(Collection):
 
 	def _notifyAccess(self):
 		# check if the query has been run before
-		if self.run == False:
+		if not self.run:
 			# run the query and build results in a collection
 			cursor = self.mapper.db.getCursor()				# get the database handler
-			self.total = cursor.execute(query, params)		# run the query
+			self.total = cursor.execute(query, params)
 			self.raw = cursor.fetchall()					# fetch all the data from the database
-			cursor.close()									# close out that cursor
+			cursor.close()
 
-		self.run = True										# make sure we don't run the query again
+		self.run = True										# ensure we don't run the query again

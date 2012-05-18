@@ -15,13 +15,14 @@ class IdentityObject:
 			self.field(field)
 
 	def isVoid(self):
-		""" Checks that this does have some fields set already """
+		"""Checks that this does have some fields set already"""
 		if not self.fields:
 			return True
 		else:
 			return False
 
 	def field(self, name):
+		"""Changes the current field to the given parameter field"""
 		# check field is not incomplete
 		if not self.isVoid() and self.currentField.isIncomplete():
 			raise Exception("Incomplete field")
@@ -40,7 +41,7 @@ class IdentityObject:
 		return self
 
 	def enforeField(self, name):
-		""" Checks if a given field name is on the enforce whitelist, if any such list exists """
+		"""Checks if a given field name is on the enforce whitelist, if any such list exists"""
 		if self.__enforce:																				# check any such list not empty
 			if name not in self.__enforce:																# check if fieldname is on the 
 				enforceString = ', '.join(self.__enforce)												# implode the key names together
@@ -55,17 +56,17 @@ class IdentityObject:
 		return self
 
 	def eq(self, value):
-		""" Equals """
+		"""Equals operator"""
 		return self.__operator("=", value)
 
 	def lt(self, value):
-		""" Less Than """
+		"""Less than operator"""
 		return self.__operator("<", value)
 
 	def gt(self, value):
-		""" Greater Than """
+		"""Greater than operator"""
 		return self.__operator(">", value)
 
 	def like(self, value):
-		""" Uses MySQL LIKE operator """
+		"""Uses MySQL LIKE operator"""
 		return self.__operator("LIKE", value)

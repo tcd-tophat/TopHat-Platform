@@ -4,8 +4,14 @@ from Model.jsonparser import *
 
 def putRequest(instance, client, data):
 
-	data.split('\n', 1) # separate header and JSON
-	data_object = JsonParser.getObject(data[1]) 
+	data = data.rstrip()
+	data = data.split('\n', 1) # separate header and JSON
+
+	try:
+		data_object = JsonParser.getObject(data[1]) 
+	except ValueError:
+		return -1 
+
 	header_http = ( data[0].split('\n') )[0]
 	data_path = ( header_http.split() )[1]
 	# TODO: auth

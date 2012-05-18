@@ -1,10 +1,10 @@
 import abc
 import database
-import mappererror as MapperError
+import mappererror
 import objectwatcher as OW
-import DomainObject
+import domainobject
 import collection
-import identityObject
+import identityobject
 
 class Mapper:
 	__metaclass__ = abc.ABCMeta
@@ -14,7 +14,7 @@ class Mapper:
 		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database class handler
 
 	def find(self, id):
-		""" Gets the object for that database id """
+		"""Gets the object for that database id"""
 
 		# check not already in watcher's list if so return that instance - no need to query the DB then
 		old = self.getFromWatcher(id)
@@ -38,7 +38,7 @@ class Mapper:
 			return None
 
 	def createObject(self, data):
-		""" Turns results from the database into objects that the rest of the program understands """
+		"""Turns results from the database into objects that the rest of the program understands"""
 		# Check if we have made this object before - no need to make it twice
 		old = self.getFromWatcher(data["id"])
 		if old is not None:
@@ -56,7 +56,7 @@ class Mapper:
 		return obj
 
 	def findAll(self, start = 0, number = 50):
-		""" Finds all the objects in such a table from start to (start + number) """
+		"""Finds all the objects in such a table from start to (start + number)"""
 		# check that the limit params are not off the wall
 		if start < 0:
 			print "The start point must be a positive int"
@@ -68,7 +68,7 @@ class Mapper:
 
 		# build the query
 		query = self._selectAllStmt()
-		params = (start, start+number)
+		params = (start, start + number)
 
 		# run the qurery
 		cursor = self.db.getCursor()
@@ -77,36 +77,36 @@ class Mapper:
 		cursor.close()
 
 		if rowsAffected > 0:								# check if there are results to be returned
-			return collection.Collection(data,  self) 		# create a collection object for the results
+			return collection.Collection(data, self) 		# create a collection object for the results
 		else:
 			return None
 
 	def delete(self, obj):
-		""" Deletes a given object from the database """
-		if not isinstance(obj, DomainObject.DomainObject):
-			raise MapperError.MapperError("This function expects a DomainObject object as the input parameter")
+		"""Deletes a given object from the database"""
+		if not isinstance(obj, domainobject.DomainObject):
+			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
-		if obj.id is -1:
-			raise MapperError.MapperError("You cannot delete an object that was never in the database. It has no id")
+		if obj.getid() is -1:
+			raise mappererror.MapperError("You cannot delete an object that was never in the database. It has no id")
 
 		return self._doDelete(obj)				
 
 
 	def update(self, obj):
-		""" Updates a given object's records in the database """
-		if not isinstance(obj, DomainObject.DomainObject) :
-			raise MapperError.MapperError("This function expects a DomainObject object as the input parameter")
+		"""Updates a given object's records in the database"""
+		if not isinstance(obj, domainobject.DomainObject) :
+			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
-		if obj.id is -1:		# can't update an object that has not been inserted
-			raise MapperError.MapperError("You can only update objects that are in the database, please insert this object first")
+		if obj.getId() is -1:		# can't update an object that has not been inserted
+			raise mappererror.MapperError("You can only update objects that are in the database, please insert this object first")
 
 		return self._doUpdate(obj)
 
 
 	def insert(self, obj):
-		""" Inserts this object into the database as its records """
-		if not isinstance(obj, DomainObject.DomainObject):
-			raise MapperError.MapperError("This function expects a DomainObject object as the input parameter")
+		"""Inserts this object into the database as its records"""
+		if not isinstance(obj, domainobject.DomainObject):
+			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		result = self._doInsert(obj)					# do the insertion specifics
 
@@ -116,24 +116,27 @@ class Mapper:
 		return result
 
 	def selectIdentity(self, identityObj, limitStart = 0, limitDistance = 50):
-		""" Builds a dynamic query using the identityObject to collect the parameters """
+		"""Builds a dynamic query using the identityObject to collect the parameters"""
 
 		# check we get an instance of identityObject
-		if not isinstance(identityObj, identityObject.identityObject):
-			raise MapperError.MapperError("Must pass in an identityObject")
+		if not isinstance(identityObj, identityobject.IdentityObject):
+			raise mappererror.MapperError("Must pass in an identityObject")
 
 		# Check the range parameters are valid
 		if limitStart < 0:
-			raise MapperError.MapperError("The start point must be a positive int")
+			raise mappererror.MapperError("The start point must be a positive int")
 
 		if limitDistance > 50:
-			raise MapperError.MapperError("You cannot select more than 50 rows at one time")
+			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+
+		if limitDistance < 1:
+			raise mappererror.MapperError("You must select at least one row")
 
 		# =======================================
 		# build the query from the identityObject's data
 		query = "SELECT * FROM " + self.tableName() + " WHERE "
 
-		params = []															# create a list to store all the parameters in
+		params = []													# create a list to store all the parameters in
 
 		# build the WHERE clause of the query
 		for field in identityObj.fields:
@@ -141,14 +144,13 @@ class Mapper:
 			for comp in identityObj.fields[field].comps:
 				if not first:
 					query += " OR "											# join clauses for the same column using OR operator
-				query += comp['name'] + " " + comp['operator'] + " %s"		# add placeholder for the value
+				query += comp['name'] + " " + comp['operator'] + " %s"		# add placeholder for the column name and value
 				params.append(comp['value'])								# add the value to a list of params
 				first = False
-			
-			if first is False:
-				query += " AND "											# join clauses for different columns using AND operator
 
-		query = query[:-5]			# remove the final AND from the query
+			query += " AND "									# join clauses for different columns using AND operator
+
+		query = query[:-5]											# remove the final AND from the query
 
 		query += " LIMIT %s, %s"
 
@@ -157,8 +159,7 @@ class Mapper:
 		# finish preparing all the params
 		params.append(limitStart)							# add the two limit params to the list
 		params.append(limitStart + limitDistance)
-		paramsTuple = tuple(params)							# convert the list of params into a tuple for the query exectuion
-
+		paramsTuple = tuple(params)								# convert the list of params into a tuple for the query exectuion
 
 		#========================================
 		# run the query and pull the results into a collection object
@@ -174,12 +175,12 @@ class Mapper:
 
 
 	def getFromWatcher(self, id):
-		""" Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does """
+		"""Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does"""
 		watcher = OW._Objectwatcher()
 		return watcher.exists(self.targetClass(), id)
 
 	def addToWatcher(self, obj):
-		""" Adds the given instance of an object to the ObjectWatcher's list of objects """
+		"""Adds the given instance of an object to the ObjectWatcher's list of objects"""
 		watcher = OW._Objectwatcher()
 		watcher.add(obj)
 

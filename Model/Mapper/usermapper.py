@@ -1,6 +1,6 @@
 import mapper
 import sys
-import User
+import user
 
 class UserMapper(mapper.Mapper):
 
@@ -20,21 +20,21 @@ class UserMapper(mapper.Mapper):
 		return "SELECT * FROM users LIMIT %s, %s"	
 
 	def _doCreateObject(self, data):
-		""" Specifics required to build a User object given persistent storage data """
-		user = User.User(data["id"])
+		"""Specifics required to build a User object given persistent storage data"""
+		usr = user.User(data["id"])
 
-		user.name = data["name"]
-		user.photo = data["photo"]
-		user.email = data["email"]
+		usr.setName(data["name"])
+		usr.setPhoto(data["photo"])
+		usr.setEmail(data["email"])
 
-		return user
+		return usr
 
 	def _doInsert(self, obj):
-		print "Inserting new User object " + str(obj.id)
+		print "Inserting new User object " + str(obj.getId())
 
 		# build query
 		query = "INSERT INTO users VALUES(NULL, %s, %s, %s)"
-		params = (obj.name, obj.photo, obj.email)
+		params = (obj.getName(), obj.getPhoto(), obj.getEmail())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -42,7 +42,7 @@ class UserMapper(mapper.Mapper):
 
 		# get insert id
 		id = cursor.lastrowid
-		obj.id = id
+		obj.setId(id)
 
 		cursor.close()
 
@@ -52,14 +52,14 @@ class UserMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting User " + str(obj.id)
+		print "Deleting User " + str(obj.getId())
 
 	def _doUpdate(self, obj):
-		print "Updating User " + str(obj.id)
+		print "Updating User " + str(obj.getId())
 
 		# build the query
-		query = "UPDATE users SET id = %s, name = %s, email = %s, photo = %s WHERE id = %s"
-		params = (obj.id, obj.name, obj.email, obj.photo, obj.id)
+		query = "UPDATE users SET name = %s, email = %s, photo = %s WHERE id = %s"
+		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()

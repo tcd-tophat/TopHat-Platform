@@ -61,6 +61,11 @@ def loadConfig(path):
 		if not hasattr(conf, 'Group'):
 				raise Exception('Please specify what group TopHat drops privileges to:\nGroup = \'groupname\'')
 				exit(1)
+
 		if not hasattr(conf, 'LogFile'):
 				raise Exception('Please specify where TopHat will log to:\nLogFile = \'/path/to/logfile\'')
 				exit(1)
+
+		if not hasattr(conf, 'DBDriver'):
+				raise Exception('Please specify what database driver you want to use with TopHat. More information available at http://wiki.tophat.ie.\nDBDriver = \'MySQL\'')
+		return conf
