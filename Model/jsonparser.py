@@ -1,12 +1,9 @@
-from types import StringType
-from twisted.web import server, resource
-from twisted.internet import reactor
 from Common.log import LogFile
 from StringIO import StringIO
 import json
 
 # This class takes in JSON encoded Strings and returns them as objects
-class JsonParser(resource.Resource):
+class JSONParser():
 
     def __init__(self):
     	self.log = LogFile()
@@ -20,7 +17,7 @@ class JsonParser(resource.Resource):
     	mapped = None
 
     	try:
-    		assert type(data) is StringType
+    		assert type(data) is str
 
     		toParse = StringIO(data)
     		mapped = json.load(toParse)

@@ -19,7 +19,10 @@ class TopHat(Protocol):
 		q = Resolver()
 		q.lifetime = 2.0
 		addr = reversename.from_address(self.transport.getPeer().host)
-		host = str(q.query(addr, 'PTR')[0])
+		try:
+				host = str(q.query(addr, 'PTR')[0])
+		except NXDOMAIN:
+				host = None
 		
 		if host is not None:
 			
@@ -39,26 +42,34 @@ class TopHat(Protocol):
 
 		diagMessage =  '[' + check_output(['date', '+%T:%D']).rstrip() + ']' + ': received ' + data.rstrip()
 		self.factory.log.write(diagMessage + '\n')
-		print diagMessage
+		#print diagMessage
 		
 		HTTPParser(self, data, self.client)
 		
 		# not implemented
+
+		if str(self.client.state) == 'get':
+			from getrequest import getRequest
+			request_value = getRequest(self.client,data)
 		
-		if (self.client == 'get'):
-			return_value = getRequest(self, data, client)
-		elif (self.client == 'put'):
-			return_value = putPequest(self, data, client)
-		elif (self.client == 'post'):
-			return_value = postRequest(self, data, client)
-		elif (self.client == 'delete'):
-			return_value = deleteRequest(self, data, client)
-		else:
-			self.respondToClient('HTTP/1.1 400 Bad Request')
+		elif str(self.client.state) == 'put':
+			from putrequest import putRequest
+			request_value = putRequest(self.client,data)
+
+		elif str(self.client.state) == 'post':
+			from postrequest import postRequest
+			request_value = postRequest(self.client,data)
+		
+		elif str(self.client.state) == 'delete':
+			from deleterequest import deleteRequest
+			request_value = deleteRequest(self.client,data)
+		
+		elif str(self.client.state) == 'undef':
+			self.respondToClient('400 Bad Request')
 			return
 
-		if return_value is -1:
-			self.respondToClient('HTTP/1.1 400 Bad Request')
+		if request_value is -1:
+			self.respondToClient('400 Bad Request')
 			return
 
 	def respondToClient (self, message):
@@ -76,7 +87,12 @@ class TopHat(Protocol):
 		q = Resolver()
 		q.lifetime = 2.0
 		addr = reversename.from_address(address)
-		host = str(q.query(addr, 'PTR')[0])
+		try:
+				host = str(q.query(addr, 'PTR')[0])
+		except NXDOMAIN:
+				host = None
+
+
 		
 		if host is not None:
 			diagMessage = '[' + check_output(['date', '+%T:%D']).rstrip() + ']' + ': connection lost from ' + host.rstrip('.') + ' (' + address + ')' + ': '+ str(reason.getErrorMessage())

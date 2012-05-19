@@ -37,7 +37,8 @@ class TophatClient:
 					exit(1)
 		def __str__(self):
 			return "Client at %s:%d <TopHatClient>" % (self.addr,self.port)
-        def __str__(self):
+	
+	def __str__(self):
 		return "Client at %s:%d <TopHatClient>" % (self.addr,self.port)
 
 	class __metaclass__(type):
@@ -67,5 +68,5 @@ class TophatClientState:
 		else:
 			raise Exception("Bad state %s" %new_state)
 	def __str__(self):
-		return "<TophatClientState>: In state %s." % self.state
+		return self.state
 	

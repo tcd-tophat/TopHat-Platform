@@ -6,11 +6,7 @@ def HTTPParser(instance, data, client):
 	data = data.lower()
 	data = data.split('\n', 1)
 	
-	if data[0].find('heya') is not -1 or data[0].find('hiya') is not -1:
-	
-		writeTopHatToInstance(instance)
-	
-	elif data[0].find('get') is not -1:
+	if data[0].find('get') is not -1:
 	
 		client.state.set_state('get')
 	
@@ -25,6 +21,10 @@ def HTTPParser(instance, data, client):
 	elif data[0].find('put') is not -1:
 		
 		client.state.set_state('put')
+	elif data[0].find('heya') is not -1 or data[0].find('hiya') is not -1:
+		client.state.set_state('undef')
+		writeTopHatToInstance(instance)
+
 	else:
 		
 		client.state.set_state('undef')

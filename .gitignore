@@ -1,2 +1,4 @@
 *.pyc
 *.confc
+*.DS_Store 
+
