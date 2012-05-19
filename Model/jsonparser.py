@@ -1,12 +1,15 @@
 from Common.log import LogFile
+from Common.date import Timestamp  
 from StringIO import StringIO
 import json
 
 # This class takes in JSON encoded Strings and returns them as objects
-class JSONParser():
+class JSONParser(config=None):
 
     def __init__(self):
-    	self.log = LogFile()
+			if config is not None:
+					self.log = LogFile(config.LogFile)
+
 
 
 
@@ -23,6 +26,7 @@ class JSONParser():
     		mapped = json.load(toParse)
 
     	except AssertionError:
-    		self.log.write("Invalid type into the JSON Parser. Expecting StringType")
+				if hasattr(self, 'log'):
+						self.log.write("%s Invalid type into the JSON Parser. Expecting StringType" % Timestamp())
 
     	return mapped

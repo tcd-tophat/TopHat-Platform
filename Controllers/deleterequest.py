@@ -1,4 +1,4 @@
-def deleteRequest (client, data):
+def deleteRequest (client, data, log):
 
 	data = data.rstrip()
 	data = data.split('\n')
