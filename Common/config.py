@@ -1,13 +1,12 @@
 #Tophat config files
 
 import imp
-from os import name
 from sys import exit
 
 def loadConfig(path):
 		"""
 			Arguments:
-					path	--	String
+					path	--	String(Python primitive str)
 
 			Returning:
 					Config object.
@@ -17,14 +16,14 @@ def loadConfig(path):
 	
 			Description:
 					loadConfig takes in a string and attempts to import the file at that location 
-					in the file system if it fails it will throw an exception and quit. It will 
+					in the file system if it fails it will<Down> throw an exception and quit. It will 
 					otherwise return an	object with the required config keys. If not all the keys 
 					are there or there is errors in the syntax of the config it will throw an 
 					exception and shutdown TopHat.
 		"""
 		
 		if type(path) is not str:
-				raise Exception('path is not a string, gtfo')
+				raise TypeError('path is not a string, gtfo')
 			
 		try:
 				module=imp.load_source('TopHatConfig', path)

@@ -9,7 +9,8 @@ from twisted.internet.error import CannotListenError
 from Controllers.tophatprotocol import *
 from Common.miscellaneous import printTopHat
 from Common.config import loadConfig
-
+from Common.log import LogFile
+from Common.date import Timestamp
 config=None
 
 def TophatMain(config_path):
@@ -63,6 +64,8 @@ def TophatMain(config_path):
 	setgid(uidNumber)
 	setuid(gidNumber)
 	print "[TopHat-Service started successfully]"
+	log = LogFile(config.LogFile)
+	log.write("TopHat Platform (c) TopHat Software 2012\n%s: Started\n" % Timestamp())
 	try:
 		reactor.run()
 	except KeyError:
