@@ -24,6 +24,7 @@ def HTTPParser(instance, data, client):
 	elif Regex.compile("^jsontest").match(data[0]):
 		json='{"glossary": {"title": "example glossary","GlossDiv": {"title": "S","GlossList": {"GlossEntry": {"ID": "SGML","SortAs": "SGML","GlossTerm": "Standard Generalized Markup Language","Acronym": "SGML","Abbrev": "ISO 8879:1986","GlossDef": {"para": "A meta-markup language, used to create markup languages such as DocBook.","GlossSeeAlso": ["GML", "XML"]},"GlossSee": "markup"}}}}}'
 		client.state.set_state('undef')
+		instance.transport.write("200 OK\n\r")
 		instance.transport.write(json)
 		instance.transport.loseConnection()
 	
