@@ -1,6 +1,9 @@
 import mapper
-import sys
+import time
+
 import kill
+import user
+import playermapper as PM
 
 class KillMapper(mapper.Mapper):
 
@@ -20,7 +23,23 @@ class KillMapper(mapper.Mapper):
 		return "SELECT * FROM kills LIMIT %s, %s"	
 
 	def _doCreateObject(self, data):
-		pass
+		"""Builds the kill object using the raw data provided from the database"""
+		kill_ = kill.Kill(data["id"])
+
+		PlayerMapper = PM.PlayerMapper()
+		killer = PlayerMapper.find(data["killer_player_id"])
+		victim = PlayerMapper.find(data["vicitm_player_id"])
+
+		kill_.setKiller(killer)
+		kill_.setVictim(victim)
+
+		kill_.setVerified(data["verfied"])
+
+		dbtime = data["time"]
+		time = time.strptime(dbtime, "%Y-%m-%d %H-%M-%S")	# convert out of the time stored in the DB into UTC
+		kill_.setTime(time)
+
+		return kill_
 
 	def _doInsert(self, obj):
 		print "Inserting new Kill object " + str(obj.getId())
@@ -46,6 +65,7 @@ class KillMapper(mapper.Mapper):
 
 		cursor.close()
 
+		# only if rows were changed return a success response
 		if rowsAffected > 0:
 			return True
 		else:
@@ -58,7 +78,7 @@ class KillMapper(mapper.Mapper):
 		print "Updating Kill " + str(obj.getId())
 
 		# build the query
-		query = "UPDATE kills SET killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s"
+		query = "UPDATE kills SET killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
 		params = (obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())
 
 		# run the query

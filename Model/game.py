@@ -4,16 +4,17 @@ import domainexception
 
 class Game(domainobject.DomainObject):
 
-	__name = ""				# public name of the game     (255 characters)
+	__name = "Unnamed Game"				# public name of the game     (255 characters)
 	__creator = None 			# user who created the game   (User Object)
 	__gameTypeId = None			# type of game by id  		  (smallint(5) unsigned)
-	__sgameTypeName = ""		# public name of game type    (50 chars)
+	__gameTypeName = ""		# public name of game type    (50 chars)
 
 	def __init__(self, id_=None):
 		super(Game, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.__id) + " " + self.__gameTypeName + ": " + self.__name + "  created by " + self.__creator.__name + " (" + self.__creator.__id + ")"
+		return str(self.__id) + " " + self.__gameTypeName + ": " + self.__name + "  created by " 
+				+ self.__creator.__name + " (" + self.__creator.__id + ")"
 
 	def getName(self):
 		return self.__name

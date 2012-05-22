@@ -1,5 +1,4 @@
 import mapper
-import sys
 import user
 
 class UserMapper(mapper.Mapper):
@@ -58,7 +57,7 @@ class UserMapper(mapper.Mapper):
 		print "Updating User " + str(obj.getId())
 
 		# build the query
-		query = "UPDATE users SET name = %s, email = %s, photo = %s WHERE id = %s"
+		query = "UPDATE users SET name = %s, email = %s, photo = %s WHERE id = %s LIMIT 1"
 		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getId())
 
 		# run the query
