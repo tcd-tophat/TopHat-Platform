@@ -1,3 +1,5 @@
+import re
+
 import domainobject
 import domainexception
 
@@ -15,18 +17,29 @@ class User(domainobject.DomainObject):
 
 	# setters #
 	def setName(self, name):
+		name = str(name)
+
 		if len(name) > 60:
 			raise domainexception.DomainException("User's name must be less than 60 characters")
 
 		self.__name = name
 
 	def setPhoto(self, photo):
+		photo = str(photo)
+
 		if len(photo) is not 32:
 			raise domainexception.DomainException("That is not a photo")
 
 		self.__photo = photo
 
 	def setEmail(self, email):
+		email = str(email)
+
+		
+		#if not re.match(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b", email):
+		if not re.match(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", email):
+			raise domainexception.DomainException("That is not a valid email address")
+
 		# email checking needs to be added to user
 		self.__email = email
 
