@@ -27,7 +27,7 @@ class DomainObject(object):
 		self.__dict__[attr] = value					# set the attribute in the dictionary
 
 		if prevValue != value: 						# when any attribute is changed the object is marked for update
-			self.__markDirty()							
+			self.__markDirty()						
 
 	def __str__(self):
 		return str(self.__class__) + str(self.__id)

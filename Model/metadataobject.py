@@ -3,14 +3,20 @@ import domainobject
 import domainexception
 
 class MetaDataObject(domainobject.DomainObject):
-	""" Abstract container that extends DomainObject for meta data records for Domain Model objects. Objects are used instead of straight variables so that it intergrates with Mapper better """"
+	""" 
+		Abstract container that extends DomainObject for meta data records for Domain Model objects. 
+		Objects are used instead of straight variables so that it intergrates with Mapper better.
+	"""
 	__metaclass__ = ABCMeta
 
 	__key = ""				# 30 char
 	__value = ""			# text
 
-	def _init__(self, id_=None, key=None, value=None):
-		super(MetaDataObject, self)._init(id_)
+	def __init__(self, id_=None, key=None, value=None):
+		super(MetaDataObject, self).__init__(id_)
+
+		self.__key = key
+		self.__value = value
 
 	def setKey(self, value):
 		# Check length

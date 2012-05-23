@@ -22,8 +22,15 @@ class Collection(object):
 		"""Makes the class iterable"""
 		return self
 
+	def __contains__(self, v):
+		"""Allows users to check if an item exists in the collection"""
+		if v in self.__objects:
+			return True
+		else:
+			return False
+
 	def __getitem__(self, key):
-		"""Allows users to access collection items using indexs"""
+		"""Allows users to access collection items using indices"""
 		row = self.__getRow(key)
 
 		if row is not None:

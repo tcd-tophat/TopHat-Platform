@@ -4,10 +4,10 @@ import domainexception
 
 class Game(domainobject.DomainObject):
 
-	__name = "Unnamed Game"				# public name of the game     (255 characters)
-	__creator = None 			# user who created the game   (User Object)
-	__gameTypeId = None			# type of game by id  		  (smallint(5) unsigned)
-	__gameTypeName = ""		# public name of game type    (50 chars)
+	__name = "Unnamed Game"		# public name of the game 
+	__creator = None 			# user who created the game
+	__gameTypeId = None			# type of game by id
+	__gameTypeName = ""			# public name of game type
 
 	def __init__(self, id_=None):
 		super(Game, self).__init__(id_)

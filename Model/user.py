@@ -2,8 +2,9 @@ import re
 
 import domainobject
 import domainexception
+import metadomainobject
 
-class User(domainobject.DomainObject):
+class User(metadomainobject.MetaDomainObject):
 
 	__name = "Anonymous"
 	__photo = None
@@ -35,9 +36,8 @@ class User(domainobject.DomainObject):
 	def setEmail(self, email):
 		email = str(email)
 
-		
-		#if not re.match(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b", email):
-		if not re.match(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", email):
+		pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+		if not re.match(pattern, email):
 			raise domainexception.DomainException("That is not a valid email address")
 
 		# email checking needs to be added to user
