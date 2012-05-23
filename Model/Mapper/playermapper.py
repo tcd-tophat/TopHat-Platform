@@ -1,5 +1,4 @@
 import sys
-import time
 
 import mapper
 import player
@@ -42,10 +41,7 @@ class PlayerMapper(mapper.Mapper):
 		player_.setLat(data["lat"])
 		player_.setLon(data["lon"])
 		player_.setScore(data["score"])
-
-		dbtime = data["time"]
-		time = time.strptime(dbtime, "%Y-%m-%d %H-%M-%S")	# convert out of the time stored in the DB into UTC
-		player_.setTime(time)
+		player_.setTime(data["time"])
 
 		return player_
 

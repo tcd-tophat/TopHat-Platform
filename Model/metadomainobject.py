@@ -29,8 +29,6 @@ class MetaDomainObject(domainobject.DomainObject):
 			raise domainexception.DomainException("""You cannot alter the data attribute of a MetaDomainObject """
 													+ self.__class___._name__ + " (" + self.id + ")")
 
-		print "ATTR: " + attr
-
 		try:
 			self.__data[attr].setValue(value) 	# attr already in meta data dictionary - update it
 

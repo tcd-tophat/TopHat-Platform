@@ -1,4 +1,5 @@
-import domainOobject
+import time
+import domainobject
 import user
 import game
 import domainexception
@@ -18,7 +19,7 @@ class Player(domainobject.DomainObject):
 		super(Player, self).__init__(id_)
 
 	def __str__(self):
-		return self.__name + " in game " + self.__game.__name + " is user " self.__user.__name + " has a score of " + self.__time
+		return self.__name + " (" + self.__user.getName() + ") in game " + self.__game.getName() + " with a score of " + str(self.__score) + " (" + str(self.__time) + ")"
 
 	# Setters #
 	def setName(self, name):
@@ -28,20 +29,23 @@ class Player(domainobject.DomainObject):
 		self.__name = name
 
 	def setPhoto(self, photo):
-		if len(photo) not 32:
-			raise domainexception.DomainException("Photo must be a 32 character string")
+		if photo is not None:
+			if len(photo) != 32:
+				raise domainexception.DomainException("Photo must be a 32 character string")
 
 		self.__photo = photo
 
-	def setGame(self, game):
-		if is not isinstance(game, game.Game):
+	def setGame(self, game_):
+		if not isinstance(game_, game.Game):
 			raise domainexception.DomainException("Game attribute must be a reference to another Game object")
 
-		self.__game = game
+		self.__game = game_
 
-	def setUser(self, user):
-		if is not isinstance(user, user.User):
+	def setUser(self, user_):
+		if not isinstance(user_, user.User):
 			raise domainexception.DomainException("User attribute must be a reference to another User object")
+
+		self.__user = user_
 
 	def setLat(self, lat):
 		# type checking required
@@ -62,11 +66,11 @@ class Player(domainobject.DomainObject):
 
 		self.__score = score
 
-	def setTime(self, time):
-		try:
-			time = int(time)
-		except ValueError:
-			raise domainexception.DomainExceptionm("Time must be an int - of seconds since Jan 1st 1972 UTC")
+	def setTime(self, time_):
+		if type(time_) is "<type 'datetime.datetime'>":
+			raise domainexception.DomainException("Time must a datetime object")
+
+		self.__time = time_
 
 	# Getters #
 	def getName(self):

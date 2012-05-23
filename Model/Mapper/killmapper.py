@@ -28,16 +28,13 @@ class KillMapper(mapper.Mapper):
 
 		PlayerMapper = PM.PlayerMapper()
 		killer = PlayerMapper.find(data["killer_player_id"])
-		victim = PlayerMapper.find(data["vicitm_player_id"])
+		victim = PlayerMapper.find(data["victim_player_id"])
 
 		kill_.setKiller(killer)
 		kill_.setVictim(victim)
 
-		kill_.setVerified(data["verfied"])
-
-		dbtime = data["time"]
-		time = time.strptime(dbtime, "%Y-%m-%d %H-%M-%S")	# convert out of the time stored in the DB into UTC
-		kill_.setTime(time)
+		kill_.setVerified(data["verified"])
+		kill_.setTime(data["time"])
 
 		return kill_
 

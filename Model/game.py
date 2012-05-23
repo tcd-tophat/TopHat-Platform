@@ -13,8 +13,7 @@ class Game(domainobject.DomainObject):
 		super(Game, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.__id) + " " + self.__gameTypeName + ": " + self.__name + "  created by " 
-				+ self.__creator.__name + " (" + self.__creator.__id + ")"
+		return str(self.getId()) + " " + self.__gameTypeName + ": " + self.__name + "  created by " + self.__creator.getName() + " (" + str(self.__creator.getId()) + ")"
 
 	def getName(self):
 		return self.__name
@@ -35,8 +34,10 @@ class Game(domainobject.DomainObject):
 		self.__name = name
 
 	def setCreator(self, creator):
-		if is not isinstance(creator, user.User):
+		if not isinstance(creator, user.User):
 			raise domainexception.DomainException("Creator must be an instance of the User object")
+
+		self.__creator = creator
 
 	def setGameTypeId(self, id_):
 		if id_ > 99999 or id_ < 0:
