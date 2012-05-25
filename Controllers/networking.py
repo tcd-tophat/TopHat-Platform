@@ -4,22 +4,17 @@ from threading import Thread
 from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
-globallol=None
 class Transport:
 		class Peer:
 				def __init__(self, port, address):
 						self.port =port
 						self.host =address
 		def __init__(self, socket,queue):
-				#if type(socket) is not socket:
-				#		raise TypeError("Expected socket type got %s type instead" % type(socket))
+				if type(socket) is not type(socket()):
+						raise TypeError("Expected socket type got %s type instead" % type(socket))
 				self.queue = queue
 				self.__sock=socket
 		def write(self, data):
-				global globallol
-				globallol = True
-				print "hi"
-				#self.queue.put(data)
 				self.__sock.send(data)
 		def loseConnection(self):
 				pass
