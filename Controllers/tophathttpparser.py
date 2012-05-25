@@ -1,7 +1,7 @@
 import re as Regex
 from Common.miscellaneous import writeTopHatToInstance
 
-def HTTPParser(instance, data, client):
+def HTTPParser(data, client):
 
 	
 	

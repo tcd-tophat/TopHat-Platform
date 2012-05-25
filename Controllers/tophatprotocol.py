@@ -2,7 +2,7 @@ from twisted.internet.protocol import Protocol, Factory
 from tophathttpparser import HTTPParser
 from dns.resolver import NXDOMAIN, Resolver, query, Timeout as DNSTimeout
 from dns import reversename
-from Model.tophatclient import TophatClient
+from Model.tophatclient import TopHatClient
 from Common.log import LogFile
 from Common.date import Timestamp
 config=None
@@ -14,7 +14,7 @@ class TopHat(Protocol):
 	
 	def connectionMade(self):
 		
-		self.client = TophatClient(transport = self.transport)
+		self.client = TopHatClient(transport = self.transport)
 		q = Resolver()
 		q.lifetime = 2.0
 		addr = reversename.from_address(self.transport.getPeer().host)
@@ -70,7 +70,7 @@ class TopHat(Protocol):
 			self.transport.loseConnection()
 			return
 
-		for x in TophatClient:
+		for x in TopHatClient:
 				if str(x.state) is 'done':
 						x.transport.loseConnection()
 				x.delete()

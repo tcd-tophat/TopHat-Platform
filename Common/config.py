@@ -52,6 +52,8 @@ def loadConfig(path):
 		if not hasattr(conf, 'Interface'):
 				raise Exception('Please specify what address to listen on, 0.0.0.0 for all addresses:\nInterface=\'0.0.0.0\'')
 				exit(1)
+		if not hasattr(conf, 'Threads'):
+				raise Exception('Please specify how many threads to use for workers:\nThreads=1')
 		
 		if not hasattr(conf, 'User'):
 				raise Exception('Please specify what user TopHat drops privileges to:\nUser = \'username\'')

@@ -1,12 +1,11 @@
-from time import sleep
 from sys import exit
-class TophatClient:
+class TopHatClient:
 	clientlist = list()
 	def __init__(self, **kwargs):
 		
 		self.tmp = self.__client(kwargs)
-		if self.tmp in TophatClient:
-
+		if self.tmp in TopHatClient:
+			self.transport = self.tmp.transport
 			self.port = self.tmp.port
 			self.addr = self.tmp.addr
 			self.state = self.tmp.state
@@ -30,8 +29,8 @@ class TophatClient:
 				transport= kwargs['transport']
 				self.port=transport.getPeer().port
 				self.addr=transport.getPeer().host
-				TophatClient.clientlist.append(self)
-				self.state = TophatClientState()
+				TopHatClient.clientlist.append(self)
+				self.state = TopHatClientState()
 				self.transport=transport
 			except KeyError:
 				try:
@@ -43,7 +42,7 @@ class TophatClient:
 		def __str__(self):
 			return "Client at %s:%d <TopHatClient>" % (self.addr,self.port)
 		def __del__(self):
-				TophatClient.clientlist.remove(self)
+				TopHatClient.clientlist.remove(self)
 				return
 		def delete(self):
 				del self
@@ -55,7 +54,7 @@ class TophatClient:
 	class __metaclass__(type):
 
 		def __iter__(self):
-			for x in TophatClient.clientlist:
+			for x in TopHatClient.clientlist:
 				yield x
 		def __len__(self):
 			return len(self.clientlist)
@@ -65,7 +64,7 @@ class TophatClient:
 			return self.clientlist[v]
 
 
-class TophatClientState:
+class TopHatClientState:
 	__allowedstates = ['get', 'put', 'delete', 'undef','post', 'res', 'init', 'done']
 	def __init__(self, state=None):
 			if state is None:

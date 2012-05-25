@@ -1,16 +1,16 @@
 #!/usr/bin/env python2.7
 
-from twisted.internet import reactor, ssl
+#from twisted.internet import reactor, ssl
 from os import getuid, setuid, setgid
 from pwd import getpwnam
 from grp import getgrnam
 from sys import exit,path
-from twisted.internet.error import CannotListenError
 from Controllers.tophatprotocol import *
 from Common.miscellaneous import printTopHat
 from Common.config import loadConfig
 from Common.log import LogFile
 from Common.date import Timestamp
+from Controllers.networking import TopHatNetwork
 config=None
 
 def TophatMain(config_path):
@@ -22,13 +22,15 @@ def TophatMain(config_path):
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
 	
-	factory = TopHatFactory(config) 
-	try:
-		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
-	except CannotListenError as test:
+#	factory = TopHatFactory(config) 
+#	try:
+#		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
+#	except CannotListenError as test:
 		print "Cannot listen on port %s:\n%s" % (config.Port,test)
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
+	from socket import AF_INET
+	test = TopHatNetwork(AF_INET, config)
 
 	print "Listening on port 443, deadly."
 
@@ -66,12 +68,9 @@ def TophatMain(config_path):
 	print "[TopHat-Service started successfully]"
 	log = LogFile(config.LogFile)
 	log.write("TopHat Platform (c) TopHat Software 2012\n%s: Started\n" % Timestamp())
-	try:
-		reactor.run()
-	except KeyError:
-		reactor.stop()
-		print "[TopHat-Service shutting down]"
-		exit(0)
+	import asyncore
+	asyncore.loop()
+#	reactor.run()
 
 if __name__ == '__main__':
 	TophatMain()
