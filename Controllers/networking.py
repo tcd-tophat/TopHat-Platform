@@ -10,8 +10,8 @@ class Transport:
 						self.port =port
 						self.host =address
 		def __init__(self, socket,queue):
-				if type(socket) is not type(socket()):
-						raise TypeError("Expected socket type got %s type instead" % type(socket))
+				#if type(socket) is not type(socket()):
+				#		raise TypeError("Expected socket type got %s type instead" % type(socket))
 				self.queue = queue
 				self.__sock=socket
 		def write(self, data):
