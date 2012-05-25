@@ -61,11 +61,11 @@ class TopHatThread(Thread):
 							request_value = deleteRequest(client,data[1])
 
 						elif str(client.state) == 'undef':
-							respondToClient('HTTP/1.1 400 Bad Request')
+							respondToClient(self.transport,'HTTP/1.1 400 Bad Request')
 							client.transport.loseConnection()
 
 						if request_value == -1:
-							respondToClient('HTTP/1.1 400 Bad Request')
+							respondToClient(self.tranport,'HTTP/1.1 400 Bad Request')
 							client.transport.loseConnection()
 						for x in TopHatClient:
 								if str(x.state) is 'done':
