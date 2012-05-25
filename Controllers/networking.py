@@ -141,8 +141,8 @@ class ClientHandle(dispatcher):
 
 
 def respondToClient(transport, data):
-		if type(transport) is not Transport:
-				raise TypeError('Expected Transport type got %s type instead' % type(transport))
+		#if type(transport) is not Transport:
+		#		raise TypeError('Expected Transport type got %s type instead' % type(transport))
 		
 		transport.write(data + '\r\n')
 		return
