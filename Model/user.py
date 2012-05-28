@@ -6,16 +6,16 @@ import metadomainobject
 
 class User(metadomainobject.MetaDomainObject):
 
-	__name = "Anonymous"
-	__photo = None
-	__email = None
-	__password = None
+	_name = "Anonymous"
+	_photo = None
+	_email = None
+	_password = None
 	
-	def __init__(self, ids=None):
-		super(User, self).__init__(ids)
+	def __init__(self, id_=None):
+		super(User, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.getId()) + " " + self.__name + " " + self.__email + " " + self.__photo
+		return str(self.getId()) + " " + self._name + " " + self._email + " " + self._photo
 
 	# setters #
 	def setName(self, name):
@@ -24,7 +24,7 @@ class User(metadomainobject.MetaDomainObject):
 		if len(name) > 60:
 			raise domainexception.DomainException("User's name must be less than 60 characters")
 
-		self.__name = name
+		self._name = name
 
 	def setPhoto(self, photo):
 		photo = str(photo)
@@ -32,7 +32,7 @@ class User(metadomainobject.MetaDomainObject):
 		if len(photo) is not 32:
 			raise domainexception.DomainException("That is not a photo")
 
-		self.__photo = photo
+		self._photo = photo
 
 	def setEmail(self, email):
 		email = str(email)
@@ -42,22 +42,22 @@ class User(metadomainobject.MetaDomainObject):
 			raise domainexception.DomainException("That is not a valid email address")
 
 		# email checking needs to be added to user
-		self.__email = email
+		self._email = email
 
 	def setPassword(self, password):
 		password = str(password)
 
-		self.__password = password
+		self._password = password
 
 	# getters #
 	def getName(self):
-		return self.__name
+		return self._name
 
 	def getPhoto(self):
-		return self.__photo
+		return self._photo
 
 	def getEmail(self):
-		return self.__email
+		return self._email
 
 	def getPassword(self):
-		return self.__password
+		return self._password

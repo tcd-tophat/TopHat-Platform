@@ -9,27 +9,24 @@ class MetaDataObject(domainobject.DomainObject):
 	"""
 	__metaclass__ = ABCMeta
 
-	__key = ""				# 30 char
-	__value = ""			# text
+	_key = ""				# 30 char
+	_value = ""			# text
 
-	def __init__(self, id_=None, key=None, value=None):
+	def __init__(self, id_=None):
 		super(MetaDataObject, self).__init__(id_)
-
-		self.__key = key
-		self.__value = value
 
 	def setKey(self, value):
 		# Check length
 		if len(value) > 30:
 			raise domainexception.DomainException("Key must be less than 30 characters long")
 
-		self.__key = value
+		self._key = value
 
 	def getKey(self):
-		return self.__key
+		return self._key
 
 	def setValue(self, value):
-		self.__value = value
+		self._value = value
 
 	def getValue(self):
-		return self.__value
+		return self._value

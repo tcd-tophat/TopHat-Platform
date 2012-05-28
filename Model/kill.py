@@ -4,21 +4,21 @@ import domainexception
 
 class Kill(domainobject.DomainObject):
 	
-	__killer = None	
-	__victim = None
-	__verified = False
-	__time = 0
+	_killer = None	
+	_victim = None
+	_verified = False
+	_time = 0
 
 	def __init__(self, id_=None):
 		super(Kill, self).__init__(id_)
 
 	def __str__(self):
-		string = self.__killer.getName() + " killed " + self.__victim.getName() + " the kill is "
-		if self.__verified is False:
+		string = self._killer.getName() + " killed " + self._victim.getName() + " the kill is "
+		if self._verified is False:
 			string += " not "
 		string += "verified"
 
-		string += " (" + str(self.__time) + ")"
+		string += " (" + str(self._time) + ")"
 
 		return string
 
@@ -27,13 +27,13 @@ class Kill(domainobject.DomainObject):
 		if not isinstance(killer, player.Player):
 			raise domainexception.DomainException("Killer must be a Player object")
 
-		self.__killer = killer
+		self._killer = killer
 
 	def setVictim(self, victim):
 		if not isinstance(victim, player.Player):
 			raise domainexception.DomainException("Victim must be a Player Object")
 
-		self.__victim = victim
+		self._victim = victim
 
 	def setVerified(self, value):
 		try:
@@ -41,23 +41,23 @@ class Kill(domainobject.DomainObject):
 		except NameError:
 			raise domainexception.DomainException("You can only set verified to true or false")
 
-		self.__verified = value
+		self._verified = value
 
 	def setTime(self, time_):
 		if type(time_) is "<type 'datetime.datetime'>":
 			raise domainexception.DomainException("Time must a datetime object")
 
-		self.__time = time_
+		self._time = time_
 
 	# Getters #
 	def getKiller(self):
-		return self.__killer
+		return self._killer
 
 	def getVictim(self):
-		return self.__victim
+		return self._victim
 
 	def getVerified(self):
-		return self.__verified
+		return self._verified
 
 	def getTime(self):
-		return self.__time
+		return self._time

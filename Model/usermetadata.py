@@ -1,22 +1,28 @@
-import metadatobject
+import metadataobject
 import user
 import domainexception
 
-class UserMetaData(metadatobject.MetaDataObject):
+class UserMetaData(metadataobject.MetaDataObject):
 
-	__user = None # reference to the User object to which this object is attached
+	_user = None # reference to the User object to which this object is attached
 
-	def __init__(self, id_=None, user=None):
-		if type(user) is not user.User:
-			self.__user = user
+	def __init__(self, id_=None, user_=None, key=None, value=None):
+		if not None:
+			self.setUser(user_)
+
+		self.setKey(key)
+		self.setValue(value)
 
 		super(UserMetaData, self).__init__(id_)
 
-	def setUser(self, user):
-		if is not isinstance(user, user.User):
+	def setUser(self, user_):
+		if not isinstance(user_, user.User):
 			raise domainexception.DomainException("User attribute must be a reference to a User object")
 
-		self.__user = user
+		self._user = user_
+
+		# add reference in the User object to this object
+		self._user.addMetaData(self)
 
 	def getUser(self):
-		return self.__user
+		return self._user

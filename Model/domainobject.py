@@ -6,12 +6,12 @@ class DomainObject(object):
 	"""Abstract base class for any object that is compatible with the Mapper for storage in the persistent storage"""
 	__metaclass__ = ABCMeta
 
-	__id = -1				# setup deafult id outside db storage range
+	_id = -1				# setup deafult id outside db storage range
 
-	def __init__(self, ids=None):
+	def __init__(self, id_=None):
 		# check valid id value (pos int)
-		if ids is not None:
-			self.__id = ids
+		if id_ is not None:
+			self.setId(id_)
 		else:
 			self.__markNew()			# when the object is created without an id it is marked new / for insertion into persistent storage
 
@@ -30,11 +30,11 @@ class DomainObject(object):
 			self.__markDirty()						
 
 	def __str__(self):
-		return str(self.__class__) + str(self.__id)
+		return str(self.__class__) + str(self._id)
 
 	# Getters and Setters #
 	def getId(self):
-		return self.__id
+		return self._id
 
 	def setId(self, value):
 		try:
@@ -45,7 +45,7 @@ class DomainObject(object):
 		if value < 0:
 			raise domainexception.DomainException("The id must be greater than one")
 
-		self.__id = value
+		self._id = value
 
 	# Object Watcher Functions #
 	def __markDirty(self):
