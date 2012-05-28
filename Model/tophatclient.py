@@ -10,12 +10,14 @@ class TophatClient:
 			self.port = self.tmp.port
 			self.addr = self.tmp.addr
 			self.state = self.tmp.state
+			self.transport = self.tmp.transport
 			return
 			
 		else:
 			self.port = self.tmp.port
 			self.addr = self.tmp.addr
 			self.state = self.tmp.state
+			self.transport = self.tmp.transport
 			self.clientlist.append(tmp)
 			return
 	def delete(self):
