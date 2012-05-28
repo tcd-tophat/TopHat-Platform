@@ -9,6 +9,7 @@ class User(metadomainobject.MetaDomainObject):
 	__name = "Anonymous"
 	__photo = None
 	__email = None
+	__password = None
 	
 	def __init__(self, ids=None):
 		super(User, self).__init__(ids)
@@ -43,6 +44,14 @@ class User(metadomainobject.MetaDomainObject):
 		# email checking needs to be added to user
 		self.__email = email
 
+	def setPassword(self, password):
+		password = str(password)
+
+		if len(password) is not 64:
+			raise domainexception.DomainException("Password variable in the User object must be a 64 character string")
+
+		self.__password = password
+
 	# getters #
 	def getName(self):
 		return self.__name
@@ -52,3 +61,6 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getEmail(self):
 		return self.__email
+
+	def getPassword(self):
+		return self.__password

@@ -25,6 +25,7 @@ class UserMapper(mapper.Mapper):
 		usr.setName(data["name"])
 		usr.setPhoto(data["photo"])
 		usr.setEmail(data["email"])
+		usr.setPassword(data["password"])
 
 		return usr
 
@@ -32,8 +33,8 @@ class UserMapper(mapper.Mapper):
 		print "Inserting new User object " + str(obj.getId())
 
 		# build query
-		query = "INSERT INTO users VALUES(NULL, %s, %s, %s)"
-		params = (obj.getName(), obj.getPhoto(), obj.getEmail())
+		query = "INSERT INTO users VALUES(NULL, %s, %s, %s, %s)"
+		params = (obj.getName(), obj.getPhoto(), obj.getEmail(), obj.getPassword())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -57,8 +58,8 @@ class UserMapper(mapper.Mapper):
 		print "Updating User " + str(obj.getId())
 
 		# build the query
-		query = "UPDATE users SET name = %s, email = %s, photo = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getId())
+		query = "UPDATE users SET name = %s, email = %s, photo = %s, password = %s WHERE id = %s LIMIT 1"
+		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
