@@ -47,9 +47,6 @@ class User(metadomainobject.MetaDomainObject):
 	def setPassword(self, password):
 		password = str(password)
 
-		if len(password) is not 64:
-			raise domainexception.DomainException("Password variable in the User object must be a 64 character string")
-
 		self.__password = password
 
 	# getters #
