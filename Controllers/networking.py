@@ -1,26 +1,31 @@
-from asyncore import dispatcher, dispatcher_with_send , loop
+from asyncore import dispatcher, dispatcher_with_send
 from sys import exit
 from threading import Thread
 from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
-class Transport:
-		class Peer:
+class Transport(object):
+		class Peer(object):
 				def __init__(self, port, address):
 						self.port =port
 						self.host =address
-		def __init__(self, socket,queue):
+		def __init__(self, socket,handle):
 				#if type(socket) is not type(socket()):
 				#		raise TypeError("Expected socket type got %s type instead" % type(socket))
-				self.queue = queue
+				self.__handle = handle
 				self.__sock=socket
 		def write(self, data):
-				self.__sock.send(data)
+				try:
+						self.__sock.send(data)
+				except SocketError:
+						return
 		def loseConnection(self):
-				pass
-			#	self.__sock.close()
+				self.__handle.close()
 		def getPeer(self):
-				tmp=self.__sock.getpeername()
+				try:
+						tmp=self.__sock.getpeername()
+				except SocketError:
+					return None
 				return Transport.Peer(tmp[1], tmp[0])
 
 
@@ -37,8 +42,11 @@ class TopHatThread(Thread):
 						data = self.queue.get()
 						from tophathttpparser import HTTPParser
 						self.transport=Transport(data[0],data[2])
+						if self.transport is None:
+								continue
 						client = TopHatClient(transport=self.transport)
 						HTTPParser(data[1], client)
+						request_value=-1
 						if str(client.state) == 'get':
 							from getrequest import getRequest
 							request_value = getRequest(client, data[1])
@@ -55,29 +63,23 @@ class TopHatThread(Thread):
 							from deleterequest import deleteRequest
 							request_value = deleteRequest(client,data[1])
 
-						elif str(client.state) == 'undef':
+						elif str(client.state) == 'undef' or request_value is -1:
 							respondToClient(self.transport,'HTTP/1.1 400 Bad Request')
 							client.transport.loseConnection()
-
-						if request_value == -1:
-							respondToClient(self.tranport,'HTTP/1.1 400 Bad Request')
-							client.transport.loseConnection()
-						for x in TopHatClient:
-								if str(x.state) is 'done':
-									x.transport.loseConnection()
-									x.delete()
+							
+						client.transport.loseConnection()
+						#del client
 				return
 
-class TopHatNetwork(dispatcher_with_send):
-
-		def __init__(self,family, config, host=None, port=443):
+class TopHatNetwork(dispatcher):
+		__workers=[]
+		__sockets=[]
+		def __init__(self, family, config, host=None, port=443):
 				dispatcher.__init__(self)
 				self.queue = Queue()
 				self.port=port
 				self.host=host
 				self.config=config
-				self.__workers = list()
-				self.__sockets = list()
 			
 				for x in range(0,config.Threads):
 						self.__workers.append(TopHatThread(self.queue, self.config))
@@ -102,12 +104,30 @@ class TopHatNetwork(dispatcher_with_send):
 							self.bind(("0.0.0.0", port))
 				else:
 						self.bind((host, 443))
+				self.set_reuse_addr()
 				self.listen(5)
 				return
 		def handle_accept(self):
+				from Encryption.sslencryption import SSLEncryption
 				sock, addr = self.accept()
-				self.__sockets.append((sock,addr))
-				ClientHandle(sock, self.queue)
+				from ssl import SSLError
+				sock=SSLEncryption(sock._sock,certfile='/etc/ssl/certs/tophat.crt', ca_certs=None, keyfile='/etc/ssl/private/tophat.key')
+				sock.do_handshake()
+				client=ClientHandle(sock, self.queue)
+				self.__sockets.append((sock,addr,client))
+		def shutdown(self):
+				for x in self.__workers:
+						x.stop=True
+						del x
+
+				for x in self.__sockets:
+						x[2].close()
+						del x
+				self.close()
+				return
+
+
+
 class ClientHandle(dispatcher):
 		def __init__(self, sock,queue):
 				self.sock=sock
@@ -121,28 +141,20 @@ class ClientHandle(dispatcher):
 				except SocketTimeout:
 						pass
 				if len(data) >0:
-						self.queue.put((self.sock,data,self.sendqueue))
-				print data.rstrip()
+						self.queue.put((self.sock,data,self))
 				return
 		def handle_close(self):
-				my = TopHatClient(transport=Transport(self.sock,self.sendqueue))
-				if my in TopHatClient:
-						my.delete()
-
+		#		my = TopHatClient(transport=Transport(self.sock,self))
+		#		if my in TopHatClient:
+		#				my.delete()
 				return self.close()
 	
 		def writeable(self): return True
 		def readable(self): return True
-#		def handle_write(self):
-#				print "Hi, handle_write"
-#				if data is not None:
-#						self.send(data)
-#				return
-
 
 def respondToClient(transport, data):
-		#if type(transport) is not Transport:
-		#		raise TypeError('Expected Transport type got %s type instead' % type(transport))
+		if type(transport) is not Transport:
+				raise TypeError('Expected Transport type got %s type instead' % type(transport))
 		
 		transport.write(data + '\r\n')
 		return

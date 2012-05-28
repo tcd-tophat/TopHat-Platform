@@ -1,3 +1,4 @@
+from networking import respondToClient
 def getRequest(client, data):
 	"""Arguments:
 

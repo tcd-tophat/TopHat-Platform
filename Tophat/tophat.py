@@ -11,7 +11,15 @@ from Common.config import loadConfig
 from Common.log import LogFile
 from Common.date import Timestamp
 from Controllers.networking import TopHatNetwork
+from signal import signal, SIGINT
 config=None
+test=None
+def Shutdown(dummy,args):
+		global test
+		print "[TopHat-Service shutting down]"
+		test.shutdown()
+		exit(0)
+
 
 def TophatMain(config_path):
 	global config
@@ -29,8 +37,10 @@ def TophatMain(config_path):
 		print "Cannot listen on port %s:\n%s" % (config.Port,test)
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
-	from socket import AF_INET
-	test = TopHatNetwork(AF_INET, config)
+	from socket import AF_INET, AF_INET6
+	global test
+	test = TopHatNetwork(AF_INET6, config)
+	signal(SIGINT,Shutdown)
 
 	print "Listening on port 443, deadly."
 
@@ -69,7 +79,8 @@ def TophatMain(config_path):
 	log = LogFile(config.LogFile)
 	log.write("TopHat Platform (c) TopHat Software 2012\n%s: Started\n" % Timestamp())
 	import asyncore
-	asyncore.loop()
+	asyncore.loop(use_poll=True)
+
 #	reactor.run()
 
 if __name__ == '__main__':
