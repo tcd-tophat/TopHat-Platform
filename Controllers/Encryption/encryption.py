@@ -37,5 +37,6 @@ class Encryption:
 				pass
 
 		@abstractmethod
-		def configKeys(slef):
+		@staticmethod
+		def configKeys():
 				pass
