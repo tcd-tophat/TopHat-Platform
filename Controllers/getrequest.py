@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from time import asctime
 from networking import respondToClient
 def getRequest(client, data):

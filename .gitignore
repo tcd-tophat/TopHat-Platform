@@ -1,6 +1,4 @@
 *.pyc
 *.confc
-*.DS_Store 
-
-
+.*.swp
 .DS_Store
