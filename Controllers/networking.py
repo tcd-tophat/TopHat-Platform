@@ -68,7 +68,7 @@ class TopHatThread(Thread):
 							client.transport.loseConnection()
 							
 						client.transport.loseConnection()
-						#del client
+						del client
 				return
 
 class TopHatNetwork(dispatcher):
