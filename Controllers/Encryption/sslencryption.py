@@ -17,8 +17,7 @@ class SSLEncryption(Encryption):
 						except KeyError:
 								raise TypeError('Expected keyfile, certfile and ca_certs got %s instead.' % str(kwargs))
 						
-						try:
-								self._securesock= wrap_socket(  self,
+						self._securesock= wrap_socket(  self,
 														keyfile=self._keyfile, 
 														ca_certs=self._ca_certs,
 														certfile=self._certfile, 
@@ -26,9 +25,6 @@ class SSLEncryption(Encryption):
 #														cert_reqs=CERT_REQUIRED,
 														do_handshake_on_connect=True,
 											)
-						except SSLError:
-								print "probs CA loL"
-								self._securesock=None
 		def recv(self, size):
 				return self._securesock.read(size)
 		
