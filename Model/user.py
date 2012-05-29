@@ -53,7 +53,7 @@ class User(metadomainobject.MetaDomainObject):
 	def setApiKey(self, key):
 		key = str(key)
 
-		self.apikey = key
+		self._apikey = key
 
 	# getters #
 	def getName(self):
