@@ -40,7 +40,6 @@ class Encryption:
 		def initialized(self):
 				pass
 
-		@staticmethod
 		@abstractmethod
 		def configKeys():
 				pass
