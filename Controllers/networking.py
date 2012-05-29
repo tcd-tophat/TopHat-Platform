@@ -75,12 +75,12 @@ class TopHatNetwork(dispatcher):
 		__workers=[]
 		__sockets=[]
 		def __init__(self, family, config, host=None, port=443):
+				from sys import exit
 				dispatcher.__init__(self)
 				self.queue = Queue()
 				self.port=port
 				self.host=host
 				self.config=config
-			
 				for x in range(0,config.Threads):
 						self.__workers.append(TopHatThread(self.queue, self.config))
 				for x in self.__workers:
@@ -96,6 +96,7 @@ class TopHatNetwork(dispatcher):
 								else:
 										pass
 				self.create_socket(family, tcp)
+				self.set_reuse_addr()
 				if host is None:
 						if family is ipv6:
 							self.bind(("::", port))
@@ -104,13 +105,14 @@ class TopHatNetwork(dispatcher):
 							self.bind(("0.0.0.0", port))
 				else:
 						self.bind((host, 443))
-				self.set_reuse_addr()
 				self.listen(5)
 				return
 		def handle_accept(self):
-				from Encryption.sslencryption import SSLEncryption
 				sock, addr = self.accept()
 				sock=self.config.EncryptionMethod(sock._sock,config=self.config)
+				if not sock.initialized():
+						del sock
+						return
 				client=ClientHandle(sock, self.queue)
 				self.__sockets.append((sock,addr,client))
 		def shutdown(self):

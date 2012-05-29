@@ -26,6 +26,9 @@ class Plaintext(Encryption):
 		
 		def getsockopt(self, *args):
 				return self.sock.getsockopt(self, *args)
+		def initialized(self):
+				return True
+
 		@staticmethod
 		def configKeys():
 				return []

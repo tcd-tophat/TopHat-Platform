@@ -37,6 +37,11 @@ class Encryption:
 				pass
 
 		@abstractmethod
+		def initialized(self):
+				pass
+
 		@staticmethod
+		@abstractmethod
 		def configKeys():
 				pass
+		
