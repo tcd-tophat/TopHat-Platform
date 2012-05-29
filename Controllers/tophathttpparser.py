@@ -1,7 +1,7 @@
 import re as Regex
 from Common.miscellaneous import writeTopHatToInstance
 
-def HTTPParser(instance, data, client):
+def HTTPParser(data, client):
 
 	
 	
@@ -23,7 +23,7 @@ def HTTPParser(instance, data, client):
 
 	elif Regex.compile("^hiya|^heya").match(data[0]):
 		client.state.set_state('undef')
-		writeTopHatToInstance(instance)
+		writeTopHatToInstance(client)
 
 	else:
 		client.state.set_state('undef')

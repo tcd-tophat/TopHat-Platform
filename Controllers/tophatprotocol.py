@@ -2,7 +2,7 @@ from twisted.internet.protocol import Protocol, Factory
 from tophathttpparser import HTTPParser
 from dns.resolver import NXDOMAIN, Resolver, query, Timeout as DNSTimeout
 from dns import reversename
-from Model.tophatclient import TophatClient
+from Model.tophatclient import TopHatClient
 from Common.log import LogFile
 from Common.date import Timestamp
 config=None
@@ -14,7 +14,7 @@ class TopHat(Protocol):
 	
 	def connectionMade(self):
 		
-		self.client = TophatClient(transport = self.transport)
+		self.client = TopHatClient(transport = self.transport)
 		q = Resolver()
 		q.lifetime = 2.0
 		addr = reversename.from_address(self.transport.getPeer().host)
@@ -28,22 +28,22 @@ class TopHat(Protocol):
 		if host is not None:
 			
 			diagMessage = '%s: connection made from: %s (%s)' % (Timestamp(),host.rstrip('.'), str(self.transport.getPeer().host))
-			self.factory.log.write(diagMessage+'\n')
-			print diagMessage
+#			self.factory.log.write(diagMessage+'\n')
+#			print diagMessage
 
 		else:
 			
 			diagMessage = '%s: connection made from: %s' % (Timestamp(), str(self.transport.getPeer().host))
-			print diagMessage
-			self.factory.log.write(diagMessage +'\n')
+#			print diagMessage
+#			self.factory.log.write(diagMessage +'\n')
 	
 	
 	def dataReceived(self, data):
 		# Basically the main controller for everything to do with data/requests.
 
 		diagMessage =  '%s: received %s' % (Timestamp(), data.rstrip())
-		self.factory.log.write(diagMessage + '\n')
-		print diagMessage
+#		self.factory.log.write(diagMessage + '\n')
+#		print diagMessage
 		
 		HTTPParser(self, data, self.client)
 		
@@ -70,7 +70,7 @@ class TopHat(Protocol):
 			self.transport.loseConnection()
 			return
 
-		for x in TophatClient:
+		for x in TopHatClient:
 				if str(x.state) is 'done':
 						x.transport.loseConnection()
 				x.delete()
@@ -83,8 +83,8 @@ class TopHat(Protocol):
 
 	def respondToClient (self, messege):
 			
-		print '%s: %s' % (Timestamp(), messege)
-		self.factory.log.write('%s: %s' % (Timestamp(), messege) +'\n')
+#		print '%s: %s' % (Timestamp(), messege)
+#		self.factory.log.write('%s: %s' % (Timestamp(), messege) +'\n')
 		self.transport.write (messege + '\n\r')
 		return
 
@@ -107,13 +107,14 @@ class TopHat(Protocol):
 		
 		if host is not None:
 			diagMessage = '%s: connection lost from %s (%s): %s' % (Timestamp(),host.rstrip('.'),address,str(reason.getErrorMessage()))
-			self.factory.log.write(diagMessage + '\n')
-			print diagMessage
+#			self.factory.log.write(diagMessage + '\n')
+#			print diagMessage
 		
 		else:
-				diagMessage = '%s: connection lost from %s: %s' % (Timestamp(), address, str(reason.getErrorMessage()))
-				self.factory.log.write(diagMessage + '\n')
-				print diagMessage
+				pass
+#				diagMessage = '%s: connection lost from %s: %s' % (Timestamp(), address, str(reason.getErrorMessage()))
+#				self.factory.log.write(diagMessage + '\n')
+#				print diagMessage
 
 class TopHatFactory(Factory):
 	
@@ -123,7 +124,7 @@ class TopHatFactory(Factory):
 		self.LogFilePath = ConfigObject.LogFile
 		self.protocal = TopHat
 		self.clients = list()
-		self.log = LogFile(self.LogFilePath)
+#		self.log = LogFile(self.LogFilePath)
 	
 	def popClient(self, client):
 		

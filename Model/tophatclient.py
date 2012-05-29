@@ -1,73 +1,45 @@
-from time import sleep
-from sys import exit
-class TophatClient:
-	clientlist = list()
+class TopHatClient:
+	_clients = []
 	def __init__(self, **kwargs):
-		
-		self.tmp = self.__client(kwargs)
-		if self.tmp in TophatClient:
 
-			self.port = self.tmp.port
-			self.addr = self.tmp.addr
-			self.state = self.tmp.state
-			self.transport = self.tmp.transport
-			return
-			
-		else:
-			self.port = self.tmp.port
-			self.addr = self.tmp.addr
-			self.state = self.tmp.state
-			self.transport = self.tmp.transport
-			self.clientlist.append(tmp)
-			return
+			try:
+					self.transport = kwargs['transport']
+					self.port = kwargs['transport'].getPeer().port
+					self.addr = kwargs['transport'].getPeer().host
+			except KeyError:
+					try:
+							self.port = kwargs['port']					
+							self.addr = kwargs['addr']
+					except KeyError:
+							raise TypeError('Expected transport or port and addr kwargs got %s instead.' % str(kwargs))
+			self.state = TopHatClientState()
+
+			self._clients.append((self.port,self.addr))
 	def delete(self):
 			del self
+
 	def __del__(self):
-			del self.tmp
+			self._clients.remove((self.port,self.addr))
 
 
-	class __client:
-		def __init__(self, kwargs):
-			try:
-				transport= kwargs['transport']
-				self.port=transport.getPeer().port
-				self.addr=transport.getPeer().host
-				TophatClient.clientlist.append(self)
-				self.state = TophatClientState()
-				self.transport=transport
-			except KeyError:
-				try:
-					self.port = kwargs['port']
-					self.addr = kwargs['addr']
-				except KeyError:
-					raise Exception("Invalid arguments passed\nCannot initialize client")
-					exit(1)
-		def __str__(self):
-			return "Client at %s:%d <TopHatClient>" % (self.addr,self.port)
-		def __del__(self):
-				TophatClient.clientlist.remove(self)
-				return
-		def delete(self):
-				del self
-
-	
-	def __str__(self):
-		return "Client at %s:%d <TopHatClient>" % (self.addr,self.port)
 
 	class __metaclass__(type):
 
 		def __iter__(self):
-			for x in TophatClient.clientlist:
+			for x in TopHatClient._clients:
 				yield x
 		def __len__(self):
-			return len(self.clientlist)
+			return len(self._clients)
 		def __contains__(self, v):
-			return v in self.clientlist
+			return v in self._clients
 		def __getitem__(self,v):
-			return self.clientlist[v]
+			return self._clients[v]
+		def __del__(self):
+				for x in self._clients:
+						del x
 
 
-class TophatClientState:
+class TopHatClientState:
 	__allowedstates = ['get', 'put', 'delete', 'undef','post', 'res', 'init', 'done']
 	def __init__(self, state=None):
 			if state is None:
@@ -76,13 +48,13 @@ class TophatClientState:
 					self.set_state(state)
 	
 	def get_state(self):
-		return self.state
+		return self.__state
 	def set_state(self, new_state):
 		if new_state in self.__allowedstates:
-			self.state = new_state
+			self.__state = new_state
 			return
 		else:
 			raise TypeError("Bad state %s" % new_state)
 	def __str__(self):
-		return self.state
+		return self.__state
 	

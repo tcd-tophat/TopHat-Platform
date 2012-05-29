@@ -1,17 +1,25 @@
 #!/usr/bin/env python2.7
 
-from twisted.internet import reactor, ssl
+#from twisted.internet import reactor, ssl
 from os import getuid, setuid, setgid
 from pwd import getpwnam
 from grp import getgrnam
 from sys import exit,path
-from twisted.internet.error import CannotListenError
 from Controllers.tophatprotocol import *
 from Common.miscellaneous import printTopHat
 from Common.config import loadConfig
 from Common.log import LogFile
 from Common.date import Timestamp
+from Controllers.networking import TopHatNetwork
+from signal import signal, SIGINT
 config=None
+test=None
+def Shutdown(dummy,args):
+		global test
+		print "[TopHat-Service shutting down]"
+		test.shutdown()
+		exit(0)
+
 
 def TophatMain(config_path):
 	global config
@@ -22,13 +30,17 @@ def TophatMain(config_path):
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
 	
-	factory = TopHatFactory(config) 
-	try:
-		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
-	except CannotListenError as test:
+#	factory = TopHatFactory(config) 
+#	try:
+#		reactor.listenSSL(config.Port, factory, ssl.DefaultOpenSSLContextFactory(config.SSLKeyPath, config.SSLCertPath), interface=config.Interface)
+#	except CannotListenError as test:
 		print "Cannot listen on port %s:\n%s" % (config.Port,test)
 		print "[TopHat-Serivce failed to start]"
 		exit(1)
+	from socket import AF_INET, AF_INET6
+	global test
+	test = TopHatNetwork(AF_INET6, config)
+	signal(SIGINT,Shutdown)
 
 	print "Listening on port 443, deadly."
 
@@ -66,12 +78,10 @@ def TophatMain(config_path):
 	print "[TopHat-Service started successfully]"
 	log = LogFile(config.LogFile)
 	log.write("TopHat Platform (c) TopHat Software 2012\n%s: Started\n" % Timestamp())
-	try:
-		reactor.run()
-	except KeyError:
-		reactor.stop()
-		print "[TopHat-Service shutting down]"
-		exit(0)
+	import asyncore
+	asyncore.loop(use_poll=True)
+
+#	reactor.run()
 
 if __name__ == '__main__':
 	TophatMain()
