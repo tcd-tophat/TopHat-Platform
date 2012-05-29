@@ -37,6 +37,5 @@ class Encryption:
 				pass
 
 		@abstractmethod
-		@staticmethod
 		def configKeys():
 				pass
