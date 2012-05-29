@@ -10,7 +10,6 @@ class User(metadomainobject.MetaDomainObject):
 	_photo = None
 	_email = None
 	_password = None
-	_apikey = None
 	
 	def __init__(self, id_=None):
 		super(User, self).__init__(id_)
@@ -50,11 +49,6 @@ class User(metadomainobject.MetaDomainObject):
 
 		self._password = password
 
-	def setApiKey(self, key):
-		key = str(key)
-
-		self._apikey = key
-
 	# getters #
 	def getName(self):
 		return self._name
@@ -67,6 +61,3 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getPassword(self):
 		return self._password
-
-	def getApiKey(self):
-		return self._apikey
