@@ -53,7 +53,7 @@ class TopHatThread(Thread):
 
 						elif str(client.state) == 'put':
 							from putrequest import putRequest
-							request_value = putRequest(client, data[1], factory.config.LogFile)
+							request_value = putRequest(client, data[1], self.config.LogFile)
 
 						elif str(client.state) == 'post':
 							from postrequest import postRequest
@@ -110,9 +110,7 @@ class TopHatNetwork(dispatcher):
 		def handle_accept(self):
 				from Encryption.sslencryption import SSLEncryption
 				sock, addr = self.accept()
-				from ssl import SSLError
-				sock=SSLEncryption(sock._sock,certfile='/etc/ssl/certs/tophat.crt', ca_certs=None, keyfile='/etc/ssl/private/tophat.key')
-				sock.do_handshake()
+				sock=self.config.EncryptionMethod(sock._sock,config=self.config)
 				client=ClientHandle(sock, self.queue)
 				self.__sockets.append((sock,addr,client))
 		def shutdown(self):

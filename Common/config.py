@@ -40,12 +40,6 @@ def loadConfig(path):
 				raise Exception('No TopHatConfig Function found in %s.\nPlease read our wiki: http://wiki.tophat.ie' % path)
 				exit(1)
 		conf=module.TopHatConfig()
-		if not hasattr(conf, 'SSLKeyPath'):
-				raise Exception('Please specify where the SSL Key is located:\nSSLKeyPath = \'/path/to/key\'')
-				exit(1)
-		if not hasattr(conf, 'SSLCertPath'):
-				raise Exception('Please specify where the SSL Cert is located:\nSSLCertPath = \'/path/to/cert\'')
-				exit(1)
 		if not hasattr(conf, 'Port'):
 				raise Exception('Please specify what port TopHat is to listen to:\nPort=443')
 				exit(1)
@@ -54,7 +48,13 @@ def loadConfig(path):
 				exit(1)
 		if not hasattr(conf, 'Threads'):
 				raise Exception('Please specify how many threads to use for workers:\nThreads=1')
-		
+				exit(1)
+		if not hasattr(conf, 'EncryptionMethod'):
+				raise Exception('Please specify how to encrypt the connection between the server and clients:\nEncryptionMethod=SSLEncryption')
+		else:
+				for x in conf.EncryptionMethod.configKeys():
+						if not hasattr(conf,x):
+								raise Exception('%s required by EncryptionMethod: %s' % (x, conf.EncryptionMethod.__name__))
 		if not hasattr(conf, 'User'):
 				raise Exception('Please specify what user TopHat drops privileges to:\nUser = \'username\'')
 				exit(1)

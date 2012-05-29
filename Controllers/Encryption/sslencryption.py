@@ -1,18 +1,20 @@
 from encryption import Encryption
-from ssl import wrap_socket, SSLSocket
-
+from ssl import wrap_socket, SSLSocket, SSLError
+from socket import error as SocketError
 class SSLEncryption(Encryption):
-		_securesock=True
 		def __init__(self, _sock, **kwargs):
 				super(SSLEncryption, self).__init__(_sock)
 				try:
 						self._keyfile = kwargs['keyfile']
 						self._certfile= kwargs['certfile']
-						self._ca_certs= kwargs['ca_certs']
 				except KeyError:
-						raise TypeError('Expected keyfile, certfile and ca_certs got %s instead.' % str(kwargs))
-				self._securesock= wrap_socket(self,keyfile=self._keyfile, certfile=self._certfile, server_side=True, ca_certs=self._ca_certs, do_handshake_on_connect=False)
-
+						try:
+								self.config = kwargs['config']
+								self._keyfile = self.config.SSLKeyPath
+								self._certfile = self.config.SSLCertPath
+						except KeyError:
+								raise TypeError('Expected keyfile, certfile and ca_certs got %s instead.' % str(kwargs))
+				self._securesock= wrap_socket(self,keyfile=self._keyfile, server_side=True, certfile=self._certfile, do_handshake_on_connect=True)
 		def recv(self, size):
 				return self._securesock.read(size)
 		def send(self, data):
@@ -26,4 +28,19 @@ class SSLEncryption(Encryption):
 		def getpeername(self):
 				return self._securesock.getpeername()
 		def close(self):
-				return self._securesock.close()
+				try:
+						self._securesock=self._securesock.unwrap()
+				except SSLError:
+						pass
+				except SocketError:
+						pass
+				except AttributeError:
+						pass
+				except ValueError:
+						pass
+				#return self._sock.close()
+		def getsockopt(self, *args):
+				return self._sock.getsockopt(*args)
+		@staticmethod
+		def configKeys():
+				return ['SSLKeyPath', 'SSLCertPath'] 
