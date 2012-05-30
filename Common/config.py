@@ -67,6 +67,22 @@ def loadConfig(path):
 				raise Exception('Please specify where TopHat will log to:\nLogFile = \'/path/to/logfile\'')
 				exit(1)
 
+		if not hasattr(conf, 'MySQLHost'):
+				raise Exception('Please specify where TopHat will connect to it\'s MySQL DB \nMySQLHost=\'hostname\'')
+				exit(1)
+
+		if not hasattr(conf, 'MySQLUser'):
+				raise Exception('Please specify what user TopHat will use to connect to the MySQL DB \nMySQLUser=\'username\'')
+				exit(1)
+
+		if not hasattr(conf, 'MySQLPass'):
+				raise Exception('Please specify what password TopHat will use to connect to the MySQL DB \nMySQLPass=\'password\'')
+				exit(1)
+
+		if not hasattr(conf, 'MySQLDatabase'):
+				raise Exception('Please specify what database name TopHat will use to connect to the MySQL DB \nMySQLDatabase=\'dbname\'')
+				exit(1)
+
 		if not hasattr(conf, 'DBDriver'):
 				raise Exception('Please specify what database driver you want to use with TopHat. More information available at http://wiki.tophat.ie.\nDBDriver = \'MySQL\'')
 		return conf
