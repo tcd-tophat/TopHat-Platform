@@ -16,11 +16,9 @@ class MetaDomainObject(domainobject.DomainObject):
 	def __getattr__(self, attr):
 		"""Searches through the object dictionary and the data dictionary to find the variable"""
 		if attr in self.__dict__:
-			print attr + " in dir(self)"
 			return self.__dict__[attr]
 
 		if attr in self._data:
-			print "Getting " + attr + " from data container"
 			return self._data[attr].getValue()			# return that value of the meta data object not the object itself
 
 		raise AttributeError
