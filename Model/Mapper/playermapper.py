@@ -61,8 +61,8 @@ class PlayerMapper(mapper.Mapper):
 		rowsAffected = cursor.execute(query, params)
 
 		# get insert id
-		id = cursor.lastrowid
-		obj.setId(id)
+		id_ = cursor.lastrowid
+		obj.setId(id_)
 
 		cursor.close()
 

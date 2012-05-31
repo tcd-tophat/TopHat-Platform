@@ -15,34 +15,27 @@ class MetaDomainObject(domainobject.DomainObject):
 
 	def __getattr__(self, attr):
 		"""Searches through the object dictionary and the data dictionary to find the variable"""
-
-		# check the list of local variables
 		if attr in self.__dict__:
 			return self.__dict__[attr]
 
 		if attr in self._data:
-			return self._data[attr].getValue()				# return that value of the meta data object not the object itself
+			return self._data[attr].getValue()			# return that value of the meta data object not the object itself
 
-		return None
+		raise AttributeError
 
 	def __setattr__(self, attr, value):
 		"""Ensures that the data dictionary is not being overwritten then calls DomainObject __setattr__"""
-		if attr == "data": 				# ensure not overriding the data dictionary with some arbitary attribute value
-			raise domainexception.DomainException("You cannot alter the data attribute of a MetaDomainObject " + self.__class___.__name__ + " (" + self.getId() + ")")
-			
-		try:
-			parent_dict = super(MetaDomainObject, self).__dict__
-			parent_dict[attr].setValue(value) 	# attr already in meta data dictionary - update it
+		if attr is "_data": 				# ensure not overriding the data dictionary with some arbitary attribute value
+			return None
 
-		except KeyError:
-			# there is no attr of this name in the dictionary create a meta data  in the meta data dictionary
+		if attr in dir(self):
+			self.__dict__[attr] = value
+
+		else:
 			metaData = metadataobject.MetaDataObject()
 			metaData.setKey(attr)
-			metaData.setValue(attr)
+			metaData.setValue(value)
 			self._data[attr] = metaData
-
-		# call the parent implementation to handle the rest
-		super(MetaDomainObject, self).__setattr__(attr, value)
 
 	def addMetaData(self, metaData):
 		"""Adds a meta data object to the dictionary of meta data objects"""

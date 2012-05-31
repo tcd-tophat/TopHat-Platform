@@ -1,4 +1,4 @@
-def deleteRequest (client, data):
+def deleteRequest (client, response, data):
 	"""Arguments:
 
 				client  --  Model.TophatClient

@@ -1,6 +1,8 @@
 from time import asctime
 from networking import respondToClient
-def getRequest(client, data):
+from Model.httpresponse import HttpResponse
+
+def getRequest(client, response, data):
 	"""Arguments:
 
 				client  --  Model.TophatClient
@@ -27,13 +29,13 @@ def getRequest(client, data):
 			return -1
 	
 	path = request_path.split('/')[1]
+
 	if path == 'jsontest':
-			json='{"glossary": {"title": "example glossary","GlossDiv": {"title": "S","GlossList": {"GlossEntry": {"ID": "SGML","SortAs": "SGML","GlossTerm": "Standard Generalized Markup Language","Acronym": "SGML","Abbrev": "ISO 8879:1986","GlossDef": {"para": "A meta-markup language, used to create markup languages such as DocBook.","GlossSeeAlso": ["GML", "XML"]},"GlossSee": "markup"}}}}}'
+			response.setCode(200)
+			response.setData ('{"glossary": {"title": "example glossary","GlossDiv": {"title": "S","GlossList": {"GlossEntry": {"ID": "SGML","SortAs": "SGML","GlossTerm": "Standard Generalized Markup Language","Acronym": "SGML","Abbrev": "ISO 8879:1986","GlossDef": {"para": "A meta-markup language, used to create markup languages such as DocBook.","GlossSeeAlso": ["GML", "XML"]},"GlossSee": "markup"}}}}}')
+			
 
-			test='HTTP/1.1 200 OK\n\rContent-Type: text/json\n\rDate: %s\n\rServer: tp\n\r\n\r%s\n\r' % (asctime(),json)
-			client.transport.write(test)
-
-
+	client.transport.write(response.constructResponse())
 	client.state.set_state('done')
 	return
 	## TODO: auth 

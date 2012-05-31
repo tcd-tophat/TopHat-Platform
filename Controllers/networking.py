@@ -4,6 +4,7 @@ from threading import Thread
 from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
+from Model.httpresponse import HttpResponse
 class Transport(object):
 		class Peer(object):
 				def __init__(self, port, address):
@@ -45,23 +46,27 @@ class TopHatThread(Thread):
 						if self.transport is None:
 								continue
 						client = TopHatClient(transport=self.transport)
+
+						# Provide a response class to share
+						response = HttpResponse()
+
 						HTTPParser(data[1], client)
 						request_value=-1
 						if str(client.state) == 'get':
 							from getrequest import getRequest
-							request_value = getRequest(client, data[1])
+							request_value = getRequest(client, response, data[1])
 
 						elif str(client.state) == 'put':
 							from putrequest import putRequest
-							request_value = putRequest(client, data[1], self.config.LogFile)
+							request_value = putRequest(client, response, data[1], self.config.LogFile)
 
 						elif str(client.state) == 'post':
 							from postrequest import postRequest
-							request_value = postRequest(client, data[1], self.config.LogFile)
+							request_value = postRequest(client, response, data[1], self.config.LogFile)
 
 						elif str(client.state) == 'delete':
 							from deleterequest import deleteRequest
-							request_value = deleteRequest(client,data[1])
+							request_value = deleteRequest(client, response, data[1])
 
 						elif str(client.state) == 'undef' or request_value is -1:
 							respondToClient(self.transport,'HTTP/1.1 400 Bad Request')

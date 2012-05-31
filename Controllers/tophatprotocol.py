@@ -5,6 +5,7 @@ from dns import reversename
 from Model.tophatclient import TopHatClient
 from Common.log import LogFile
 from Common.date import Timestamp
+from Model.httpresponse import HttpResponse
 config=None
 class TopHat(Protocol):
 	
@@ -47,23 +48,26 @@ class TopHat(Protocol):
 		
 		HTTPParser(self, data, self.client)
 		
+		# Provide a response class to share
+		response = HttpResponse()
+
 		# not implemented
 
 		if str(self.client.state) == 'get':
 			from getrequest import getRequest
-			request_value = getRequest(self.client,data)
+			request_value = getRequest(self.client, response, data)
 		
 		elif str(self.client.state) == 'put':
 			from putrequest import putRequest
-			request_value = putRequest(self.client,data, self.factory.LogFilePath)
+			request_value = putRequest(self.client, response, data, self.factory.LogFilePath)
 
 		elif str(self.client.state) == 'post':
 			from postrequest import postRequest
-			request_value = postRequest(self.client,data, self.factory.LogFilePath)
+			request_value = postRequest(self.client, response, data, self.factory.LogFilePath)
 		
 		elif str(self.client.state) == 'delete':
 			from deleterequest import deleteRequest
-			request_value = deleteRequest(self.client,data)
+			request_value = deleteRequest(self.client, response, data)
 		
 		elif str(self.client.state) == 'undef':
 			self.respondToClient('400 Bad Request')

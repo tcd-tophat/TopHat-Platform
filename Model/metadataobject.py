@@ -15,6 +15,9 @@ class MetaDataObject(domainobject.DomainObject):
 	def __init__(self, id_=None):
 		super(MetaDataObject, self).__init__(id_)
 
+	def __str__(self):
+		return str(self._key) + " : " + str(self._value)
+
 	def setKey(self, value):
 		# Check length
 		if len(value) > 30:
