@@ -5,6 +5,7 @@ from dns import reversename
 from Model.tophatclient import TopHatClient
 from Common.log import LogFile
 from Common.date import Timestamp
+from Model.httpresponse import HttpResponse
 config=None
 class TopHat(Protocol):
 	

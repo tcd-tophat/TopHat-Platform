@@ -4,6 +4,7 @@ from threading import Thread
 from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
+from Model.httpresponse import HttpResponse
 class Transport(object):
 		class Peer(object):
 				def __init__(self, port, address):
