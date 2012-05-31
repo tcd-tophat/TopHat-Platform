@@ -37,8 +37,7 @@ def postRequest (client, response, data, log):
 
 			if data_path == "/api/v1/apitokens":
 					response.setCode(200) # 501 = Unimplemented
-					response.setData ("{'Feature coming soon!':'YAY'}")
-
+					response.setData ("{\"Feature coming soon!\":\"YAY\"}")
 
 			client.transport.write(response.constructResponse())
 
