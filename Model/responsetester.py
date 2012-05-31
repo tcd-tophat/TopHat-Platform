@@ -1,9 +1,9 @@
 #! /usr/bin/python
 
-from httpresponse import HttpResponse
+from Model.httpresponse import HttpResponse
 
 
-n = HttpResponse(200, "Data")
+n = HttpResponse(100, "Data")
 
 print "String HTTP: "+ str(n)
 
