@@ -78,7 +78,6 @@ class TopHatThread(Thread):
 
 class TopHatNetwork(dispatcher):
 		__workers=[]
-		__sockets=[]
 		def __init__(self, family, config, host=None, port=443):
 				from sys import exit
 				dispatcher.__init__(self)
@@ -119,15 +118,11 @@ class TopHatNetwork(dispatcher):
 						del sock
 						return
 				client=ClientHandle(sock, self.queue)
-				self.__sockets.append((sock,addr,client))
 		def shutdown(self):
 				for x in self.__workers:
 						x.stop=True
 						del x
 
-				for x in self.__sockets:
-						x[2].close()
-						del x
 				self.close()
 				return
 

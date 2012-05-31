@@ -3,7 +3,6 @@ from ssl import wrap_socket, SSLSocket, SSLError, CERT_REQUIRED
 from socket import error as SocketError
 class SSLEncryption(Encryption):
 		def __init__(self, _sock, **kwargs):
-				print "howeya"
 				super(SSLEncryption, self).__init__(_sock)
 				try:
 						self._keyfile = kwargs['keyfile']
