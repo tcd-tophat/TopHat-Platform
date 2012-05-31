@@ -17,14 +17,15 @@ class DomainObject(object):
 
 		self.__markClean()				# during setup we have updated some of the attributes, make sure we don't update DB without any changes
 
-	def __setattr__(self, attr, value):
+	def __setattr__(self, attr, value, setVar=True):
 		"""Whenever an attribute of this object is changed the object is marked dirty and needs to be updated in persistent storage"""
 		if attr in self.__dict__:					# check the attr exists
 			prevValue = self.__dict__[attr]			# if so set the prevValue to its value
 		else:
 			prevValue = None
 
-		self.__dict__[attr] = value					# set the attribute in the dictionary
+		if setVar:
+			self.__dict__[attr] = value					# set the attribute in the dictionary
 
 		if prevValue != value: 						# when any attribute is changed the object is marked for update
 			self.__markDirty()						

@@ -10,7 +10,7 @@ class MetaDataObject(domainobject.DomainObject):
 	__metaclass__ = ABCMeta
 
 	_key = ""				# 30 char
-	_value = ""			# text
+	_value = ""				# text
 
 	def __init__(self, id_=None):
 		super(MetaDataObject, self).__init__(id_)

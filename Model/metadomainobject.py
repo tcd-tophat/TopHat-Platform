@@ -37,6 +37,8 @@ class MetaDomainObject(domainobject.DomainObject):
 			metaData.setValue(value)
 			self._data[attr] = metaData
 
+		super(MetaDomainObject, self).__setattr__(attr, value, False)
+
 	def addMetaData(self, metaData):
 		"""Adds a meta data object to the dictionary of meta data objects"""
 		if not isinstance(metaData, metadataobject.MetaDataObject):

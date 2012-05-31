@@ -1,4 +1,5 @@
 import abc
+#import config
 import database
 import mappererror
 import objectwatcher as OW
@@ -12,8 +13,9 @@ class Mapper:
 
 	def __init__(self):
 		try:
-			config = kwargs["config"]
-			self.db = database.Database(config.MySQLHost, config.MySQLUser, config.MySQLPass, config.MySQLDatabase)
+			#cnf = config.getConfig()
+			#self.db = database.Database(cnf.MySQLHost, cnf.MySQLUser, cnf.MySQLPass, cnf.MySQLDatabase)
+			self.db = database.Database("localhost", "root", "root", "tophat")
 		except KeyError:
 			raise NameError("Cannot load database details from the config file")
 
@@ -157,8 +159,6 @@ class Mapper:
 		query = query[:-5]											# remove the final AND from the query
 
 		query += " LIMIT %s, %s"
-
-		print query
 
 		# finish preparing all the params
 		params.append(limitStart)							# add the two limit params to the list

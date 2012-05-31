@@ -18,7 +18,7 @@ class Database:
 		self.__close()	 # on detruction of object close the connection to the DB
 
 	def __connect(self):
-		""" Makes a connection to the database"""
+		"""Makes a connection to the database"""
 		gc.collect()		# runs the python garbage collector to close and possible open but unused MySQL connections
 		
 		try:
@@ -29,11 +29,11 @@ class Database:
 			sys.exit(1)
 			
 	def __close(self):
-		""" Closes the connection to the database if it still exists """
+		"""Closes the connection to the database if it still exists"""
 		if self.__con is not None:
 			# close the connection
 			self.__con.close()
 
 	def getCursor(self):
-		""" Returns the cursor handler to the database with the setting of data being returned as an assoc array on """
+		"""Returns the cursor handler to the database with the setting of data being returned as an assocative array on"""
 		return self.__con.cursor(cursorclass=mdb.cursors.DictCursor)

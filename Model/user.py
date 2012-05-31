@@ -15,7 +15,7 @@ class User(metadomainobject.MetaDomainObject):
 		super(User, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.getId()) + " " + self._name + " " + self._email + " " + self._photo
+		return str(self.getId()) + " " + self._name + " " + str(self._email) + " " + str(self._photo)
 
 	# setters #
 	def setName(self, name):
