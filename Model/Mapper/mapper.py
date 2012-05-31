@@ -11,13 +11,17 @@ class Mapper:
 	db = None
 
 	def __init__(self):
-		self.db = database.Database("localhost", "root", "root", "tophat")			# get the database class handler
+		try:
+			config = kwargs["config"]
+			self.db = database.Database(config.MySQLHost, config.MySQLUser, config.MySQLPass, config.MySQLDatabase)
+		except KeyError:
+			raise NameError("Cannot load database details from the config file")
 
-	def find(self, id):
+	def find(self, id_):
 		"""Gets the object for that database id"""
 
 		# check not already in watcher's list if so return that instance - no need to query the DB then
-		old = self.getFromWatcher(id)
+		old = self.getFromWatcher(id_)
 		if old:
 			return old
 
@@ -25,7 +29,7 @@ class Mapper:
 
 		# gonna have to load object off the disk (database server)
 		query = self._selectStmt()
-		parameters = id,
+		parameters = id_,
 
 		cursor = self.db.getCursor()
 		rowsAffected = cursor.execute(query, parameters)	# bind the id to the query and run it
@@ -174,10 +178,10 @@ class Mapper:
 			return None										# otherwise return nada
 
 
-	def getFromWatcher(self, id):
+	def getFromWatcher(self, id_):
 		"""Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does"""
 		watcher = OW._Objectwatcher()
-		return watcher.exists(self.targetClass(), id)
+		return watcher.exists(self.targetClass(), id_)
 
 	def addToWatcher(self, obj):
 		"""Adds the given instance of an object to the ObjectWatcher's list of objects"""
