@@ -23,7 +23,7 @@ def postRequest (client, response, data, log):
 
 	data = data.rstrip()
 	data = data.split('\n', 1)
-	parser = JSONParser(log)
+	parser = JsonParser(log)
 	try:
 			data_object = parser.getObject(data[1])
 	except IndexError:
@@ -36,8 +36,8 @@ def postRequest (client, response, data, log):
 			data_path = header_http.split()[1]
 
 			if data_path == "/api/v1/apitokens":
-					response.setCode(501) # 501 = Unimplemented
-					response.setData ('Feature coming soon!')
+					response.setCode(200) # 501 = Unimplemented
+					response.setData ("{'Feature coming soon!':'YAY'}")
 
 
 			client.transport.write(response.constructResponse())
