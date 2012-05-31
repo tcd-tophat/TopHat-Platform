@@ -47,6 +47,9 @@ class TopHat(Protocol):
 		
 		HTTPParser(self, data, self.client)
 		
+		# Provide a response class to share
+		response = HttpResponse()
+
 		# not implemented
 
 		if str(self.client.state) == 'get':

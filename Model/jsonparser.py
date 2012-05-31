@@ -3,7 +3,7 @@ from Common.date import Timestamp
 from StringIO import StringIO
 from json import load
 # This class takes in JSON encoded Strings and returns them as objects
-class JSONParser():
+class JsonParser:
 
 	def __init__(self, log=None):
 			if log is not None:

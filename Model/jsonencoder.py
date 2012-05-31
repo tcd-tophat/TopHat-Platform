@@ -1,10 +1,8 @@
-from twisted.web import server, resource
-from twisted.internet import reactor
 from Common.log import LogFile
 import json
 
 # This class takes in Objects and encoes them
-class JsonEncoder(resource.Resource):
+class JsonEncoder:
 
     def __init__(self):
     	self.log = LogFile()
