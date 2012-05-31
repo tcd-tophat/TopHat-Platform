@@ -17,7 +17,7 @@ class HttpResponse:
 		self._errorCodes = dict({ 200: "OK", 201: "Created", 202:"Accepted", 204: "No Content", 400:"Bad Request", 401:"Unauthorized", 403:"Forbidden", 404:"Not Found", 500:"Internal Server Error", 501:"Not Implemented", 503:"Service Unavailable", 504:"Gateway Timeout"})
 
 		if _code != None:
-			self._code = _code
+			self.setCode(_code)
 		
 		if _object != None:
 			self.json = JsonEncoder()
@@ -39,7 +39,10 @@ class HttpResponse:
 	# setters #
 
 	def setCode(self, _code):
-		self._code = _code
+		if self._errorCodes.has_key(_code):
+			self._code = _code
+		else:
+			raise domainexception.DomainException("Given response code '"+str(_code)+"' is not supported by the TopHat platform HttpLib.")
 
 	def setData(self, _data):
 		self._data = _data
