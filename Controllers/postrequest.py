@@ -1,4 +1,4 @@
-from Model.jsonparser import JSONParser
+from Model.jsonparser import JsonParser
 
 
 def postRequest (client, response, data, log):
