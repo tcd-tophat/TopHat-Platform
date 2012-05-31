@@ -2,7 +2,7 @@ from time import asctime
 from networking import respondToClient
 from Model.httpresponse import HttpResponse
 
-def getRequest(client, data):
+def getRequest(client, response, data):
 	"""Arguments:
 
 				client  --  Model.TophatClient

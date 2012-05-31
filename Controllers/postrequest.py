@@ -1,7 +1,7 @@
 from Model.jsonparser import JSONParser
 
 
-def postRequest (client, data, log):
+def postRequest (client, response, data, log):
 	"""Arguments:
 
 				client  --  Model.TophatClient
