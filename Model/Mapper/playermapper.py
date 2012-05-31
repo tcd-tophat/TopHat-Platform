@@ -46,8 +46,6 @@ class PlayerMapper(mapper.Mapper):
 		return player_
 
 	def _doInsert(self, obj):
-		print "Inserting new Player object " + str(obj.getId())
-
 		# build query
 		# id, name, photo, game_id, user_id, lat, lon, score, time
 		query = "INSERT INTO player VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -72,11 +70,9 @@ class PlayerMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting Player " + str(obj.getId())
+		pass
 
 	def _doUpdate(self, obj):
-		print "Updating Player " + str(obj.getId())
-
 		# build the query
 		query = """UPDATE players SET 
 					name = %s, photo = %s, game_id = %s, user_id = %s, lat = %s, lon = %s, score = %s, time = %s 

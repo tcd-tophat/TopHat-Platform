@@ -38,8 +38,6 @@ class GameMapper(mapper.Mapper):
 
 
 	def _doInsert(self, obj):
-		print "Inserting new Game object " + str(obj.getId())
-
 		# build query
 		# id, name, game_type_id, creator
 		query = "INSERT INTO games VALUES(NULL, %s, %s, %s)"
@@ -64,11 +62,9 @@ class GameMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting Game " + str(obj.getId())
+		pass
 
 	def _doUpdate(self, obj):
-		print "Updating Game (not game-type) " + str(obj.getId())
-
 		# build the query
 		query = "UPDATE games SET name = %s, game_type_id = %s, creator = %s WHERE id = %s LIMIT 1"
 		params = (obj.getName(), obj.getGameTypeId(), obj.getCreator().getId(), obj.getId())

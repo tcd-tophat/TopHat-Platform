@@ -39,8 +39,6 @@ class KillMapper(mapper.Mapper):
 		return kill_
 
 	def _doInsert(self, obj):
-		print "Inserting new Kill object " + str(obj.getId())
-
 		# build query
 		# id, killer, victim, time, verified
 		query = "INSERT INTO kills VALUES(NULL, %s, %s, %s, %s)"
@@ -69,11 +67,9 @@ class KillMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting Kill " + str(obj.getId())
+		pass
 
 	def _doUpdate(self, obj):
-		print "Updating Kill " + str(obj.getId())
-
 		# build the query
 		query = "UPDATE kills SET killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
 		params = (obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())

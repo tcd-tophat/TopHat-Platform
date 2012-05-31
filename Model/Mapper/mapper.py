@@ -95,6 +95,8 @@ class Mapper:
 		if obj.getid() is -1:
 			raise mappererror.MapperError("You cannot delete an object that was never in the database. It has no id")
 
+		print "Deleting new " + str(type(obj)) + " object " + str(obj.getId())
+
 		return self._doDelete(obj)				
 
 
@@ -106,6 +108,8 @@ class Mapper:
 		if obj.getId() is -1:		# can't update an object that has not been inserted
 			raise mappererror.MapperError("You can only update objects that are in the database, please insert this object first")
 
+		print "Update new " + str(type(obj)) + " object " + str(obj.getId())
+
 		return self._doUpdate(obj)
 
 
@@ -113,6 +117,8 @@ class Mapper:
 		"""Inserts this object into the database as its records"""
 		if not isinstance(obj, domainobject.DomainObject):
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
+
+		print "Inserting new " + str(type(obj)) + " object " + str(obj.getId())
 
 		result = self._doInsert(obj)					# do the insertion specifics
 

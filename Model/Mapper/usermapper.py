@@ -30,8 +30,6 @@ class UserMapper(mapper.Mapper):
 		return usr
 
 	def _doInsert(self, obj):
-		print "Inserting new User object " + str(obj.getId())
-
 		# build query
 		query = "INSERT INTO users VALUES(NULL, %s, %s, %s, %s)"
 		params = (obj.getName(), obj.getPhoto(), obj.getEmail(), obj.getPassword())
@@ -52,11 +50,9 @@ class UserMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting User " + str(obj.getId())
+		pass
 
 	def _doUpdate(self, obj):
-		print "Updating User " + str(obj.getId())
-
 		# build the query
 		query = "UPDATE users SET name = %s, email = %s, photo = %s, password = %s WHERE id = %s LIMIT 1"
 		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId())

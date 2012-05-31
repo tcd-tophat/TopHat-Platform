@@ -27,8 +27,6 @@ class ApitokenMapper(mapper.Mapper):
 		return apitoken_
 
 	def _doInsert(self, obj):
-		print "Inserting new Apitoken object " + str(obj.getId())
-
 		# build query
 		# id, key, group_id
 		query = "INSERT INTO api_tokens VALUES(NULL, %s, 1)"
@@ -40,8 +38,8 @@ class ApitokenMapper(mapper.Mapper):
 		rowsAffected = cursor.execute(query, params)
 
 		# get insert id
-		id = cursor.lastrowid
-		obj.setId(id)
+		id_ = cursor.lastrowid
+		obj.setId(id_)
 
 		cursor.close()
 
@@ -52,11 +50,9 @@ class ApitokenMapper(mapper.Mapper):
 			return False
 
 	def _doDelete(self, obj):
-		print "Deleting Apitoken " + str(obj.getId())
+		pass
 
 	def _doUpdate(self, obj):
-		print "Updating Apitoken " + str(obj.getId())
-
 		# build the query
 		query = "UPDATE api_keys SET key = %s WHERE id = %s LIMIT 1"
 		params = (obj.getToken(), obj.getId())
