@@ -1,5 +1,5 @@
 from Model.jsonparser import JsonParser
-
+import urllib2
 
 def postRequest (client, response, data, log):
 	"""Arguments:
