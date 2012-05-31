@@ -1,4 +1,5 @@
 from Model.jsonparser import JsonParser
+from Common.unescape import Unescape
 
 
 def postRequest (client, response, data, log):
@@ -25,7 +26,7 @@ def postRequest (client, response, data, log):
 	data = data.split('\n', 1)
 	parser = JsonParser(log)
 	try:
-			data_object = parser.getObject(data[1].split('=')[1])
+			data_object = parser.getObject(Unescape.unescape(data[1].split('=')[1]))
 	except IndexError:
 			return -1
 	except ValueError:
