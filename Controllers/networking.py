@@ -5,23 +5,30 @@ from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
 from Model.httpresponse import HttpResponse
+from Common.config import TopHatConfig
+
 class Transport(object):
+		
 		class Peer(object):
 				def __init__(self, port, address):
 						self.port =port
 						self.host =address
+		
 		def __init__(self, socket,handle):
 				#if type(socket) is not type(socket()):
 				#		raise TypeError("Expected socket type got %s type instead" % type(socket))
 				self.__handle = handle
 				self.__sock=socket
+		
 		def write(self, data):
 				try:
 						self.__sock.send(data)
 				except SocketError:
 						return
+		
 		def loseConnection(self):
 				self.__handle.close()
+		
 		def getPeer(self):
 				try:
 						tmp=self.__sock.getpeername()
@@ -32,12 +39,14 @@ class Transport(object):
 
 
 class TopHatThread(Thread):
-		def __init__(self,queue,config):
+
+		def __init__(self,queue):
 				Thread.__init__(self)
 				self.queue=queue
-				self.config=config
+				self.config = TopHatConfig.getConfig()
 				self.stop=False
 				self.transport=None
+
 		def run(self):
 				while not self.stop:
 						data = self.queue.get()
@@ -78,17 +87,23 @@ class TopHatThread(Thread):
 
 class TopHatNetwork(dispatcher):
 		__workers=[]
-		def __init__(self, family, config, host=None, port=443):
+
+		def __init__(self, family, host=None, port=443):
 				from sys import exit
 				dispatcher.__init__(self)
 				self.queue = Queue()
 				self.port=port
 				self.host=host
-				self.config=config
-				for x in range(0,config.Threads):
-						self.__workers.append(TopHatThread(self.queue, self.config))
-				for x in self.__workers:
+				self.config = TopHatConfig.getConfig()
+
+				for x in range(0,self.config.Threads):
+
+						x = TopHatThread(self.queue)
+						
+						self.__workers.append(x)
+
 						x.daemon=True
+
 						x.start()
 
 				if host is not None:
@@ -100,7 +115,9 @@ class TopHatNetwork(dispatcher):
 								else:
 										pass
 				self.create_socket(family, tcp)
+
 				self.set_reuse_addr()
+
 				if host is None:
 						if family is ipv6:
 							self.bind(("::", port))
@@ -111,13 +128,15 @@ class TopHatNetwork(dispatcher):
 						self.bind((host, 443))
 				self.listen(5)
 				return
+
 		def handle_accept(self):
 				sock, addr = self.accept()
-				sock=self.config.EncryptionMethod(sock._sock,config=self.config)
+				sock=self.config.EncryptionMethod(sock._sock)
 				if not sock.initialized():
 						del sock
 						return
 				client=ClientHandle(sock, self.queue)
+
 		def shutdown(self):
 				for x in self.__workers:
 						x.stop=True
@@ -129,12 +148,14 @@ class TopHatNetwork(dispatcher):
 
 
 class ClientHandle(dispatcher):
+
 		def __init__(self, sock,queue):
 				self.sock=sock
 				self.queue=queue
 				self.sendqueue = Queue()
 				dispatcher.__init__(self, sock=sock)
 				return
+
 		def handle_read(self):
 				try:
 						data = self.recv(10240)
@@ -143,6 +164,7 @@ class ClientHandle(dispatcher):
 				if len(data) >0:
 						self.queue.put((self.sock,data,self))
 				return
+
 		def handle_close(self):
 		#		my = TopHatClient(transport=Transport(self.sock,self))
 		#		if my in TopHatClient:
@@ -150,6 +172,7 @@ class ClientHandle(dispatcher):
 				return self.close()
 	
 		def writeable(self): return True
+
 		def readable(self): return True
 
 def respondToClient(transport, data):

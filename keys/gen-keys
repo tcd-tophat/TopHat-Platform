@@ -1,0 +1,137 @@
+#!/bin/bash
+
+function helpFunc {
+
+	echo "TopHat Platform install script © Colm Vize 2012"
+	echo "Options:"
+	echo -e "gen-keys: This will generate the SSL keys optionally required to run the TopHat platform server.\n\
+Please note that these will be self signed and thus clients will NOT be able to verify them."
+	
+	echo
+	echo -e "create-users: This will create the necessary users and groups required to run the server.\n\
+This function needs root access so please run with sudo"
+
+	echo
+	echo -e "install: This will generate the keys, create the user and group and change the permissions on the keys to make them both secure and readable by the server."
+	exit
+}
+
+function generatekey {
+
+	if [ -z "$1" ]; then
+		echo "$0 install: Usage: $0 install /path/to/key/config"
+		exit
+	fi
+	source $1 
+	
+	#echo "Pass the following information to the routine to generate the certificate:"
+	
+	if [ -z "$cc" ]; then
+		echo $cc
+		read -p "Country Name (2 letter code) [GB]: " cc
+	fi
+	
+	if [ -z "$province" ]; then
+		read -p "State or Province Name (full name) [Berkshire]: " province
+	fi
+
+	if [ -z "$city" ]; then
+		read -p "Locality Name (eg, city) [Newbury]: " city
+	fi
+
+	if [ -z "$org" ]; then
+		read -p "Organization Name (eg, company) [My Company Ltd]: " org
+	fi
+
+	if [ -z "$orgu" ]; then
+		read -p "Organizational Unit Name (eg, section) []: " orgu
+	fi
+
+	if [ -z "$cn" ]; then
+		read -p "Common Name (eg, your name or your server's hostname) []: " cn
+	fi
+	
+	if [ -z "$addr" ]; then
+		read -p "Email Address []: " addr
+	fi
+
+	openssl genrsa -out ca.key 4096 >/dev/null 2>&1
+	
+	echo "$cc
+	$province
+	$city
+	$org
+	$orgu
+	$cn
+	$addr" |openssl req -new -x509 -days 365 -key ca.key -out ca.crt >/dev/null 2>&1
+	
+	openssl genrsa -out $filename.key 4096 >/dev/null 2>&1
+	
+	echo "$cc
+	$province
+	$city
+	$org
+	$orgu
+	$cn
+	$addr
+	$ocn
+	$cp" | openssl req -new -key $filename.key -out $filename.csr >/dev/null 2>&1
+	
+	openssl x509 -req -days 365 -in $filename.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out $filename.crt >/dev/null 2>&1
+	
+	
+}
+
+function createUsers {
+
+	getent passwd tophat >/dev/null 2>&1
+	if [ "$?" != "0" ]; then
+		echo "Creating user tophat"
+		sudo useradd -r tophat >/dev/null 2>&1
+		sudo gpasswd -a tophat tophat
+	fi
+}
+
+function installKeys {
+
+	if [ -z "$1" ]; then
+	echo "$0 install: Usage: $0 install /path/to/key/config"
+	exit
+	fi
+	
+	createUsers
+	generatekey $1
+	source $1
+	DIR=$(dirname "$filename")
+	cd $DIR
+	
+	chmod o=xr $DIR
+	chmod o= $(basename "$filename").key
+	chmod o= $(basename "$filename").crt
+	chmod o= $(basename "$filename").csr
+	chmod o= ca.*
+
+	sudo chown $user:$group $DIR
+	sudo chown $user:$group $(basename "$filename").key
+	sudo chown $user:$group $(basename "$filename").crt
+	sudo chown $user:$group $(basename "$filename").csr
+	sudo chown $user:$group ca.*
+
+	sudo mkdir -p $logdir
+	sudo chown $user:$group $logdir
+	exit
+}
+
+if [ -z $1 ] ; then
+	
+	helpFunc
+	exit
+fi
+
+test "$1" == "help" && helpFunc
+
+test "$1" == "create-users" && createUsers
+
+test "$1" == "install" && installKeys $2
+
+test "$1" == "gen-keys" && generatekey $2

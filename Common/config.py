@@ -3,10 +3,32 @@
 import imp
 from sys import exit
 
+class TopHatConfig:
+	_config=None
+	def __init__(self, **kwargs):
+
+		if TopHatConfig._config is None:
+			try:
+				TopHatConfig._config = loadConfig(kwargs['path'])
+
+			except KeyError:
+				raise TypeError('Config not loaded, expected path in kwargs got %s instead.' % kwargs)
+
+	@staticmethod
+	def getConfig():
+		if TopHatConfig._config is not None:
+				return TopHatConfig._config
+	@staticmethod
+	def getKey(key):
+		if TopHatConfig._config is not None:
+				return getattr(TopHatConfig._config, key)	
+
+	
+
 def loadConfig(path):
 		"""
 			Arguments:
-					path	--	String(Python primitive str)
+					path	--	String(Python primitive string)
 
 			Returning:
 					Config object.

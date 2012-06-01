@@ -1,4 +1,4 @@
-from Model.jsonparser import JsonParser
+from Model.jsonparser import JSONParser
 import urllib2
 
 def postRequest (client, response, data, log):
@@ -23,7 +23,7 @@ def postRequest (client, response, data, log):
 
 	data = data.rstrip()
 	data = data.split('\n', 1)
-	parser = JsonParser(log)
+	parser = JSONParser(log)
 	try:
 			data_object = parser.getObject(urllib2.unquote(data[1].split('=')[1]))
 	except IndexError:
