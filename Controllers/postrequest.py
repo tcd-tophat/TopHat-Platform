@@ -23,7 +23,7 @@ def postRequest (client, response, data, log):
 
 	data = data.rstrip()
 	data = data.split('\n', 1)
-	parser = JSONParser(log)
+	parser = JSOPNarser(log)
 	try:
 			data_object = parser.getObject(urllib2.unquote(data[1].split('=')[1]))
 	except IndexError:

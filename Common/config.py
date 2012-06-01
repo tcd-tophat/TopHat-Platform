@@ -58,10 +58,7 @@ def loadConfig(path):
 		except SyntaxError as detail:
 				raise Exception('Bad Syntax in %s: %s' % (path, detail))
 		
-		if not hasattr(module, 'TopHatConfig'):
-				raise Exception('No TopHatConfig Function found in %s.\nPlease read our wiki: http://wiki.tophat.ie' % path)
-				exit(1)
-		conf=module.TopHatConfig()
+		conf=module
 		if not hasattr(conf, 'Port'):
 				raise Exception('Please specify what port TopHat is to listen to:\nPort=443')
 				exit(1)
