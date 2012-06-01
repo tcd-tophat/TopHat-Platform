@@ -7,6 +7,8 @@ import domainobject
 import collection
 import identityobject
 
+import inspect
+
 class Mapper:
 	__metaclass__ = abc.ABCMeta
 	db = None

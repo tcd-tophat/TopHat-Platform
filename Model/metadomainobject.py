@@ -31,13 +31,14 @@ class MetaDomainObject(domainobject.DomainObject):
 		if attr in dir(self):
 			self.__dict__[attr] = value
 
+			super(MetaDomainObject, self).__setattr__(attr, value, False)
+
 		else:
-			metaData = metadataobject.MetaDataObject()
+			metaData = self.__getMetaDataObject()
 			metaData.setKey(attr)
 			metaData.setValue(value)
+			metaData.setObject(self)
 			self._data[attr] = metaData
-
-		super(MetaDomainObject, self).__setattr__(attr, value, False)
 
 	def addMetaData(self, metaData):
 		"""Adds a meta data object to the dictionary of meta data objects"""
@@ -45,3 +46,24 @@ class MetaDomainObject(domainobject.DomainObject):
 			raise domainexception.DomainException("You must pass in a valid meta data object")
 
 		self._data[metaData.getKey()] = metaData
+
+	def __getMetaDataObject(self):
+		"""Returns the correct meta data class for this domain object"""
+		name = str(self.__class__.__name__) + "MetaData"
+
+		try:
+			module = __import__(name.lower())				# import the class
+			
+			for name in dir(module):
+				try:
+					# create a new instance of the specific meta data object and return it
+					obj = getattr(module, name)()
+					return obj					
+
+				except AttributeError:
+					raise domainexception.DomainException("Cannot find MetaDataObject " + name + " in order to create an instance of it")
+
+				# let all other exceptions just rise up
+
+		except ImportError:
+			raise domainexception.DomainException("Unable to import MetaDataObject: " + name + ". It does not exist.")

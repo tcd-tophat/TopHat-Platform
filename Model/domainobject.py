@@ -73,6 +73,9 @@ class DomainObject(object):
 		mapperName = str(self.__class__.__name__) + "Mapper"
 		moduleName = "Mapper." + mapperName.lower()
 
+		print mapperName
+		print moduleName
+
 		try:
 			mapperModule = __import__(moduleName, fromlist=["Mapper"])				# import the class
 			
@@ -82,8 +85,8 @@ class DomainObject(object):
 					M = getattr(mapperModule, mapperName)()							
 					return M
 
-				except:
-					print "Cannot create Mapper object"
+				except AttributeError:
+					print "Cannot create instance of the mapper object"
 					return None
 
 		except ImportError:
