@@ -1,4 +1,4 @@
-from Model.jsonparser import JsonParser
+from Model.httpdata import HttpData
 
 def putRequest(client, response, data,log):
 	"""Arguments:
@@ -18,21 +18,24 @@ def putRequest(client, response, data,log):
 		Description:
 				Handles PUT requests."""
 	
-	data = data.rstrip()
-	data = data.split('\n', 1)
 
 	try:
-		parser=JsonParser(log)
-		data_object = parser.getObject(data[1]) 
-	except ValueError:
-		return -1
-	except IndexError:
-		return -1 
 
-	header_http = data[0].split('\n')[0]
-	data_path   =  header_http.split()[1]
+			http = HttpData(data, True)
 
+			if http.getDataPath() == "/api/v1/apitokens":
+					response.setCode(200) # 501 = Unimplemented
+					response.setData ("{\"Feature coming soon!\":\"YAY\"}")
+
+			client.transport.write(response.constructResponse())
+	except:
+			# Respond with internal server error
+			response.setCode(500)
+			client.transport.write(response.constructResponse())
+			return -1
+	
 	client.state.set_state('done')
+
 	return
 
 

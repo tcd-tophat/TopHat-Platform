@@ -22,7 +22,7 @@ def getRequest(client, response, data):
 
 	try:
 
-			http = HttpData(data, False)
+			http = HttpData(data)
 
 			if http.getDataPath() == "/jsontest":
 					response.setCode(200) # 501 = Unimplemented
@@ -33,6 +33,7 @@ def getRequest(client, response, data):
 
 	client.transport.write(response.constructResponse())
 	client.state.set_state('done')
+	
 	return
 	## TODO: auth 
    	## TODO: DB call
