@@ -1,4 +1,4 @@
-from Model.jsonparser import JSONParser
+from Model.jsonparser import JsonParser
 
 def putRequest(client, response, data,log):
 	"""Arguments:
@@ -22,7 +22,7 @@ def putRequest(client, response, data,log):
 	data = data.split('\n', 1)
 
 	try:
-		parser=JSONParser(log)
+		parser=JsonParser(log)
 		data_object = parser.getObject(data[1]) 
 	except ValueError:
 		return -1
