@@ -21,7 +21,7 @@ def postRequest (client, response, data, log):
 
 	try:
 
-			http = HttpData(response, True)
+			http = HttpData(data, True)
 
 			if http.getDataPath() == "/api/v1/apitokens":
 					response.setCode(200) # 501 = Unimplemented
