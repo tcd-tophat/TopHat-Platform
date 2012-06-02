@@ -1,4 +1,6 @@
 from Model.jsonparser import JsonParser
+from Model.httpdata import HttpData
+
 import urllib2
 
 def postRequest (client, response, data, log):
@@ -18,31 +20,21 @@ def postRequest (client, response, data, log):
 
 		Description:
 				Handles POST requests."""
-
-
-
-	data = data.rstrip()
-	data = data.split('\n', 1)
-	parser = JsonParser(log)
 	try:
-			data_object = parser.getObject(urllib2.unquote(data[1].split('=')[1]))
-	except IndexError:
-			return -1
-	except ValueError:
-			return -1
-	
-	try:
-			header_http = data[0].split('\n')[0]
-			data_path = header_http.split()[1]
 
-			if data_path == "/api/v1/apitokens":
+			http = HttpData(response, True)
+
+			if http.getDataPath() == "/api/v1/apitokens":
 					response.setCode(200) # 501 = Unimplemented
 					response.setData ("{\"Feature coming soon!\":\"YAY\"}")
 
 			client.transport.write(response.constructResponse())
-
-	except IndexError:
+	except:
+			# Respond with internal server error
+			response.setCode(500)
+			client.transport.write(response.constructResponse())
 			return -1
+	
 	client.state.set_state('done')
 	return
 	## TODO: auth
