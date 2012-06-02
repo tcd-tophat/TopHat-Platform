@@ -37,7 +37,6 @@ class HttpData:
 		if data == None:
 			data = self._raw_http
 
-		data = data.rstrip()
 		data = data.split('\n', 1)
 
 		try:
