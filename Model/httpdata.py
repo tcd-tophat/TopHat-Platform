@@ -34,11 +34,10 @@ class HttpData:
 	def parseResponse(self, data = None):
 		"""Converts the classes raw http response into it's basic components."""
 
-		if data != None:
-			data = data.rstrip()
-		else:
-			data = self._raw_http.rstrip()
+		if data == None:
+			data = self._raw_http
 
+		data = data.rstrip()
 		data = data.split('\n', 1)
 
 		try:
