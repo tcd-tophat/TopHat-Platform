@@ -1,6 +1,7 @@
 from time import asctime
 from networking import respondToClient
 from Model.httpresponse import HttpResponse
+from Model.httpdata import HttpData
 
 def getRequest(client, response, data):
 	"""Arguments:
