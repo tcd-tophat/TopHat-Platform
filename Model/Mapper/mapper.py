@@ -185,6 +185,11 @@ class Mapper:
 		else:
 			return None										# otherwise return nada
 
+	def null(self, value):
+		if value is None:
+			return "NULL"
+		else:
+			return value
 
 	def getFromWatcher(self, id_):
 		"""Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does"""

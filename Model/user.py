@@ -10,6 +10,7 @@ class User(metadomainobject.MetaDomainObject):
 	_photo = None
 	_email = None
 	_password = None
+	_time = None
 	
 	def __init__(self, id_=None):
 		super(User, self).__init__(id_)
@@ -49,6 +50,12 @@ class User(metadomainobject.MetaDomainObject):
 
 		self._password = password
 
+	def setTime(self, time):
+		if type(time) is not datetime.date:
+    		raise domainexception.DomainException('arg must be a datetime.date, not a %s' % type(arg))
+
+    	self._time = time
+
 	# getters #
 	def getName(self):
 		return self._name
@@ -61,3 +68,6 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getPassword(self):
 		return self._password
+
+	def getTime(self):
+		return self._time
