@@ -65,6 +65,25 @@ class _Objectwatcher:
 		if obj in self.__delete:
 			self.__delete.remove(obj)
 
+	def printAll(self):
+		print "##==================================="
+		print "========================"
+		print "## Dirty"
+		for dirty in self.__dirty:
+			print str(dirty) + " :: " + str(type(dirty))
+
+		print "========================"
+		print "## Clean"
+		for new in self.__new:
+			print str(new) + " :: " + str(type(new))
+
+		print "========================"
+		print "## Delete"
+		for delete in self.__delete:
+			print str(delete) + " :: " + str(type(delete))
+
+		print "##====================================="
+
 	def magicSaveAll(self):
 		""" Loop through all the list of objects to change and make those changes in persistent storage """
 
@@ -74,7 +93,7 @@ class _Objectwatcher:
 			if M is not None:
 				M.insert(newObj)
 			else:
-				print "Unable to finder mapper for " + str(newObj) + ". Object not being inserted."
+				print "Unable to finder mapper for " + str(newObj) + " (" + str(type(newObj)) + ") . Object not being inserted."
 
 		# update changed objects
 		for changedObj in self.__dirty:

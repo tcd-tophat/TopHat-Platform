@@ -1,32 +1,38 @@
 from encryption import Encryption
 from ssl import wrap_socket, SSLSocket, SSLError, CERT_REQUIRED
 from socket import error as SocketError
+from Common.config import TopHatConfig
+
+
 class SSLEncryption(Encryption):
+
 		def __init__(self, _sock, **kwargs):
+
 				super(SSLEncryption, self).__init__(_sock)
+
 				try:
 						self._keyfile = kwargs['keyfile']
 						self._certfile= kwargs['certfile']
 						self._ca_certs= kwargs['ca_certs']
+
 				except KeyError:
-						try:
-								self.config = kwargs['config']
-								self._keyfile = self.config.SSLKeyPath
-								self._certfile = self.config.SSLCertPath
-								self._ca_certs = self.config.SSLCAPath
-						except KeyError:
-								raise TypeError('Expected keyfile, certfile and ca_certs got %s instead.' % str(kwargs))
-						try:
-								self._securesock= wrap_socket(  self,
-														keyfile=self._keyfile, 
-														ca_certs=self._ca_certs,
-														certfile=self._certfile, 
-														server_side=True,
-#														cert_reqs=CERT_REQUIRED,
-														do_handshake_on_connect=True,
-											)
-						except SSLError:
-								self._securesock=None
+					self.config = TopHatConfig.getConfig()
+					self._keyfile = self.config.SSLKeyPath
+					self._certfile = self.config.SSLCertPath
+					self._ca_certs = self.config.SSLCAPath
+					
+				try:
+					self._securesock= wrap_socket(  self,
+						keyfile=self._keyfile, 
+						ca_certs=self._ca_certs,
+						certfile=self._certfile, 
+						server_side=True,
+						do_handshake_on_connect=True,
+						)
+
+				except SSLError:
+					self._securesock=None
+
 		def recv(self, size):
 				return self._securesock.read(size)
 		
@@ -51,15 +57,20 @@ class SSLEncryption(Encryption):
 		def close(self):
 				try:
 						self._securesock=self._securesock.unwrap()
+
 				except SSLError:
 						pass
+
 				except SocketError:
 						pass
+
 				except AttributeError:
 						pass
+
 				except ValueError:
 						pass
-				#return self._sock.close()
+				return self._sock.close()
+
 		def getsockopt(self, *args):
 				return self._sock.getsockopt(*args)
 		

@@ -7,12 +7,27 @@ class IdentityObject:
 	__and = None
 	__enforce = []
 
-	def __init__(self, field = None, obj = None):
+	def __init__(self, field=None, obj=None):
 		if obj is not None:
-			self.__enforce = vars(obj).keys()		# list of the object properties
+			self.__enforce = self._getAttributesFromObject(obj)		# list of the object properties
 
 		if field is not None:
 			self.field(field)
+
+	def _getAttributesFromObject(self, obj):
+		"""Builds a list of allowed variables based on the attributes in the domain object"""
+		attr_list = []
+
+		for attr in dir(obj):						# foreach class attribute
+			if not callable(getattr(obj, attr)):	# check not a function
+				if (
+					"__" not in attr and 			# except python
+					"_abc_" not in attr and 		# except abstract base class
+					attr is not "_data"				# except the data container
+					):
+					attr_list.append(attr[1:])		# remove starting _ and add to
+
+		return attr_list
 
 	def isVoid(self):
 		"""Checks that this does have some fields set already"""

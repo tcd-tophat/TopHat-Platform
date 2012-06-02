@@ -1,8 +1,6 @@
 from Model.jsonparser import JsonParser
 from Model.httpdata import HttpData
 
-import urllib2
-
 def postRequest (client, response, data, log):
 	"""Arguments:
 
@@ -20,6 +18,7 @@ def postRequest (client, response, data, log):
 
 		Description:
 				Handles POST requests."""
+
 	try:
 
 			http = HttpData(response, True)

@@ -3,7 +3,7 @@ from json import load
 import domainexception
 
 # This class takes in JSON encoded Strings and returns them as objects
-class JsonParser:
+class JSONParser:
 
 	def __init__(self, log=None):
 			return

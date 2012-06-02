@@ -3,10 +3,32 @@
 import imp
 from sys import exit
 
+class TopHatConfig:
+	_config=None
+	def __init__(self, **kwargs):
+
+		if TopHatConfig._config is None:
+			try:
+				TopHatConfig._config = loadConfig(kwargs['path'])
+
+			except KeyError:
+				raise TypeError('Config not loaded, expected path in kwargs got %s instead.' % kwargs)
+
+	@staticmethod
+	def getConfig():
+		if TopHatConfig._config is not None:
+				return TopHatConfig._config
+	@staticmethod
+	def getKey(key):
+		if TopHatConfig._config is not None:
+				return getattr(TopHatConfig._config, key)	
+
+	
+
 def loadConfig(path):
 		"""
 			Arguments:
-					path	--	String(Python primitive str)
+					path	--	String(Python primitive string)
 
 			Returning:
 					Config object.
@@ -36,10 +58,7 @@ def loadConfig(path):
 		except SyntaxError as detail:
 				raise Exception('Bad Syntax in %s: %s' % (path, detail))
 		
-		if not hasattr(module, 'TopHatConfig'):
-				raise Exception('No TopHatConfig Function found in %s.\nPlease read our wiki: http://wiki.tophat.ie' % path)
-				exit(1)
-		conf=module.TopHatConfig()
+		conf=module
 		if not hasattr(conf, 'Port'):
 				raise Exception('Please specify what port TopHat is to listen to:\nPort=443')
 				exit(1)
