@@ -26,7 +26,10 @@ def postRequest (client, response, data, log):
 			if http.getDataPath() == "/api/v1/apitokens":
 					response.setCode(200) # 501 = Unimplemented
 					response.setData ("{\"Feature coming soon!\":\"YAY\"}")
-
+			elif http.parseError():
+					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder
+					response.setCode(400)
+					
 			client.transport.write(response.constructResponse())
 	except:
 			# Respond with internal server error

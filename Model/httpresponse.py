@@ -5,7 +5,7 @@ from jsonencoder import JsonEncoder
 
 class HttpResponse:
 
-	_code = 400
+	_code = 404
 	_data = None
 
 	_errorCodes = None

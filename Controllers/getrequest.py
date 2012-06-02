@@ -27,6 +27,9 @@ def getRequest(client, response, data):
 			if http.getDataPath() == "/jsontest":
 					response.setCode(200) # 501 = Unimplemented
 					response.setData ('{"glossary": {"title": "example glossary","GlossDiv": {"title": "S","GlossList": {"GlossEntry": {"ID": "SGML","SortAs": "SGML","GlossTerm": "Standard Generalized Markup Language","Acronym": "SGML","Abbrev": "ISO 8879:1986","GlossDef": {"para": "A meta-markup language, used to create markup languages such as DocBook.","GlossSeeAlso": ["GML", "XML"]},"GlossSee": "markup"}}}}}')
+			elif http.parseError():
+					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder
+					response.setCode(400)
 	except:
 			# Respond with internal server error
 			response.setCode(500)
