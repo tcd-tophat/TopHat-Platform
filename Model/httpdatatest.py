@@ -1,5 +1,45 @@
 from httpdata import HttpData
 import pprint
+import sys, traceback
+
+
+def test (data, json, number):
+
+	print " === Start Test: "+str(number)+" ==="
+
+	try:
+		# Test Without JSON Parsing
+		http = HttpData(data, json)
+
+		if (http.parseError()):
+			print "Error 400 Bad Request"
+
+		print ""
+		print "Request Type:"
+		pprint.pprint ( http.getRequestType() )
+		print ""
+		print "Status Line:"
+		pprint.pprint ( http.getStatusLine() )
+		print ""
+		print "Data Path:"
+		pprint.pprint ( http.getDataPath() )
+		print ""
+		print "Data Object:"
+		pprint.pprint ( http.getDataObject() )
+		print ""
+		print "Raw Response:"
+		pprint.pprint ( http.getRawResponse() )
+
+		print ""
+		print "Parse Error:"
+		pprint.pprint ( http.parseError() )
+
+	except:
+		print "TEST "+str(number)+" Failed"
+		traceback.print_exc(file=sys.stdout)
+
+	print " === End Test: "+str(number)+" ==="
+
 
 #
 # Set of HTTP Request Tests
@@ -8,112 +48,15 @@ import pprint
 
 data = 'POST /api/v1/apitokens HTTP/1.1\r\nContent-Length: 60\r\nContent-Type: application/x-www-form-urlencoded\r\nHost: www.arboroia.com\r\nConnection: Keep-Alive\r\nUser-Agent: org.tophat.android.PlatformClient 0.1a\r\n\r\njson=%7B%22password%22%3A%22%22%2C%22username%22%3A%22%22%7D'
 
-http = None
-http = HttpData(data, True)
-try:
-	# Test With JSON Parsing
-	
-
-	if (http.parseError()):
-		print "Error 400 Bad Request"
-
-	print ""
-	print "Request Type:"
-	pprint.pprint ( http.getRequestType() )
-	print ""
-	print "Status Line:"
-	pprint.pprint ( http.getStatusLine() )
-	print ""
-	print "Data Path:"
-	pprint.pprint ( http.getDataPath() )
-	print ""
-	print "Data Object:"
-	pprint.pprint ( http.getDataObject() )
-	print ""
-	print "Raw Response:"
-	pprint.pprint ( http.getRawResponse() )
-
-except:
-	print "TEST 1 Failed"
-
-try:
-	# Test Without JSON Parsing
-	http = HttpData(data, False)
-
-	if (http.parseError()):
-		print "Error 400 Bad Request"
-
-	print ""
-	print "Request Type:"
-	pprint.pprint ( http.getRequestType() )
-	print ""
-	print "Status Line:"
-	pprint.pprint ( http.getStatusLine() )
-	print ""
-	print "Data Path:"
-	pprint.pprint ( http.getDataPath() )
-	print ""
-	print "Data Object:"
-	pprint.pprint ( http.getDataObject() )
-	print ""
-	print "Raw Response:"
-	pprint.pprint ( http.getRawResponse() )
-
-except:
-	print "TEST 2 Failed"
-
+test(data, True, 1)
+test(data, False, 2)
 
 data = "BAD DATA }''"
 
-try:
-	# Test With JSON Parsing
-	http = HttpData(data, True)
+test(data, True, 3)
+test(data, False, 4)
 
-	if (http.parseError()):
-		print "Error 400 Bad Request"
+data = "GET /jsontest HTTP/1.1\n"
 
-	print ""
-	print "Request Type:"
-	pprint.pprint ( http.getRequestType() )
-	print ""
-	print "Status Line:"
-	pprint.pprint ( http.getStatusLine() )
-	print ""
-	print "Data Path:"
-	pprint.pprint ( http.getDataPath() )
-	print ""
-	print "Data Object:"
-	pprint.pprint ( http.getDataObject() )
-	print ""
-	print "Raw Response:"
-	pprint.pprint ( http.getRawResponse() )
-
-except:
-	print "TEST 3 Failed"
-
-
-try:
-	# Test Without JSON Parsing (and bad data)
-	http = HttpData(data, False)
-
-	if (http.parseError()):
-		print "Error 400 Bad Request"
-
-	print ""
-	print "Request Type:"
-	pprint.pprint ( http.getRequestType() )
-	print ""
-	print "Status Line:"
-	pprint.pprint ( http.getStatusLine() )
-	print ""
-	print "Data Path:"
-	pprint.pprint ( http.getDataPath() )
-	print ""
-	print "Data Object:"
-	pprint.pprint ( http.getDataObject() )
-	print ""
-	print "Raw Response:"
-	pprint.pprint ( http.getRawResponse() )
-
-except:
-	print "TEST 4 Failed"
+test(data, True, 5)
+test(data, False, 6)

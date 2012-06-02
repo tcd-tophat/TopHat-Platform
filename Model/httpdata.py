@@ -41,14 +41,17 @@ class HttpData:
 		data = data.split('\n', 1)
 
 		try:
-			if self._is_json == True:
-				self._data_object = self._parser.getObject(urllib2.unquote(data[1].split('=')[1]))
-			else:
-				self._data_object = data[1].split('\r\n\r\n')[1]
-
 			self._status_line = data[0].split('\n')[0]
 			self._data_path = self._status_line.split()[1]
 			self._request_type = self._status_line.split(' ')[0]
+
+			if self._is_json == True:
+				self._data_object = self._parser.getObject(urllib2.unquote(data[1].split('=')[1]))
+			
+			# No need for any more parsing with Non-JSON requests atm
+			#else:
+			#	self._data_object = data[1].split('\r\n\r\n')[1]
+
 		except:
 			self._parse_error = True
 
