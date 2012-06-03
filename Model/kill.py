@@ -15,7 +15,7 @@ class Kill(domainobject.DomainObject):
 	def __str__(self):
 		string = self._killer.getName() + " killed " + self._victim.getName() + " the kill is "
 		if self._verified is False:
-			string += " not "
+			string += "not "
 		string += "verified"
 
 		string += " (" + str(self._time) + ")"

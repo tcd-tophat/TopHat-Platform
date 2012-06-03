@@ -33,6 +33,7 @@ class GameMapper(mapper.Mapper):
 		game_.setName(data["name"])
 		game_.setGameTypeId(data["game_type_id"])
 		game_.setGameTypeName(data["game_type_name"])
+		game_.setTime(data["time"])
 
 		return game_
 
@@ -40,7 +41,7 @@ class GameMapper(mapper.Mapper):
 	def _doInsert(self, obj):
 		# build query
 		# id, name, game_type_id, creator
-		query = "INSERT INTO games VALUES(NULL, %s, %s, %s)"
+		query = "INSERT INTO games VALUES(NULL, %s, %s, %s, NULL)"
 
 		# convert boolean value to int bool
 		params = (obj.getName(), obj.getGameTypeId(), obj.getCreator().getId())

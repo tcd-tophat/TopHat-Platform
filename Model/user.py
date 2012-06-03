@@ -1,5 +1,5 @@
 import re
-
+from datetime import datetime
 import domainobject
 import domainexception
 import metadomainobject
@@ -20,16 +20,12 @@ class User(metadomainobject.MetaDomainObject):
 
 	# setters #
 	def setName(self, name):
-		name = str(name)
-
 		if len(name) > 60:
 			raise domainexception.DomainException("User's name must be less than 60 characters")
 
 		self._name = name
 
 	def setPhoto(self, photo):
-		photo = str(photo)
-
 		if len(photo) is not 32:
 			raise domainexception.DomainException("That is not a photo")
 
@@ -51,10 +47,10 @@ class User(metadomainobject.MetaDomainObject):
 		self._password = password
 
 	def setTime(self, time):
-		if type(time) is not datetime.date:
-    		raise domainexception.DomainException('arg must be a datetime.date, not a %s' % type(arg))
+		if type(time) is not datetime:
+			raise domainexception.DomainException("Time must be a datetime object, not a %s" % type(time))
 
-    	self._time = time
+		self._time = time
 
 	# getters #
 	def getName(self):

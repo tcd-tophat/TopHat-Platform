@@ -1,3 +1,4 @@
+from datetime import datetime
 import domainobject
 import user
 import domainexception
@@ -8,6 +9,7 @@ class Game(domainobject.DomainObject):
 	_creator = None 			# user who created the game
 	_gameTypeId = None			# type of game by id
 	_gameTypeName = ""			# public name of game type
+	_time = None
 
 	def __init__(self, id_=None):
 		super(Game, self).__init__(id_)
@@ -27,6 +29,9 @@ class Game(domainobject.DomainObject):
 	def getGameTypeName(self):
 		return self._gameTypeName
 
+	def getTime(self):
+		return self._time
+
 	def setName(self, name):
 		if len(name) > 255:
 			raise domainexception.DomainException("The name of a game cannot be more than 255 characters")
@@ -40,6 +45,8 @@ class Game(domainobject.DomainObject):
 		self._creator = creator
 
 	def setGameTypeId(self, id_):
+		id_ = int(id_)
+		
 		if id_ > 99999 or id_ < 0:
 			raise domainexception.DomainException("Game Type id must be a positive int less than 99999")
 
@@ -50,3 +57,9 @@ class Game(domainobject.DomainObject):
 			raise domainexception.DomainException("Name of the Game type must be less that 50")
 
 		self._gameTypeName = name
+
+	def setTime(self, time):
+		if type(time) is not datetime:
+			raise domainexception.DomainException("Time attribute must be a datetime object not a %s" % type(time))
+
+		self._time = time

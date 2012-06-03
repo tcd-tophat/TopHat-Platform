@@ -73,9 +73,6 @@ class DomainObject(object):
 		mapperName = str(self.__class__.__name__) + "Mapper"
 		moduleName = "Mapper." + mapperName.lower()
 
-		print mapperName
-		print moduleName
-
 		try:
 			mapperModule = __import__(moduleName, fromlist=["Mapper"])				# import the class
 			

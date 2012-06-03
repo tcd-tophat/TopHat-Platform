@@ -1,3 +1,4 @@
+from datetime import datetime
 import domainobject
 import user
 import game
@@ -66,7 +67,7 @@ class Player(domainobject.DomainObject):
 		self._score = score
 
 	def setTime(self, time_):
-		if type(time_) is "<type 'datetime.datetime'>":
+		if type(time_) is not datetime:
 			raise domainexception.DomainException("Time must a datetime object")
 
 		self._time = time_
