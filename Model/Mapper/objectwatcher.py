@@ -1,4 +1,4 @@
-from Model import domainobject
+from . import domainobject
 
 class _Objectwatcher:
 	""" Singleton class that keeps track of every instance of a DomainObject in this system """
