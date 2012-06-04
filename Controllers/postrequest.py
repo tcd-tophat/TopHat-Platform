@@ -1,7 +1,7 @@
 from Model.jsonparser import JsonParser
 from Model.httpdata import HttpData
-from Mapper import usermapper as UM
-from Mapper import identityobject
+from Model.Mapper import usermapper as UM
+from Model.Mapper import identityobject
 
 def postRequest (client, response, data, log):
 	"""Arguments:
@@ -40,8 +40,9 @@ def postRequest (client, response, data, log):
 							response.setData ("{\"Successfully retrieved user\":\"YAY\"}")
 
 						except KeyError:
-							response.setCode(400)
-
+							response.setCode(500)
+					else:
+						response.setCode(400)
 
 
 			elif http.parseError():
