@@ -1,14 +1,15 @@
 from Model.jsonparser import JsonParser
 from Model.httpdata import HttpData
 from Model.Mapper import usermapper as UM
-from Model.Mapper import identityobject
+from Common.apikeygen import getKey
 
 def postRequest (client, response, data, log):
 	"""Arguments:
 
-				client  --  Model.TophatClient
-				data	--  String(Python primitive str)
-				log		--  String(Python primitive str)
+				client  	--  Model.TophatClient
+				response 	--	Model.HttpResponse
+				data		--  String(Python primitive str)
+				log			--  String(Python primitive str)
 		Returning:
 
 				Integer as request_status.
@@ -29,21 +30,27 @@ def postRequest (client, response, data, log):
 
 					if http.getDataObject().has_key('username') and http.getDataObject().has_key('password'):
 
-						IO = identityobject.IdentityObject(None, user.User())
-						IO.field("email").eq(http.getDataObject()['username'])
-						usersSelect = UserMapper.selectIdentity(IO, 0, 1)
+						UserMapper = UM()
+						usersSelect = UserMapper.getUserByEmail(http.getDataObject()['username'])
 
 						try:
 							user_object = usersSelect[0]
 
+							key = getKey()
+
 							response.setCode(200) # 501 = Unimplemented
-							response.setData ("{\"Successfully retrieved user\":\"YAY\"}")
+							response.setData ("{\"apikey\":\""+key+"\"}")
 
 						except KeyError:
 							response.setCode(404)
 					else:
-						response.setCode(400)
+						key = getKey()
 
+						response.setCode(501) # 501 = Unimplemented
+						response.setData ("{\"apikey\":\""+key+"\"}")
+
+			elif http.getDataPath() == "/api/v1/users/":
+				# This method is to create a new user
 
 			elif http.parseError():
 					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder

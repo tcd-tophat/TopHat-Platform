@@ -59,6 +59,8 @@ class TopHatThread(Thread):
 						# Provide a response class to share
 						response = HttpResponse()
 
+						# Provide Plugin Method Framework
+
 						HTTPParser(data[1], client)
 						request_value=-1
 						if str(client.state) == 'get':

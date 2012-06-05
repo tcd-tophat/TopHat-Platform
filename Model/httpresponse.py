@@ -30,9 +30,9 @@ class HttpResponse:
 
 	def constructResponse(self):
 		if (self._code != None and self._data != None ):
-				return 'HTTP/1.1 %s %s\n\rContent-Type: text/json\n\rDate: %s\n\rServer: tp\n\r\n\r%s\n\r' % (self.getCode(), self._errorCodes[self._code], asctime(), self.getData())
+				return 'HTTP/1.1 %s %s\n\rContent-Type: text/json\n\rDate: %s\n\rServer: TopHatPlatform\n\r\n\r%s\n\r' % (self.getCode(), self._errorCodes[self._code], asctime(), self.getData())
 		elif ( self._code != None and self._data == None):
-				return 'HTTP/1.1 %s %s\n\rContent-Type: text/json\n\rDate: %s\n\rServer: tp\n\r\n\r%s\n\r' % (self.getCode(), self._errorCodes[self._code], asctime(), "")			
+				return 'HTTP/1.1 %s %s\n\rContent-Type: text/json\n\rDate: %s\n\rServer: TopHatPlatform\n\r\n\r%s\n\r' % (self.getCode(), self._errorCodes[self._code], asctime(), "")			
 		else:
 				raise domainexception.DomainException("Response code or data is missing.")
 
