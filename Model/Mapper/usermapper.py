@@ -67,3 +67,9 @@ class UserMapper(mapper.Mapper):
 			return True
 		else:
 			return False
+
+	def getUserByEmail(self, email):
+		params = (email,)
+		query = "SELECT * FROM users WHERE email = %s"
+	
+		return self.__getOne(query, params)

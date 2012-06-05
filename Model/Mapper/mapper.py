@@ -19,6 +19,18 @@ class Mapper:
 		except KeyError:
 			raise NameError("Cannot load database details from the config file")
 
+	def __getOne(query, params):
+		"""Given the SQL query and the params to be bound get one object from the database. Returns made object."""
+		cursor = self.db.getCursor()
+		cursor.execute(query, params)			# bind the id to the query and run it
+		data = cursor.fetchone()					# fetch the one row from the DB
+		cursor.close()
+
+		if data is None:	
+			return None
+		else:
+			return self.createObject(data) 			# if a row was returned then build and object from it
+
 	def find(self, id_):
 		"""Gets the object for that database id"""
 
@@ -33,15 +45,7 @@ class Mapper:
 		query = self._selectStmt()
 		parameters = id_,
 
-		cursor = self.db.getCursor()
-		rowsAffected = cursor.execute(query, parameters)	# bind the id to the query and run it
-		data = cursor.fetchone()							# fetch the one row from the DB
-		cursor.close()
-
-		if rowsAffected > 0:								# if a row was returned then build and object from it
-			return self.createObject(data)
-		else:
-			return None
+		return self.__getOne(query, parameters)
 
 	def createObject(self, data):
 		"""Turns results from the database into objects that the rest of the program understands"""
