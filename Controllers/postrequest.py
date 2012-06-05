@@ -50,8 +50,8 @@ def postRequest (client, response, data, log):
 						response.setData ("{\"apikey\":\""+key+"\"}")
 
 			elif http.getDataPath() == "/api/v1/users/":
-				# This method is to create a new user
-
+					# This method is to create a new user
+					response.setCode(501) # Unimplemented
 			elif http.parseError():
 					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder
 					response.setCode(400)
