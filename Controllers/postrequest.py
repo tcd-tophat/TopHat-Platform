@@ -40,7 +40,7 @@ def postRequest (client, response, data, log):
 							response.setData ("{\"Successfully retrieved user\":\"YAY\"}")
 
 						except KeyError:
-							response.setCode(500)
+							response.setCode(404)
 					else:
 						response.setCode(400)
 
