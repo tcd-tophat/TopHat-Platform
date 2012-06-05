@@ -1,14 +1,14 @@
-import domainobject
+import Model.domainobject
 
 class _Objectwatcher:
-	""" Singleton class that keeps track of every instance of a DomainObject in this system """
+	"""Singleton class that keeps track of every instance of a DomainObject in this system"""
 
 	_instance = None
 
 	__objects = {}						# dictionary of all the objects in the system
 	__new = []							# list of objects to be inserted into the database
-	__dirty = []							# list of objects to be updated
-	__delete = []							# list of objects to be deleted
+	__dirty = []						# list of objects to be updated
+	__delete = []						# list of objects to be deleted
 	
 	def __init__(self):
 		pass
@@ -20,45 +20,45 @@ class _Objectwatcher:
 		return cls._instance
 
 	def add(self, obj):
-		""" Add an object to the watchers list """
-		if isinstance(obj, domainobject.DomainObject):
+		"""Add an object to the watcher's list"""
+		if isinstance(obj, Model.domainobject.DomainObject):
 			key = self.getGlobalName(obj)
 			self.__objects[key] = obj
 		else:
 			t = str(type(obj))
 			raise Exception("Only DomainObjects can be stored in the ObjectWatcher's list, not " + t)
 
-	def exists(self, classname, id):
-		""" Check if an object exists given its classname and id """
-		name = classname + "." + str(id)
+	def exists(self, classname, id_):
+		"""Check if an object exists given its classname and id"""
+		name = classname + "." + str(id_)
 		if name in self.__objects:
 			return self.__objects[name]
 		else:
 			return None
 
 	def getGlobalName(self, obj) :
-		""" Gets the global name of this object to be used as the key in the hash map """
+		"""Gets the global name of this object to be used as the key in the hash map"""
 		return str(obj.__class__.__name__) + "." + str(obj.getId())
 
 	def addNew(self, obj):
-		""" Marks an object new so that it can be inserted into the database """
+		"""Marks an object new so that it can be inserted into the database"""
 		if obj not in self.__new:
 			self.__new.append(obj)
 
 	def addDelete(self, obj):
-		""" Marks an old object that needs to be deleted from the database """
+		"""Marks an old object that needs to be deleted from the database"""
 		if obj.getId() != -1:
 			if obj not in self.__delete:
 				self.__delete.append(obj)
 
 	def addDirty(self, obj):
-		""" Marks an object that has changed and needs to be updated """
+		"""Marks an object that has changed and needs to be updated"""
 		if obj.getId() != -1:						# check that the object has been inserted into the database so that there is actually a record to update
 			if obj not in self.__dirty:
 				self.__dirty.append(obj)
 
 	def addClean(self, obj):
-		""" Marks an object clean by removing it from the delete/dirty list of objects to be updated """
+		"""Marks an object clean by removing it from the delete/dirty list of objects to be updated"""
 		if obj in self.__dirty:
 			self.__dirty.remove(obj)
 		
@@ -82,10 +82,10 @@ class _Objectwatcher:
 		for delete in self.__delete:
 			print str(delete) + " :: " + str(type(delete))
 
-		print "##====================================="
+		print "##==================================="
 
 	def magicSaveAll(self):
-		""" Loop through all the list of objects to change and make those changes in persistent storage """
+		"""Loop through all the list of objects to change and make those changes in persistent storage"""
 
 		# insert new objects
 		for newObj in self.__new:

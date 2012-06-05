@@ -1,5 +1,5 @@
 import metadataobjectmapper
-import user
+import Model.usermetadata
 import usermapper
 
 class UserMetaDataMapper(metadataobjectmapper.MetaDataObjectMapper):
@@ -18,7 +18,7 @@ class UserMetaDataMapper(metadataobjectmapper.MetaDataObjectMapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the UserMetaData objects from the data pulled from the database"""
-		user_meta = UserMetaData(data["id"])
+		user_meta = Model.usermetadata.UserMetaData(data["id"])
 
 		user_meta.setKey(data["key"])
 		user_meta.setValue(value)

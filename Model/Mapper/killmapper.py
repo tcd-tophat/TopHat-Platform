@@ -1,8 +1,7 @@
 import mapper
 import time
 
-import kill
-import user
+import Model.kill
 import playermapper as PM
 
 class KillMapper(mapper.Mapper):
@@ -24,7 +23,7 @@ class KillMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
-		kill_ = kill.Kill(data["id"])
+		kill_ = Model.kill.Kill(data["id"])
 
 		PlayerMapper = PM.PlayerMapper()
 		killer = PlayerMapper.find(data["killer_player_id"])

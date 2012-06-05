@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import mapper
+import mappererror
 import metadataobject
 
 class MetaDataObjectMapper(mapper.Mapper):

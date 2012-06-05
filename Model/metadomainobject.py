@@ -21,7 +21,7 @@ class MetaDomainObject(domainobject.DomainObject):
 		if attr in self._data:
 			return self._data[attr].getValue()			# return that value of the meta data object not the object itself
 
-		raise AttributeError
+		raise AttributeError("Could not find attr " + attr)
 
 	def __setattr__(self, attr, value):
 		"""Ensures that the data dictionary is not being overwritten then calls DomainObject __setattr__"""

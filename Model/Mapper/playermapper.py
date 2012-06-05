@@ -1,10 +1,8 @@
 import sys
 
 import mapper
-import player
-import user
+import Model.player
 import usermapper
-import game
 import gamemapper
 
 class PlayerMapper(mapper.Mapper):
@@ -26,7 +24,7 @@ class PlayerMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
-		player_ = player.Player(data["id"])
+		player_ = Model.player.Player(data["id"])
 
 		GameMapper = gamemapper.GameMapper()
 		game_ = GameMapper.find(data["game_id"])

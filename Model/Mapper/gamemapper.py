@@ -1,7 +1,5 @@
 import mapper
-
-import game
-import user
+import Model.game
 import usermapper as UM
 
 class GameMapper(mapper.Mapper):
@@ -23,7 +21,7 @@ class GameMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
-		game_ = game.Game(data["id"])
+		game_ = Model.game.Game(data["id"])
 
 		# get creator User object
 		UserMapper = UM.UserMapper()
@@ -36,7 +34,6 @@ class GameMapper(mapper.Mapper):
 		game_.setTime(data["time"])
 
 		return game_
-
 
 	def _doInsert(self, obj):
 		# build query

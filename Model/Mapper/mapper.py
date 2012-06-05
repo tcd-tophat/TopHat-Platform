@@ -3,11 +3,9 @@ import abc
 import database
 import mappererror
 import objectwatcher as OW
-import domainobject
+import Model.domainobject
 import collection
 import identityobject
-
-import inspect
 
 class Mapper:
 	__metaclass__ = abc.ABCMeta
