@@ -1,53 +1,70 @@
-from Model.httpdata import HttpData
+from Model.textresponse import TextResponse
+from Model.jsonparser import JsonParser
 
-def putRequest(client, response, data,log):
+def putRequest(client, resource, data):
 	"""Arguments:
-				
-				client		--	Model.TophatClient
-				response 	--	Model.HttpResponse
-				data		--	String(Python primitive str) 
-				log			--	String(Python primitive str)
+
+				client  	--  Model.TophatClient
+				resource	--  The resource URL
+				data		--  String(Python primitive str)
 		Returning:
-				
+
 				Integer as request_status.
 
 				if -1 then something went wrong
 				otherwise None.
 		Exceptions:
-				None
+			None
 
 		Description:
-				Handles PUT requests."""
-	
+			Handles PUT requests."""
+
+	response = TextResponse()
 
 	try:
 
-			http = HttpData(data, True)
+		# Left inside try, so that bad JSON returns a valid error code to client, rather than crashing.
+		json = JsonParser()
+		jsonObject = json.getObject(data)
 
-			if http.getDataPath() == "/api/v1/apitokens":
+		if resource == "/api/v1/apitokens":
+
+			if jsonObject.has_key('username') and jsonObject.has_key('password'):
+
+				UserMapper = UM()
+				usersSelect = UserMapper.getUserByEmail(jsonObject['username'])
+
+				try:
+					user_object = usersSelect[0]
+
+					key = getKey()
+
 					response.setCode(200) # 501 = Unimplemented
-					response.setData ("{\"Feature coming soon!\":\"YAY\"}")
-			
-			elif http.getDataPath() == "/api/v1/users/":
-				# This lists all users. Not accessible by standard access level, must be admin
-				response.setCode(403)
-				
-			elif http.parseError():
-					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder
-					response.setCode(400)
+					response.setData ("{\"apikey\":\""+key+"\"}")
 
-			client.transport.write(response.constructResponse())
+				except KeyError:
+					response.setCode(404)
+			else:
+				key = getKey()
+
+				response.setCode(501) # 501 = Unimplemented
+				response.setData ("{\"apikey\":\""+key+"\"}")
+
+		elif resource == "/api/v1/users/":
+				# This method is to create a new user
+				response.setCode(501) # Unimplemented
+				
+		else:
+				response.setCode(404)
+
+		client.transport.write(response.constructResponse())
 	except:
-			# Respond with internal server error
-			response.setCode(500)
-			client.transport.write(response.constructResponse())
-			return -1
+		# Respond with internal server error
+		response.setCode(500)
+		client.transport.write(response.constructResponse())
+		return -1
 	
 	client.state.set_state('done')
-
 	return
-
-
-
-	# TODO: auth
-	# TODO: DB call
+	## TODO: auth 
+   	## TODO: DB call

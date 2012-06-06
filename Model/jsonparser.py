@@ -8,9 +8,6 @@ class JsonParser:
 	def __init__(self, log=None):
 			return
 
-
-
-
 	# Get JSON as object, if not StringType, returns None.
 	# Causes a ValueError to rise if invalid JSON is supplied
 	def getObject(self, data):

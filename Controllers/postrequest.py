@@ -1,15 +1,13 @@
 from Model.jsonparser import JsonParser
-from Model.httpdata import HttpData
 from Model.Mapper import usermapper as UM
 from Common.apikeygen import getKey
 
-def postRequest (client, response, data, log):
+def postRequest (client, response, data):
 	"""Arguments:
 
 				client  	--  Model.TophatClient
 				response 	--	Model.HttpResponse
 				data		--  String(Python primitive str)
-				log			--  String(Python primitive str)
 		Returning:
 
 				Integer as request_status.
@@ -22,46 +20,50 @@ def postRequest (client, response, data, log):
 		Description:
 				Handles POST requests."""
 
+	response = TextResponse()
+
 	try:
 
-			http = HttpData(data, True)
+		# Left inside try, so that bad JSON returns a valid error code to client, rather than crashing.
+		json = JsonParser()
+		jsonObject = json.getObject(data)
 
-			if http.getDataPath() == "/api/v1/apitokens":
+		if resource == "/api/v1/apitokens":
 
-					if http.getDataObject().has_key('username') and http.getDataObject().has_key('password'):
+			if jsonObject.has_key('username') and jsonObject.has_key('password'):
 
-						UserMapper = UM()
-						usersSelect = UserMapper.getUserByEmail(http.getDataObject()['username'])
+				UserMapper = UM()
+				usersSelect = UserMapper.getUserByEmail(jsonObject['username'])
 
-						try:
-							user_object = usersSelect[0]
+				try:
+					user_object = usersSelect[0]
 
-							key = getKey()
+					key = getKey()
 
-							response.setCode(200) # 501 = Unimplemented
-							response.setData ("{\"apikey\":\""+key+"\"}")
+					response.setCode(200) # 501 = Unimplemented
+					response.setData ("{\"apikey\":\""+key+"\"}")
 
-						except KeyError:
-							response.setCode(404)
-					else:
-						key = getKey()
+				except KeyError:
+					response.setCode(404)
+			else:
+				key = getKey()
 
-						response.setCode(501) # 501 = Unimplemented
-						response.setData ("{\"apikey\":\""+key+"\"}")
+				response.setCode(501) # 501 = Unimplemented
+				response.setData ("{\"apikey\":\""+key+"\"}")
 
-			elif http.getDataPath() == "/api/v1/users/":
-					# This method is to create a new user
-					response.setCode(501) # Unimplemented
-			elif http.parseError():
-					# Respond with error 400 - Bad Request - if an parse error occurred inside the Http input responder
-					response.setCode(400)
+		elif resource == "/api/v1/users/":
+				# This method is to create a new user
+				response.setCode(501) # Unimplemented
+				
+		else:
+				response.setCode(404)
 
-			client.transport.write(response.constructResponse())
+		client.transport.write(response.constructResponse())
 	except:
-			# Respond with internal server error
-			response.setCode(500)
-			client.transport.write(response.constructResponse())
-			return -1
+		# Respond with internal server error
+		response.setCode(500)
+		client.transport.write(response.constructResponse())
+		return -1
 	
 	client.state.set_state('done')
 	return
