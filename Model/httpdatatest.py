@@ -60,3 +60,8 @@ data = "GET /jsontest HTTP/1.1\n"
 
 test(data, True, 5)
 test(data, False, 6)
+
+data = "POST /api/v1/apitokens HTTP/1.1\\r\\nContent-Length: 60\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nHost: www.arboroia.com\\r\\nConnection: Keep-Alive\\r\\nUser-Agent: org.tophat.android.PlatformClient 0.1a\\r\\n\\r\\njson=%7B%22password%22%3A%22%22%2C%22username%22%3A%22%22%7D\n"
+
+test(data, True, 7)
+test(data, False, 8)
