@@ -1,5 +1,5 @@
 import abc
-#import config
+from Common.config import TopHatConfig
 import database
 import mappererror
 import objectwatcher as OW
@@ -13,13 +13,14 @@ class Mapper:
 
 	def __init__(self):
 		try:
-			#cnf = config.getConfig()
-			#self.db = database.Database(cnf.MySQLHost, cnf.MySQLUser, cnf.MySQLPass, cnf.MySQLDatabase)
-			self.db = database.Database("localhost", "root", "root", "tophat")
+			cnf = TopHatConfig
+			print str(cnf.getKey("MySQLHost")) + " " + str(cnf.getKey("MySQLUser")) + " " + str(cnf.getKey("MySQLPass")) + " " + str(cnf.getKey("MySQLDatabase"))
+			self.db = database.Database(cnf.getKey("MySQLHost"), cnf.getKey("MySQLUser"), cnf.getKey("MySQLPass"), cnf.getKey("MySQLDatabase"))
+			#self.db = database.Database("localhost", "root", "root", "tophat")
 		except KeyError:
-			raise NameError("Cannot load database details from the config file")
+			raise RuntimeError("Cannot load database details from the config file")
 
-	def __getOne(query, params):
+	def __getOne(self, query, params):
 		"""Given the SQL query and the params to be bound get one object from the database. Returns made object."""
 		cursor = self.db.getCursor()
 		cursor.execute(query, params)			# bind the id to the query and run it
@@ -43,7 +44,7 @@ class Mapper:
 
 		# gonna have to load object off the disk (database server)
 		query = self._selectStmt()
-		parameters = id_,
+		parameters = (id_,)
 
 		return self.__getOne(query, parameters)
 
