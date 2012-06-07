@@ -2,11 +2,11 @@ from Model.jsonparser import JsonParser
 from Model.Mapper import usermapper as UM
 from Common.apikeygen import getKey
 
-def postRequest (client, response, data):
+def postRequest (client, resource, data):
 	"""Arguments:
 
 				client  	--  Model.TophatClient
-				response 	--	Model.HttpResponse
+				resource 	--	Model.HttpResponse
 				data		--  String(Python primitive str)
 		Returning:
 
