@@ -14,9 +14,7 @@ class Mapper:
 	def __init__(self):
 		try:
 			cnf = TopHatConfig
-			print str(cnf.getKey("MySQLHost")) + " " + str(cnf.getKey("MySQLUser")) + " " + str(cnf.getKey("MySQLPass")) + " " + str(cnf.getKey("MySQLDatabase"))
 			self.db = database.Database(cnf.getKey("MySQLHost"), cnf.getKey("MySQLUser"), cnf.getKey("MySQLPass"), cnf.getKey("MySQLDatabase"))
-			#self.db = database.Database("localhost", "root", "root", "tophat")
 		except KeyError:
 			raise RuntimeError("Cannot load database details from the config file")
 
