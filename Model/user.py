@@ -26,8 +26,9 @@ class User(metadomainobject.MetaDomainObject):
 		self._name = name
 
 	def setPhoto(self, photo):
-		if len(photo) is not 32:
-			raise domainexception.DomainException("That is not a photo")
+		if photo is not None:
+			if len(photo) is not 32:
+				raise domainexception.DomainException("That is not a photo")
 
 		self._photo = photo
 
@@ -42,7 +43,8 @@ class User(metadomainobject.MetaDomainObject):
 		self._email = email
 
 	def setPassword(self, password):
-		password = str(password)
+		if password is not None:
+			password = str(password)
 
 		self._password = password
 

@@ -1,6 +1,7 @@
 import abc
 from Common.config import TopHatConfig
 import database
+import MySQLdb as mdb
 import mappererror
 import objectwatcher as OW
 import Model.domainobject
@@ -19,7 +20,7 @@ class Mapper:
 			raise RuntimeError("Cannot load database details from the config file")
 
 	def __getOne(self, query, params):
-		"""Given the SQL query and the params to be bound get one object from the database. Returns made object."""
+		"""Given the SQL query with placeholders and the params to be bound get one object from the database. Returns made object."""
 		cursor = self.db.getCursor()
 		cursor.execute(query, params)			# bind the id to the query and run it
 		data = cursor.fetchone()					# fetch the one row from the DB
@@ -47,7 +48,7 @@ class Mapper:
 		return self.__getOne(query, parameters)
 
 	def createObject(self, data):
-		"""Turns results from the database into objects that the rest of the program understands"""
+		"""Turns results from the database into objects that the rest of the application understands"""
 		# Check if we have made this object before - no need to make it twice
 		old = self.getFromWatcher(data["id"])
 		if old is not None:
@@ -92,45 +93,47 @@ class Mapper:
 
 	def delete(self, obj):
 		"""Deletes a given object from the database"""
-		if not isinstance(obj, domainobject.DomainObject):
+		if not isinstance(obj, Model.domainobject.DomainObject):
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getid() is -1:
 			raise mappererror.MapperError("You cannot delete an object that was never in the database. It has no id")
 
-		print "Deleting new " + str(type(obj)) + " object " + str(obj.getId())
+		print "Deleting " + str(type(obj)) + " object " + str(obj.getId())
 
 		return self._doDelete(obj)				
 
 
 	def update(self, obj):
 		"""Updates a given object's records in the database"""
-		if not isinstance(obj, domainobject.DomainObject) :
+		if not isinstance(obj, Model.domainobject.DomainObject) :
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:		# can't update an object that has not been inserted
 			raise mappererror.MapperError("You can only update objects that are in the database, please insert this object first")
 
-		print "Update new " + str(type(obj)) + " object " + str(obj.getId())
+		print "Update " + str(type(obj)) + " object " + str(obj.getId())
 
 		return self._doUpdate(obj)
+
+		return False
 
 
 	def insert(self, obj):
 		"""Inserts this object into the database as its records"""
-		if not isinstance(obj, domainobject.DomainObject):
+		if not isinstance(obj, Model.domainobject.DomainObject):
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		print "Inserting new " + str(type(obj)) + " object " + str(obj.getId())
 
-		result = self._doInsert(obj)					# do the insertion specifics
+		result = self._doInsert(obj)						# do the insertion specifics
 
 		if result:
 			self.addToWatcher(obj)							# add the new object to the object watcher
 
 		return result
 
-	def selectIdentity(self, identityObj, limitStart = 0, limitDistance = 50):
+	def selectIdentity(self, identityObj, limitStart=0, limitDistance=50):
 		"""Builds a dynamic query using the identityObject to collect the parameters"""
 
 		# check we get an instance of identityObject
@@ -185,12 +188,6 @@ class Mapper:
 			return collection.Collection(data, self)		# return a collection of the objects
 		else:
 			return None										# otherwise return nada
-
-	def null(self, value):
-		if value is None:
-			return "NULL"
-		else:
-			return value
 
 	def getFromWatcher(self, id_):
 		"""Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does"""
