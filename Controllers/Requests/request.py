@@ -5,9 +5,8 @@ class Request:
 		__metaclass__=ABCMeta
 		
 		@abstractmethod
-		def __init__(self, response):
+		def __init__(self, _response):
 				self._response=_response
-				self._dataObject = dataObject
 		
 		@abstractmethod
 		def get(self, url):
