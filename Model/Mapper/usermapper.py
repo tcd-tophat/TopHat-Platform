@@ -16,7 +16,10 @@ class UserMapper(mapper.Mapper):
 		return "SELECT * FROM users WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM users LIMIT %s, %s"	
+		return "SELECT * FROM users LIMIT %s, %s"
+
+	def _deleteStmt(self, obj):
+		return "DELETE FROM users WHERE id = %s LIMIT 1"	
 
 	def _doCreateObject(self, data):
 		"""Specifics required to build a User object given persistent storage data"""
@@ -49,9 +52,6 @@ class UserMapper(mapper.Mapper):
 			return True
 		else:
 			return False
-
-	def _doDelete(self, obj):
-		pass
 
 	def _doUpdate(self, obj):
 		# build the query

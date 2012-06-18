@@ -91,6 +91,16 @@ class Mapper:
 		else:
 			return None
 
+	def __executeOperation(self, query, params):
+		cursor = self.db.getCursor()
+		rowsAffected = cursor.execute(query, params)
+		cursor.close()
+
+		if rowsAffected > 0:
+			return True
+		else:
+			return False
+
 	def delete(self, obj):
 		"""Deletes a given object from the database"""
 		if not isinstance(obj, Model.domainobject.DomainObject):
@@ -101,7 +111,10 @@ class Mapper:
 
 		print "Deleting " + str(type(obj)) + " object " + str(obj.getId())
 
-		return self._doDelete(obj)				
+		query = self._deleteStmt()
+		params = (obj.getId(),)
+
+		return __executeOperation(query params)		
 
 
 	def update(self, obj):
@@ -115,8 +128,6 @@ class Mapper:
 		print "Update " + str(type(obj)) + " object " + str(obj.getId())
 
 		return self._doUpdate(obj)
-
-		return False
 
 
 	def insert(self, obj):
@@ -217,11 +228,11 @@ class Mapper:
 		pass
 
 	@abc.abstractmethod 
-	def _doUpdate(self, obj):
+	def _deleteStmt(self, obj):
 		pass
 
 	@abc.abstractmethod 
-	def _doDelete(self, obj):
+	def _doUpdate(self, obj):
 		pass
 
 	@abc.abstractmethod 

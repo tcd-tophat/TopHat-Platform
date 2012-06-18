@@ -13,7 +13,10 @@ class MetaDataObjectMapper(mapper.Mapper):
 		return "SELECT * FROM " + self.tableName() + " WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM " + self.tableName() + " LIMIT %s, %s"	
+		return "SELECT * FROM " + self.tableName() + " LIMIT %s, %s"
+
+	def _deleteStmt(self, obj):
+		return "DELETE FROM " + self.tableName() + " WHERE id = %s LIMIT 1"	
 
 	def _doInsert(self, obj):
 		if not isinstance(obj, metadataobject.MetaDataObject):
@@ -39,9 +42,6 @@ class MetaDataObjectMapper(mapper.Mapper):
 			return True
 		else:
 			return False
-
-	def _doDelete(self, obj):
-		pass
 
 	def _doUpdate(self, obj):
 		if not isinstance(obj, metadataobject.MetaDataObject):

@@ -19,7 +19,10 @@ class KillMapper(mapper.Mapper):
 		return "SELECT * FROM kills WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM kills LIMIT %s, %s"	
+		return "SELECT * FROM kills LIMIT %s, %s"
+
+	def _deleteStmt(self, obj):
+		return "DELETE FROM kills WHERE id = %s LIMIT 1"	
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
@@ -64,9 +67,6 @@ class KillMapper(mapper.Mapper):
 			return True
 		else:
 			return False
-
-	def _doDelete(self, obj):
-		pass
 
 	def _doUpdate(self, obj):
 		# build the query

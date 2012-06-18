@@ -19,6 +19,9 @@ class GameMapper(mapper.Mapper):
 	def _selectAllStmt(self):
 		return "SELECT g.*, t.name as game_type_name FROM games g LEFT JOIN game_types t ON g.game_type_id = t.id LIMIT %s, %s"	
 
+	def _deleteStmt(self, obj):
+		return "DELETE FROM games WHERE id = %s LIMIT 1"
+		
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
 		game_ = Model.game.Game(data["id"])
@@ -58,9 +61,6 @@ class GameMapper(mapper.Mapper):
 			return True
 		else:
 			return False
-
-	def _doDelete(self, obj):
-		pass
 
 	def _doUpdate(self, obj):
 		# build the query
