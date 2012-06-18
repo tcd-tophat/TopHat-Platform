@@ -2,7 +2,7 @@ from Model.textresponse import TextResponse
 
 
 try:
-	mod = __import__('Controllers.Requests.jsontestcrap', fromlist=['Jsontest'])
+	mod = __import__('Controllers.Requests.jsontest', fromlist=['Jsontest'])
 	klass = getattr(mod, 'Jsontest')
 
 	obj = klass(response)
