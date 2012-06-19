@@ -22,17 +22,9 @@ def main():
 		s.write(data)
 
 
-		header = self.recv(8)
-		try:
-			header=unpack("BBHHH", header)
-		except HeaderFormatError:
-			self.close()
-			return 
+		header = s.recv(8)
+		header = unpack("BBHHH", header)
 		ver=header[0]
-		
-		if TopHatNetwork.ver is not ver:
-			self.close()
-			return
 
 		opcode=header[1]
 		res=header[2]
