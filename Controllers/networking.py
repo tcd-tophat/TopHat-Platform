@@ -135,7 +135,11 @@ class ClientHandle(dispatcher):
 		def handle_read(self):
 				try:
 						header = self.recv(8)
-						header=unpack("BBHHH", header)
+						try:
+												header=unpack("BBHHH", header)
+						except HeaderFormatError:
+							self.close()
+							return
 						ver=header[0]
 						
 						if self.ver is not ver:
