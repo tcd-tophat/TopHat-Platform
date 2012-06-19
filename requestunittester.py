@@ -1,15 +1,38 @@
+#!/usr/bin/env python2.7
 from Model.textresponse import TextResponse
 
+from ssl import wrap_socket
+from socket import socket
+from sys import argv
+from struct import pack, unpack, error as HeaderFormatError
+def main():
+		ver=2
+		opcode=0
+		res=0
+		s = socket()
+		s.connect((argv[1],int(argv[2])))
+		s=wrap_socket(s)
+		data="Hiya: \"hi\""
+		uri="jsontest"
+		urilen=len(uri)
+		datalen=len(data)
+		header=pack("BBHHH", ver, opcode, res, datalen, urilen)
+		s.write(header)
+		s.write(uri)
+		s.write(data)
 
-try:
-	mod = __import__('Controllers.Requests.jsontest', fromlist=['Jsontest'])
-	klass = getattr(mod, 'Jsontest')
+		header = s.recv(8)
+		header = unpack("BBHHH", header)
+		ver=header[0]
 
-	obj = klass(response)
-	
-	obj.get("json")
+		opcode=header[1]
+		res=header[2]
+		datalen=header[3]
+		urilen=header[4]
+		uri=self.recv(urilen)
+		data=self.recv(datalen)
+		print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 
-	print response.constructResponse()
-except ImportError:
-	print "Class not found"
-
+if __name__ == '__main__':
+		main()
+		

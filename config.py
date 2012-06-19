@@ -31,3 +31,4 @@ MySQLUser='tophat'
 MySQLPass='password'
 
 MySQLDatabase='tophat'
+
