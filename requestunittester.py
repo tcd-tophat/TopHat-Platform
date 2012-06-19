@@ -21,7 +21,6 @@ def main():
 		s.write(uri)
 		s.write(data)
 
-
 		header = s.recv(8)
 		header = unpack("BBHHH", header)
 		ver=header[0]
@@ -33,11 +32,6 @@ def main():
 		uri=self.recv(urilen)
 		data=self.recv(datalen)
 		print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
-
-
-
-
-
 
 if __name__ == '__main__':
 		main()

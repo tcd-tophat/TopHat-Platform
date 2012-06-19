@@ -1,9 +1,7 @@
 from Model.textresponse import TextResponse
 
-def quickRequest(client, type, resource, data):
+def quickRequest(type, resource, data):
 	"""Arguments:
-
-				client  	--  Model.TophatClient
 				type		-- The state variable about the type this is
 				resource	--  The resource URL
 				data		--  String(Python primitive str)
