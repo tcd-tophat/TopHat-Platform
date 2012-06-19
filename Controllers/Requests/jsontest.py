@@ -4,7 +4,6 @@ class Jsontest(Request):
 
 		def __init__(self, _response, **kwargs):
 				super(Jsontest, self).__init__(_response)
-				print "init"
 		
 		def get(self, url):
 				super(Jsontest,self).get(url)
