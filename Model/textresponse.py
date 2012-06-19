@@ -39,7 +39,7 @@ class TextResponse:
 	def sendResponse(self, socket):
 		ver=2
 		opcode=0
-		res=0
+		res= self.getCode()
 		urilen=len('')
 		datalen=len(self.getData())
 		header=pack("BBHHH", ver, opcode, res, datalen, urilen)

@@ -155,9 +155,8 @@ class ClientHandle(dispatcher):
 						data=self.recv(datalen)
 						print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 
-
 						response = quickRequest(self.queue, opcode, uri, data)
-
+						response.sendResponse(self.sock)
 
 				except SocketTimeout:
 						self.close()
