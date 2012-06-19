@@ -34,7 +34,7 @@ def singleRequest(client, resource, data):
 		except:
 			response.setCode(404)
 
-print response.constructResponse()
+		print response.constructResponse()
 	except:
 			# Respond with internal server error
 			response.setCode(500)
