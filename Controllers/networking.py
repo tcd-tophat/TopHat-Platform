@@ -6,7 +6,7 @@ from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error
 from Model.tophatclient import TopHatClient
 from Common.config import TopHatConfig
 from struct import pack, unpack, error as HeaderFormatError
-from Requests.singlerequest import quickRequest
+from Requests.quickrequest import quickRequest
 class Transport(object):
 		
 		class Peer(object):
