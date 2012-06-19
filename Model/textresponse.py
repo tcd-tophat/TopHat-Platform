@@ -28,13 +28,25 @@ class TextResponse:
 	def __str__(self):
 		return  " " + str(self._code) + " " + str(self._data)
 
-	def constructResponse(self):
+	def constructStringResponse(self):
 		if (self._code != None and self._data != None ):
 				return '%s\n\r%s\n\r' % (self.getCode(), self.getData())
 		elif ( self._code != None and self._data == None):
 				return '%s\n\r' % (self.getCode())
 		else:
 				raise domainexception.DomainException("Response code or data is missing.")
+
+	def sendResponse(self, socket):
+		ver=2
+		opcode=0
+		res=0
+		urilen=len('')
+		datalen=len(self.getData())
+		header=pack("BBHHH", ver, opcode, res, datalen, urilen)
+		socket.write(header)
+		socket.write('')
+		socket.write(self.getData())
+
 
 	# setters #
 

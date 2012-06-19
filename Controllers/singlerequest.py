@@ -1,9 +1,10 @@
 from Model.textresponse import TextResponse
 
-def singleRequest(client, resource, data):
+def quickRequest(client, type, resource, data):
 	"""Arguments:
 
 				client  	--  Model.TophatClient
+				type		-- The state variable about the type this is
 				resource	--  The resource URL
 				data		--  String(Python primitive str)
 		Returning:
@@ -16,32 +17,35 @@ def singleRequest(client, resource, data):
 			None
 
 		Description:
-			Handles GET requests."""
+			Handles ALL requests."""
 
 	response = TextResponse()
 
 	try:
+		# Capitalize first letter for the class name
 		var = resource.title()
 
 		try:
-			mod = __import__('Controllers.Requests.'+var, fromlist=[var])
+			mod = __import__('Controllers.Requests.'+resource, fromlist=[var])
 			klass = getattr(mod, var)
 
 			obj = klass(response)
 			
-			obj.get("json")
+			if type 	== 0:
+				obj.get(resource)
+			elif type 	== 1:
+				obj.post(resource, data)
+			elif type	== 2:
+				obj.put(resource, data)
+			elif type	== 3:
+				obj.delete(resource)
 
 		except:
 			response.setCode(404)
-
-		print response.constructResponse()
 	except:
 			# Respond with internal server error
 			response.setCode(500)
-
-	client.transport.write(response.constructResponse())
-	client.state.set_state('done')
 	
-	return
+	return response
 	## TODO: auth 
    	## TODO: DB call

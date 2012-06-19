@@ -6,6 +6,7 @@ from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error
 from Model.tophatclient import TopHatClient
 from Common.config import TopHatConfig
 from struct import pack, unpack, error as HeaderFormatError
+from Requests.singlerequest import quickRequest
 class Transport(object):
 		
 		class Peer(object):
@@ -136,7 +137,7 @@ class ClientHandle(dispatcher):
 				try:
 						header = self.recv(8)
 						try:
-												header=unpack("BBHHH", header)
+							header=unpack("BBHHH", header)
 						except HeaderFormatError:
 							self.close()
 							return 
@@ -154,6 +155,8 @@ class ClientHandle(dispatcher):
 						data=self.recv(datalen)
 						print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 
+
+						response = quickRequest(self.queue, opcode, uri, data)
 
 
 				except SocketTimeout:
