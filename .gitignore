@@ -2,3 +2,4 @@
 *.confc
 .*.swp
 .DS_Store
+tophat.sublime-*

@@ -5,7 +5,7 @@ from Queue import Queue, Empty as QueueEmpty
 from socket import AF_INET6 as ipv6, SOCK_STREAM as tcp, socket,inet_aton, error as SocketError, timeout as SocketTimeout
 from Model.tophatclient import TopHatClient
 from Common.config import TopHatConfig
-
+from struct import pack, unpack, error as HeaderFormatError
 class Transport(object):
 		
 		class Peer(object):
@@ -55,41 +55,16 @@ class TopHatThread(Thread):
 								continue
 						client = TopHatClient(transport=self.transport)
 
-						# Provide Plugin Method Framework
-
-						# For the time being force "/jsontest" URL as the new protocol isn't up
-						resource = "/jsontest"
-
-						HTTPParser(data[1], client)
-						request_value = -1
-						if str(client.state) == 'get':
-							from getrequest import getRequest
-							request_value = getRequest(client, resource, data[1])
-
-						elif str(client.state) == 'put':
-							from putrequest import putRequest
-							request_value = putRequest(client, resource, data[1])
-
-						elif str(client.state) == 'post':
-							from postrequest import postRequest
-							request_value = postRequest(client, resource, data[1])
-
-						elif str(client.state) == 'delete':
-							from deleterequest import deleteRequest
-							request_value = deleteRequest(client, resource, data[1])
-
-						elif str(client.state) == 'undef' or request_value is -1:
-							respondToClient(self.transport,'HTTP/1.1 400 Bad Request')
-							client.transport.loseConnection()
-							
 						client.transport.loseConnection()
 						del client
 				return
 
 class TopHatNetwork(dispatcher):
 		__workers=[]
+		ver=2
 
 		def __init__(self, family, host=None, port=443):
+
 				from sys import exit
 				dispatcher.__init__(self)
 				self.queue = Queue()
@@ -159,11 +134,28 @@ class ClientHandle(dispatcher):
 
 		def handle_read(self):
 				try:
-						data = self.recv(10240)
+						header = self.recv(8)
+						header=unpack("BBHHH", header)
+						ver=header[0]
+						
+						if self.ver is not ver:
+							self.close()
+							return
+
+						opcode=header[1]
+						res=header[2]
+						datalen=header[3]
+						urilen=header[4]
+						uri=self.recv(urilen)
+						data=self.recv(datalen)
+
+
+
 				except SocketTimeout:
-						pass
-				if len(data) >0:
-						self.queue.put((self.sock,data,self))
+						self.close()
+						return
+
+				self.queue.put((self.sock,header,self,data,uri))
 				return
 
 		def handle_close(self):
