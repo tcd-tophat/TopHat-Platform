@@ -1,5 +1,6 @@
 import mapper
 import Model.apitoken
+import usermapper as UM
 
 class ApitokenMapper(mapper.Mapper):
 
@@ -16,22 +17,27 @@ class ApitokenMapper(mapper.Mapper):
 		return "SELECT * FROM api_keys WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM api_keys LIMIT %s, %s"	
+		return "SELECT * FROM api_keys LIMIT %s, %s"
+
+	def _deleteStmt(self):
+		return "DELETE FROM api_keys WHERE id = %s LIMIT 1"	
 
 	def _doCreateObject(self, data):
 		"""Builds the Apitoken object using the raw data provided from the database"""
 		apitoken_ = Model.apitoken.Apitoken(data["id"])
 
 		apitoken_.setToken(data["key"])
+		UserMapper = UM.UserMapper()
+		apitoken_.setUser(UserMapper.find(data["user_id"]))
 
 		return apitoken_
 
 	def _doInsert(self, obj):
 		# build query
 		# id, key, group_id
-		query = "INSERT INTO api_tokens VALUES(NULL, %s, 1)"
+		query = "INSERT INTO api_tokens VALUES(NULL, %s, 1, %s)"
 
-		params = (obj.getToken())
+		params = (obj.getToken(), obj.getUser().getId())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -49,13 +55,10 @@ class ApitokenMapper(mapper.Mapper):
 		else:
 			return False
 
-	def _doDelete(self, obj):
-		pass
-
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE api_keys SET key = %s WHERE id = %s LIMIT 1"
-		params = (obj.getToken(), obj.getId())
+		query = "UPDATE api_keys SET key = %s, user_id = %s WHERE id = %s LIMIT 1"
+		params = (obj.getToken(), obj.getUser().getId(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -66,3 +69,9 @@ class ApitokenMapper(mapper.Mapper):
 			return True
 		else:
 			return False
+
+	def findTokenByUserId(self, user_id):
+		query = "SELECT * FROM api_keys WHERE user_id = %s LIMIT 1"
+		params = (user_id,)
+	
+		return self.__getOne(query, params)

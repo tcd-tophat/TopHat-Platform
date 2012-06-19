@@ -114,7 +114,7 @@ class Mapper:
 		query = self._deleteStmt()
 		params = (obj.getId(),)
 
-		return __executeOperation(query params)		
+		return __executeOperation(query, params)		
 
 
 	def update(self, obj):

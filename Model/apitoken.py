@@ -1,15 +1,22 @@
 import domainobject
 import domainexception
+import user
 
 class Apitoken(domainobject.DomainObject):
 
 	_token = None
+	_user = None
 
 	def __init__(self, id_=None):
 		super(Apitoken, self).__init__(id_)
 
 	def __str__(self):
-		return "APIToken: " + self._token
+		str_ = "APIToken: " + self._token
+
+		if self._user is not None:
+			str_ += " (User: " + str(self._user) + ")"
+
+		return str_
 
 	def setToken(self, token):
 		if len(token) != 64:
@@ -19,3 +26,12 @@ class Apitoken(domainobject.DomainObject):
 
 	def getToken(self):
 		return self._token
+
+	def setUser(self, user_):
+		if not isinstance(user_, user.User):
+			raise domainexception.DomainException("Must reference a User object")
+
+		self._user = user_
+
+	def getUsers(self):
+		return self._user

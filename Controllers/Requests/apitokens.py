@@ -1,47 +1,58 @@
 from Model.Mapper import usermapper as UM
+from Model.Mapper import apitokenmapper as ATM
 from Common.apikeygen import getKey
+from Common.passHash import checkHash
 
 from request import Request
 
-class JsonTest(Request):
+class Apitokens(Request):
 
-		def __init__(self, _response, **kwargs):
-				super(JsonTest, self).__init__(_response)
-		
-		def get(self, url):
-				super(JsonTest,self).get(url)
-				self._response.setCode(501)
+	def __init__(self, _response, **kwargs):
+		super(Apitokens, self).__init__(_response)
 
-		def post(self, url, dataObject):
-				super(JsonTest,self).post(url, dataObject)
+	def get(self, url):
+		super(Apitokens,self).get(url)
+		self._response.setCode(405)			# method not allowed
 
-				if dataObject.has_key('username') and dataObject.has_key('password'):
+	def post(self, url, dataObject):
+		super(Apitokens,self).post(url, dataObject)
 
-					UserMapper = UM()
-					usersSelect = UserMapper.getUserByEmail(dataObject['username'])
+		if dataObject.has_key('username') and dataObject.has_key('password'):
 
-					try:
-						user_object = usersSelect[0]
+			UserMapper = UM.UserMapper()
+			selectedUser = UserMapper.getUserByEmail(dataObject['username'])
 
-						key = getKey()
+			if selectedUser is None:
+				# User not found in database
+				response.setCode(404)
+				return
 
-						response.setCode(200) # 501 = Unimplemented
-						response.setData ("{\"apikey\":\""+key+"\"}")
+			# check password is correct	return corresponding key
+			if checkHash(dataObject['password'], selectedUser.getPassword()):
 
-					except KeyError:
-						# User not found in database = Empty Dictionary
-						response.setCode(404)
-				else:
-					# Anonymous login here.
-					key = getKey()
+				ATM_ = ATM.ApitokenMapper()
+				key = ATM.findTokenByUserId(selectUser.getId())
 
-					response.setCode(501) # 501 = Unimplemented
-					response.setData ("{\"apikey\":\""+key+"\"}")
+				response.setCode(201) # created
+				response.setData(self.__buildData(key))
 
-		def put(self, url, dataObject):
-				super(JsonTest,self).put(url, dataObject)
-				self._response.setCode(501)
+			else:
+				response.setCode(401) # not authorised
 
-		def delete(self, url):
-				super(JsonTest,self).delete(url)
-				self._response.setCode(501)
+		else:
+			# Anonymous login here.
+			key = getKey()
+
+			response.setCode(201) # 201 = created
+			response.setData(self.__buildData(key))
+
+	def put(self, url, dataObject):
+		super(Apitokens,self).put(url, dataObject)
+		self._response.setCode(405)			# method not supported
+
+	def delete(self, url):
+		super(Apitokens,self).delete(url)
+		self._response.setCode(405)			# method not supported
+
+	def __buildData(self, key):
+		return "{\"apitoken\":\"" + key + "\"}"
