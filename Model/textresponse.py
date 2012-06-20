@@ -36,16 +36,16 @@ class TextResponse:
 		else:
 				raise domainexception.DomainException("Response code or data is missing.")
 
-	def sendResponse(self, socket):
+	def sendResponse(self, client):
 		ver=2
 		opcode=0
 		res= self.getCode()
 		urilen=len('')
 		datalen=len(self.getData())
 		header=pack("BBHHH", ver, opcode, res, datalen, urilen)
-		socket.write(header)
-		socket.write('')
-		socket.write(self.getData())
+		client.write(header)
+		client.write('')
+		client.write(self.getData())
 
 
 	# setters #
