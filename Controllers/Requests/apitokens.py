@@ -7,15 +7,14 @@ from request import Request
 
 class Apitokens(Request):
 
-	def __init__(self, _response, **kwargs):
-		super(Apitokens, self).__init__(_response)
+	def __init__(self, response, **kwargs):
+		super(Apitokens, self).__init__(response)
 
-	def get(self, url):
-		super(Apitokens,self).get(url)
+	def _doGet(self, url):
 		self._response.setCode(405)			# method not allowed
 
-	def post(self, url, dataObject):
-		super(Apitokens,self).post(url, dataObject)
+	def _doPost(self, url, dataObject):
+		response = self._response
 
 		if dataObject.has_key('username') and dataObject.has_key('password'):
 
@@ -31,7 +30,7 @@ class Apitokens(Request):
 			if checkHash(dataObject['password'], selectedUser.getPassword()):
 
 				ATM_ = ATM.ApitokenMapper()
-				key = ATM.findTokenByUserId(selectUser.getId())
+				key = ATM_.findTokenByUserId(selectUser.getId())
 
 				response.setCode(201) # created
 				response.setData(self.__buildData(key))
@@ -46,13 +45,11 @@ class Apitokens(Request):
 			response.setCode(201) # 201 = created
 			response.setData(self.__buildData(key))
 
-	def put(self, url, dataObject):
-		super(Apitokens,self).put(url, dataObject)
+	def _doPut(self, url, dataObject):
 		self._response.setCode(405)			# method not supported
 
-	def delete(self, url):
-		super(Apitokens,self).delete(url)
+	def _doDelete(self, url):
 		self._response.setCode(405)			# method not supported
 
 	def __buildData(self, key):
-		return "{\"apitoken\":\"" + key + "\"}"
+		return '{"apitoken":"' + key + '"}'
