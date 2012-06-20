@@ -3,5 +3,3 @@
 .*.swp
 .DS_Store
 tophat.sublime-*
-
-Controllers/networking.py
