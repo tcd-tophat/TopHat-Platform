@@ -6,18 +6,14 @@ class Users(Request):
 		super(Jsontest, self).__init__(_response)
 		print "init"
 
-	def get(self, url):
-		super(Jsontest,self).get(url)
+	def _doGet(self, url):
 		self._response.setCode(501)
 
-	def post(self, url, dataObject):
-		super(Jsontest,self).post(url, dataObject)
+	def _doPost(self, url, dataObject):
 		self._response.setCode(501)
 
-	def put(self, url, dataObject):
-		super(Jsontest,self).put(url, dataObject)
+	def _doPut(self, url, dataObject):
 		self._response.setCode(501)
 
-	def delete(self, url):
-		super(Jsontest,self).delete(url)
+	def _doDelete(self, url):
 		self._response.setCode(501)

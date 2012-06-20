@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABCMeta
+from requesterrors import ServerErrors
 
 class Request:
 
@@ -29,6 +30,18 @@ class Request:
 		self._url = url
 
 		self._doDelete(url)
+
+	def __response(self, code, data):
+		codeChoices = [200, 201]
+
+		if code not in codeChoices:
+			raise ServerError("Unable to build the response")
+
+		info = {}
+		info["code"] = code
+		info["data"] = data
+
+		return info
 
 	@abstractmethod
 	def _doGet(self, url):
