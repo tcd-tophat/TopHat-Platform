@@ -150,8 +150,6 @@ class ClientHandle(dispatcher):
 							return 
 
 						ver=header[0]
-
-						print "Version local"+TopHatNetwork.ver +" Remote Version"+ver
 						
 						if TopHatNetwork.ver is not ver:
 							print "CHLOSING"
@@ -164,8 +162,8 @@ class ClientHandle(dispatcher):
 							datalen=header[3]
 							urilen=header[4]
 							print "HEADER: %d %d %d %d \n" % (opcode,res,datalen,urilen)
-							uri = self.recv(urilen)
-							data=self.recv(datalen)
+							uri = self.recv(int(urilen))
+							data=self.recv(int(datalen))
 							print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 						except:
 							import traceback, sys
