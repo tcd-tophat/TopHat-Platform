@@ -163,7 +163,7 @@ class ClientHandle(dispatcher):
 							data=self.recv(datalen)
 							print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 						except:
-							import traceback
+							import traceback, sys
 							traceback.print_exc(file=sys.stdout)
 
 
