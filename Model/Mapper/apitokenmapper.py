@@ -74,4 +74,4 @@ class ApitokenMapper(mapper.Mapper):
 		query = "SELECT * FROM api_keys WHERE user_id = %s LIMIT 1"
 		params = (user_id,)
 	
-		return self.__getOne(query, params)
+		return self._getOne(query, params)

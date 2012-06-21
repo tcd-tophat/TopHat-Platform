@@ -1,6 +1,6 @@
 import exceptions
 
-class RequestError(exceptions.Excpetion)
+class RequestError(exceptions.Exception):
 	code = 0
 	message = None
 

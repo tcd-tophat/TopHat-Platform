@@ -5,19 +5,17 @@ from Common.passHash import checkHash
 
 from request import Request
 from requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
-import MySQLDb as mdb
+import MySQLdb as mdb
 
 class Apitokens(Request):
 
-	def __init__(self, response, **kwargs):
-		super(Apitokens, self).__init__(response)
+	def __init__(self):
+		super(Apitokens, self).__init__()
 
 	def _doGet(self, url):
 		raise MethodNotAllowed()			# method not allowed
 
 	def _doPost(self, url, dataObject):
-		response = self._response
-
 		if dataObject.has_key('username') and dataObject.has_key('password'):
 
 			username = dataObject['username']
@@ -37,12 +35,13 @@ class Apitokens(Request):
 			if not checkHash(password, selectedUser.getPassword()):
 				raise Unauthorised("Failed to login with that username and password")
 
+			# get API token from the database and return it
 			try:
 				data = {}
 				ATM_ = ATM.ApitokenMapper()
-				data["apitoken"] = ATM_.findTokenByUserId(selectUser.getId())
+				data["apitoken"] = ATM_.findTokenByUserId(selectedUser.getId()).getToken()
 
-				return self.__response(201, data)
+				return self._response(201, data)
 
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to get API key from the database (%s: %s)" % e.args[0], e.args[1])
@@ -52,7 +51,7 @@ class Apitokens(Request):
 			data = {}
 			data["apitoken"] = getKey()
 
-			return self.__response(201, data)
+			return self._response(201, data)
 
 	def _doPut(self, url, dataObject):
 		raise MethodNotAllowed()

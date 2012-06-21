@@ -3,8 +3,8 @@ from Model.authentication import requirelogin
 
 class Jsontest(Request):
 
-	def __init__(self, _response, **kwargs):
-		super(Jsontest, self).__init__(_response)
+	def __init__(self,):
+		super(Jsontest, self).__init__()
 
 	@requirelogin
 	def _doGet(self, url):

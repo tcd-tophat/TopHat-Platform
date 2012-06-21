@@ -1,13 +1,14 @@
 from request import Request
+from requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
 
 class Users(Request):
 
-	def __init__(self, _response, **kwargs):
-		super(Jsontest, self).__init__(_response)
+	def __init__(self):
+		super(Users, self).__init__()
 		print "init"
 
 	def _doGet(self, url):
-		self._response.setCode(501)
+		
 
 	def _doPost(self, url, dataObject):
 		self._response.setCode(501)
