@@ -148,8 +148,10 @@ class ClientHandle(dispatcher):
 							print "CHLOSING"
 							self.close()
 							return 
-							
+
 						ver=header[0]
+
+						print "Version local"+TopHatNetwork.ver +" Remote Version"+ver
 						
 						if TopHatNetwork.ver is not ver:
 							print "CHLOSING"
