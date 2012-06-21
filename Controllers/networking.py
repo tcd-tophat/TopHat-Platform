@@ -145,11 +145,14 @@ class ClientHandle(dispatcher):
 							header=unpack("BBHHH", header)
 							pass
 						except HeaderFormatError:
+							print "CHLOSING"
 							self.close()
 							return 
+							
 						ver=header[0]
 						
 						if TopHatNetwork.ver is not ver:
+							print "CHLOSING"
 							self.close()
 							return
 
@@ -159,7 +162,7 @@ class ClientHandle(dispatcher):
 							datalen=header[3]
 							urilen=header[4]
 							print "HEADER: %d %d %d %d \n" % (opcode,res,datalen,urilen)
-							uri=self.recv(urilen)
+							uri = self.recv(urilen)
 							data=self.recv(datalen)
 							print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
 						except:
