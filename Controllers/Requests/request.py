@@ -1,5 +1,8 @@
 from abc import abstractmethod, ABCMeta
 from requesterrors import ServerError
+from response import Response
+
+from Controllers import statuscodes as CODE
 
 class Request:
 
@@ -10,38 +13,19 @@ class Request:
 		pass
 	
 	def get(self, data):
-		self._url = url
-
-		return self._doGet(url)
+		return self._doGet(data)
 
 	def post(self, data):
-		self._url = url
-		self._dataObject = dataObject
-
-		return self._doPost(url, dataObject)
+		return self._doPost(data)
 
 	def put(self, data):
-		self._url = url
-		self._dataObject = dataObject
-
-		return self._doPut(url, dataObject)
+		return self._doPut(data)
 
 	def delete(self, data):
-		self._url = url
+		return self._doDelete(data)
 
-		return self._doDelete(url)
-
-	def _response(self, code, data):
-		codeChoices = [200, 201]
-
-		if code not in codeChoices:
-			raise ServerError("Unable to build the response, invalid status code")
-
-		response = {}
-		response["code"] = code
-		response["data"] = data
-
-		return response
+	def _response(self, data, code=CODE.OK):
+		return Response(data, code)
 
 	@abstractmethod
 	def _doGet(self, data):
