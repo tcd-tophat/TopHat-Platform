@@ -140,26 +140,35 @@ class ClientHandle(dispatcher):
 
 		def handle_read(self):
 				try:
-						header = self.recv(8)
+						header = self.recv(1024)
 						try:
 							header=unpack("BBHHH", header)
 							pass
 						except HeaderFormatError:
+							print "CHLOSING"
 							self.close()
 							return 
+
 						ver=header[0]
 						
 						if TopHatNetwork.ver is not ver:
+							print "CHLOSING"
 							self.close()
 							return
 
-						opcode=header[1]
-						res=header[2]
-						datalen=header[3]
-						urilen=header[4]
-						uri=self.recv(urilen)
-						data=self.recv(datalen)
-						print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
+						try:
+							opcode=header[1]
+							res=header[2]
+							datalen=header[3]
+							urilen=header[4]
+							print "HEADER: %d %d %d %d \n" % (opcode,res,datalen,urilen)
+							uri = self.recv(int(urilen))
+							data=self.recv(int(datalen))
+							print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
+						except:
+							import traceback, sys
+							traceback.print_exc(file=sys.stdout)
+
 
 				except SocketTimeout:
 						self.close()

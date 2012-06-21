@@ -9,24 +9,24 @@ class Request:
 	def __init__(self):
 		pass
 	
-	def get(self, url):
+	def get(self, data):
 		self._url = url
 
 		return self._doGet(url)
 
-	def post(self, url, dataObject):
+	def post(self, data):
 		self._url = url
 		self._dataObject = dataObject
 
 		return self._doPost(url, dataObject)
 
-	def put(self, url, dataObject):
+	def put(self, data):
 		self._url = url
 		self._dataObject = dataObject
 
 		return self._doPut(url, dataObject)
 
-	def delete(self, url):
+	def delete(self, data):
 		self._url = url
 
 		return self._doDelete(url)
@@ -44,17 +44,17 @@ class Request:
 		return response
 
 	@abstractmethod
-	def _doGet(self, url):
+	def _doGet(self, data):
 		pass
 
 	@abstractmethod
-	def _doPost(self, url, dataObject):
+	def _doPost(self, data):
 		pass
 
 	@abstractmethod
-	def _doPut(self, url, dataObject):
+	def _doPut(self, data):
 		pass
 
 	@abstractmethod
-	def _doDelete(self, url):
+	def _doDelete(self, data):
 		pass
