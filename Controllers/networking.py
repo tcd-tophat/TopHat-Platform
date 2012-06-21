@@ -140,7 +140,7 @@ class ClientHandle(dispatcher):
 
 		def handle_read(self):
 				try:
-						header = self.recv(8)
+						header = self.recv(1024)
 						try:
 							header=unpack("BBHHH", header)
 							pass
