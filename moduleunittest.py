@@ -24,4 +24,4 @@ except:
 		response.setCode(500)
 		traceback.print_exc(file=sys.stdout)
 
-print response.constructResponse()
+print response.constructStringResponse()
