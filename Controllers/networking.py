@@ -157,6 +157,7 @@ class ClientHandle(dispatcher):
 						res=header[2]
 						datalen=header[3]
 						urilen=header[4]
+						print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen)
 						uri=self.recv(urilen)
 						data=self.recv(datalen)
 						print "HEADER: %d %d %d %d \nURI: %s\nDATA: %s" % (opcode,res,datalen,urilen,uri,data)
