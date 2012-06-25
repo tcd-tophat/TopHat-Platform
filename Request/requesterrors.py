@@ -1,5 +1,6 @@
 import exceptions
-from Networking.Protocols.Twisted import statuscodes as CODE
+
+from Networking.Protocols.statuscodes import StatusCodes as CODE
 
 class RequestError(exceptions.Exception):
 	code = CODE.NONE

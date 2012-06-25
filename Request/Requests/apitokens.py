@@ -2,10 +2,10 @@ from Model.Mapper import usermapper as UM
 from Model.Mapper import apitokenmapper as ATM
 from Common.apikeygen import getKey
 from Common.passHash import checkHash
-from Controllers import statuscodes as CODE
+from Networking.Protocols.Twisted.statuscodes import StatusCodes as CODE
 
-from request import Request
-from requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
+from Request.request import Request
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
 import MySQLdb as mdb
 
 class Apitokens(Request):

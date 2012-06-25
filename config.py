@@ -14,7 +14,7 @@ Group='tophat'
 
 Threads=6
 
-from Controllers.Encryption.sslencryption import SSLEncryption
+from Networking.Protocols.Twisted.Encryption.sslencryption import SSLEncryption
 
 #from Controllers.Encryption.plaintext import Plaintext
 
