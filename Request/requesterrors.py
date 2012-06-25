@@ -1,7 +1,8 @@
 import exceptions
+from Networking.Protocols.Twisted import statuscodes as CODE
 
 class RequestError(exceptions.Exception):
-	code = 0
+	code = CODE.NONE
 	message = None
 
 	def __init__(self, code, message):
@@ -12,26 +13,26 @@ class RequestError(exceptions.Exception):
 class NotFound(RequestError):
 
 	def __init__(self, message):
-		self.code = 404
+		self.code = CODE.NOT_FOUND
 		self.message = message
 
 
 class ServerError(RequestError):
 
 	def __init__(self, message):
-		self.code = 500
+		self.code = CODE.SERVER_ERROR
 		self.message = message
 
 
 class Unauthorised(RequestError):
 
 	def __init__(self, message):
-		self.code = 401
+		self.code = CODE.UNAUTHORISED
 		self.message = message
 
 
 class MethodNotAllowed(RequestError):
 
 	def __init__(self):
-		self.code = 405
+		self.code = CODE.METHOD_NOT_ALLOWED
 		self.message = "There is no method available at that URI. Check the documentation."
