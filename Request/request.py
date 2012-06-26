@@ -2,7 +2,7 @@ from abc import abstractmethod, ABCMeta
 from requesterrors import ServerError
 from response import Response
 
-from Networking.Protocols.Twisted.statuscodes import StatusCodes as CODE
+from Networking.statuscodes import StatusCodes as CODE
 
 class Request:
 

@@ -2,7 +2,7 @@ from Model.Mapper import usermapper as UM
 from Model.Mapper import apitokenmapper as ATM
 from Common.apikeygen import getKey
 from Common.passHash import checkHash
-from Networking.Protocols.Twisted.statuscodes import StatusCodes as CODE
+from Networking.statuscodes import StatusCodes as CODE
 
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
