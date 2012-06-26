@@ -1,27 +1,15 @@
-from Model.textresponse import TextResponse
+from Networking.protocolhandler import ProtocolHandler
 import traceback, sys
 
-response = TextResponse()
+p = ProtocolHandler("twisted")
 
-resource = "jsontest"
 
-try:
-	var = resource.title()
+t = p.getStatusCodes()
 
-	try:
-		mod = __import__('Controllers.Requests.'+resource, fromlist=[var])
-		klass = getattr(mod, var)
+print t.OK
+print StatusCodes.OK
 
-		obj = klass(response)
-		
-		obj.get("json")
 
-	except:
-		response.setCode(404)
-		traceback.print_exc(file=sys.stdout)
-except:
-		# Respond with internal server error
-		response.setCode(500)
-		traceback.print_exc(file=sys.stdout)
+import pprint
 
-print response.constructStringResponse()
+pprint.pprint(t)
