@@ -16,8 +16,6 @@ Threads=6
 
 from Networking.Protocols.Twisted.Encryption.sslencryption import SSLEncryption
 
-#from Controllers.Encryption.plaintext import Plaintext
-
 EncryptionMethod =SSLEncryption
 
 LogFile='/var/log/tophat/tophat.log'

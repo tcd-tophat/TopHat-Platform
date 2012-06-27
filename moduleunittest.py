@@ -2,13 +2,12 @@ from Networking.protocolhandler import ProtocolHandler
 import traceback, sys
 
 p = ProtocolHandler("twisted")
-
-
 t = p.getStatusCodes()
 
 print t.OK
 
+print "[DONE STATUS CODE CHECK]"
 
-import pprint
+print "[LOADING NETWORKING....]"
 
-pprint.pprint(t)
+p.setupNetworking()

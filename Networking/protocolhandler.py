@@ -6,6 +6,20 @@ class ProtocolHandler:
 	def __init__(self, protocol):
 		self.protocol = protocol
 
+	def setupNetworking(self):
+		title = self.protocol.title()
+
+		mod = self.import_item('Networking.protocols.%s.networking' % title)
+
+		networking = getattr(mod, "Networking")
+
+		# load protcols networking
+		loaded = networking(self)
+
+
+	def networkingPush(self, data):
+		''' This method takes data from the network and pushes it to the data processor'''
+
 
 	def load(self):
 		try:
