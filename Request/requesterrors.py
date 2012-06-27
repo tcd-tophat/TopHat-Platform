@@ -2,6 +2,7 @@ import exceptions
 
 from Networking.statuscodes import StatusCodes as CODE
 
+
 class RequestError(exceptions.Exception):
 	code = CODE.NONE
 	message = None
