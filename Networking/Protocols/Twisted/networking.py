@@ -16,3 +16,6 @@ class Networking:
 		reactor.listenTCP(8880, factory)
 		#reactor.listenSSL(self.config, factory, ssl.DefaultOpenSSLContextFactory( self.config.SSLKeyPath, self.config.SSLCertPath))
 		reactor.run()
+
+	def getHandler(self):
+		return self.protocol_handler

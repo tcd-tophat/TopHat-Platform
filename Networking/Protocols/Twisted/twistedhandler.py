@@ -1,4 +1,5 @@
 from twisted.web.resource import Resource
+from urlparse import urlparse, parse_qs
 
 class TwistedHandler(Resource):
 
@@ -11,13 +12,18 @@ class TwistedHandler(Resource):
 		Resource.__init__(self)
 
 	def render_GET(self, request):
-		return ("<html><body><pre>GET"+str(request.postpath)+"</pre></body></html>")
+
+		return self.networking.getHandler().networkingPush(0, request.postpath, request.content)
 
 	def render_POST(self, request):
-		return "<html><body><pre>POST</pre></body></html>"
+		try:
+			return self.networking.getHandler().networkingPush(1, request.postpath, request.args['json'])
+		except:
+			request.setResponseCode(500)
+			return ""
 
 	def render_PUT(self, request):
-		return "<html><body><pre>PUT</pre></body></html>"
+		return self.networking.getHandler().networkingPush(2, request.postpath, request.content.getvalue())
 
 	def render_DELETE(self, request):
-		return "<html><body><pre>DELETE</pre></body></html>"
+		return self.networking.getHandler().networkingPush(3, request.postpath, request.content.getvalue())

@@ -17,8 +17,10 @@ class ProtocolHandler:
 		loaded = networking(self)
 
 
-	def networkingPush(self, data):
+	def networkingPush(self, opcode, uri, data):
 		''' This method takes data from the network and pushes it to the data processor'''
+
+		return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
 
 	def load(self):
