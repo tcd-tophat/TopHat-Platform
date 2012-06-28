@@ -68,12 +68,12 @@ def loadConfig(path):
 		if not hasattr(conf, 'Threads'):
 				raise Exception('Please specify how many threads to use for workers:\nThreads=1')
 				exit(1)
-		if not hasattr(conf, 'EncryptionMethod'):
-				raise Exception('Please specify how to encrypt the connection between the server and clients:\nEncryptionMethod=SSLEncryption')
-		else:
-				for x in conf.EncryptionMethod.configKeys():
-						if not hasattr(conf,x):
-								raise Exception('%s required by EncryptionMethod: %s' % (x, conf.EncryptionMethod.__name__))
+		#if not hasattr(conf, 'EncryptionMethod'):
+		#		raise Exception('Please specify how to encrypt the connection between the server and clients:\nEncryptionMethod=SSLEncryption')
+		#else:
+		#		for x in conf.EncryptionMethod.configKeys():
+		#				if not hasattr(conf,x):
+		#						raise Exception('%s required by EncryptionMethod: %s' % (x, conf.EncryptionMethod.__name__))
 		if not hasattr(conf, 'User'):
 				raise Exception('Please specify what user TopHat drops privileges to:\nUser = \'username\'')
 				exit(1)

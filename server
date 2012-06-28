@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
-from Tophat.tophat import TophatMain
+#from Tophat.tophat import TophatMain
+from Networking.protocolhandler import ProtocolHandler
 from optparse import OptionParser
 from sys import exit
 
@@ -20,4 +21,13 @@ if __name__ == '__main__':
 				print "No syntax errors found in %s." % opts.config
 				exit()
 		else:
-				TophatMain(opts.config)
+				#TophatMain(opts.config)
+				from Common.config import loadConfig, TopHatConfig
+				loadConfig(opts.config)
+
+				print "[LOADING NETWORKING....]"
+				
+				p = ProtocolHandler("twisted")
+
+				p.setupNetworking()
+

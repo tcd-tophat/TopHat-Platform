@@ -14,9 +14,9 @@ Group='tophat'
 
 Threads=6
 
-from Networking.Protocols.Twisted.Encryption.sslencryption import SSLEncryption
+#from Networking.Protocols.Twisted.Encryption.sslencryption import SSLEncryption
 
-EncryptionMethod =SSLEncryption
+#EncryptionMethod =PlainText
 
 LogFile='/var/log/tophat/tophat.log'
 
@@ -29,4 +29,6 @@ MySQLUser='tophat'
 MySQLPass='password'
 
 MySQLDatabase='tophat'
+
+Protocol='twisted'
 
