@@ -14,7 +14,7 @@ Group='tophat'
 
 Threads=6
 
-EncryptionMethod=SSLEncryption
+#EncryptionMethod=SSLEncryption
 
 LogFile='/var/log/tophat/tophat.log'
 
@@ -29,7 +29,7 @@ MySQLPass='password'
 MySQLDatabase='tophat'
 
 resources = [
-	('/apitokens/', "Apitokens")
+	('/apitokens/', "Apitokens"),
 	('/users/', "Users")
 ]
 

@@ -25,8 +25,12 @@ if __name__ == '__main__':
 				from Common.config import loadConfig, TopHatConfig
 				loadConfig(opts.config)
 
+				from Common.config import TopHatConfig
+				kwargs = {"path":"config.py"}
+				TopHatConfig(**kwargs)
+
 				print "[LOADING NETWORKING....]"
-				
+
 				p = ProtocolHandler("twisted")
 
 				p.setupNetworking()

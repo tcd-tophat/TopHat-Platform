@@ -22,7 +22,7 @@ class RequestController:
 		try:
 			request = self.__importRequest(self.uri)
 		except LookupError as e:
-
+			print "ERROR: DIE"
 		try:
 			response = request.post(self.data)
 		except RequestError as e:

@@ -1,3 +1,4 @@
+from Request.requestcontroller import RequestController
 
 class ProtocolHandler:
 
@@ -21,6 +22,14 @@ class ProtocolHandler:
 
 	def networkingPush(self, opcode, uri, data):
 		''' This method takes data from the network and pushes it to the data processor'''
+
+		data = {}
+		data['username'] = 'banana@tophat.ie'
+		data['password'] = '123456789'
+
+		RC = RequestController(1, uri, data)
+
+		RC.run()
 
 		return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
