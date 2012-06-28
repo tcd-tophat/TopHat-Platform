@@ -32,3 +32,5 @@ resources = [
 	('/apitokens/', "Apitokens")
 	('/users/', "Users")
 ]
+
+Protocol='twisted'
