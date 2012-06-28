@@ -13,17 +13,17 @@ class TwistedHandler(Resource):
 
 	def render_GET(self, request):
 
-		return self.networking.getHandler().networkingPush(0, request.postpath, request.content)
+		return self.networking.getHandler().networkingPush(0, request.path, request.content)
 
 	def render_POST(self, request):
 		try:
-			return self.networking.getHandler().networkingPush(1, request.postpath, request.args['json'])
+			return self.networking.getHandler().networkingPush(1, request.path, request.args['json'])
 		except:
 			request.setResponseCode(500)
 			return ""
 
 	def render_PUT(self, request):
-		return self.networking.getHandler().networkingPush(2, request.postpath, request.content.getvalue())
+		return self.networking.getHandler().networkingPush(2, request.path, request.content.getvalue())
 
 	def render_DELETE(self, request):
-		return self.networking.getHandler().networkingPush(3, request.postpath, request.content.getvalue())
+		return self.networking.getHandler().networkingPush(3, request.path, request.content.getvalue())
