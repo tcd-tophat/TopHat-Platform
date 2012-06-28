@@ -12,7 +12,7 @@ class ProtocolHandler:
 	def __importProtocol(self):
 		title = self.protocolName.title()
 
-		mod = self.import_item('Networking.protocols.%s.networking' % title)
+		mod = self.import_item('Networking.Protocols.%s.networking' % title)
 
 		networking = getattr(mod, "Networking")
 
@@ -35,6 +35,8 @@ class ProtocolHandler:
 
 	def import_item(self, name):
 	    """Import and return bar given the string foo.bar."""
+
+	    print name
 	    package = '.'.join(name.split('.')[0:-1])
 	    obj = name.split('.')[-1]
 
