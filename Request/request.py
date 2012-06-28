@@ -13,7 +13,7 @@ class Request:
 		pass
 	
 	def get(self):
-		return self._doGet(data)
+		return self._doGet()
 
 	def post(self, data):
 		return self._doPost(data)
@@ -22,7 +22,7 @@ class Request:
 		return self._doPut(data)
 
 	def delete(self):
-		return self._doDelete(data)
+		return self._doDelete()
 
 	def _response(self, data, code=CODE.OK):
 		return Response(data, code)

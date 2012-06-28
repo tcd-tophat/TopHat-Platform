@@ -30,7 +30,9 @@ MySQLDatabase='tophat'
 
 resources = [
 	('/apitokens/', "Apitokens"),
-	('/users/', "Users")
+	('/users/', "Users"),
+	('/jsontest/', "Jsontest"),
+	('/', 'Jsontest')
 ]
 
 Protocol='twisted'

@@ -1,5 +1,7 @@
-from request import Request
+from Request.request import Request
 from Model.authentication import requirelogin
+from Networking.statuscodes import StatusCodes as CODE
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
 
 class Jsontest(Request):
 
@@ -7,15 +9,8 @@ class Jsontest(Request):
 		super(Jsontest, self).__init__()
 
 	@requirelogin
-	def _doGet(self, data):
-		self._response.setCode(200)
-		self._response.setData ('{"glossary": {"title": "example glossary","GlossDiv": {"title": "S","GlossList": {"GlossEntry": {"ID": "SGML","SortAs": "SGML","GlossTerm": "Standard Generalized Markup Language","Acronym": "SGML","Abbrev": "ISO 8879:1986","GlossDef": {"para": "A meta-markup language, used to create markup languages such as DocBook.","GlossSeeAlso": ["GML", "XML"]},"GlossSee": "markup"}}}}}')
-
-	def _doPost(self, data):
-		self._response.setCode(501)
-
-	def _doPut(self, data):
-		self._response.setCode(501)
-
-	def _doDelete(self, data):
-		self._response.setCode(501)
+	def _doGet(self):
+		# Anonymous login
+		rdata = {}
+		rdata["crap"] = "datiubsfvius"
+		return self._response(rdata, CODE.OK)

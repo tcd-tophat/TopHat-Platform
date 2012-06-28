@@ -21,15 +21,24 @@ class RequestController:
 		"""
 		try:
 			request = self.__importRequest(self.uri)
-		except LookupError as e:
-			print "ERROR: DIE"
-		try:
-			response = request.post(self.data)
-		except RequestError as e:
-			print "ERROR: DIE"
 
-		print response.code
-		print response.data
+			try:
+				if self.opcode == 0:
+					response = request.get()
+				elif self.opcode == 1:
+					response = request.post(self.data)
+				elif self.opcode == 2:
+					response = request.put(self.data)
+				elif self.opcode == 3:
+					response = request.delete()
+
+				print response.code
+				print response.data
+			except RequestError as e:
+				print "Request Failed"
+
+		except LookupError as e:
+			print "The requested URL does not exist. uri = %s " % self.uri
 
 	def __importRequest(self, uri):
 		"""

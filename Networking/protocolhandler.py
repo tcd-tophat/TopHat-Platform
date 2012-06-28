@@ -27,7 +27,7 @@ class ProtocolHandler:
 		data['username'] = 'banana@tophat.ie'
 		data['password'] = '123456789'
 
-		RC = RequestController(1, uri, data)
+		RC = RequestController(opcode, uri, data)
 
 		RC.run()
 
