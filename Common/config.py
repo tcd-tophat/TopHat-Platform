@@ -105,3 +105,7 @@ def loadConfig(path):
 		if not hasattr(conf, 'DBDriver'):
 				raise Exception('Please specify what database driver you want to use with TopHat. More information available at http://wiki.tophat.ie.\nDBDriver = \'MySQL\'')
 		return conf
+
+		if not hasattr(conf, 'resources'):
+				raise Exception('Please specify what database driver you want to use with TopHat. More information available at http://wiki.tophat.ie.\nDBDriver = \'MySQL\'')
+		return conf

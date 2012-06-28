@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABCMeta
-from requesterrors import ServerError
+from requesterrors import ServerError, MethodNotAllowed
 from response import Response
 
 from Networking.statuscodes import StatusCodes as CODE
@@ -12,7 +12,7 @@ class Request:
 	def __init__(self):
 		pass
 	
-	def get(self, data):
+	def get(self):
 		return self._doGet(data)
 
 	def post(self, data):
@@ -21,24 +21,22 @@ class Request:
 	def put(self, data):
 		return self._doPut(data)
 
-	def delete(self, data):
+	def delete(self):
 		return self._doDelete(data)
 
 	def _response(self, data, code=CODE.OK):
 		return Response(data, code)
 
-	@abstractmethod
-	def _doGet(self, data):
-		pass
+	# Functions to be overloaded by child classes
+	# otherwise they raise a method not allowed exception
+	def _doGet(self):
+		raise MethodNotAllowed()			# method not allowed
 
-	@abstractmethod
 	def _doPost(self, data):
-		pass
+		raise MethodNotAllowed()			# method not allowed
 
-	@abstractmethod
 	def _doPut(self, data):
-		pass
-
-	@abstractmethod
-	def _doDelete(self, data):
-		pass
+		raise MethodNotAllowed()			# method not allowed
+	
+	def _doDelete(self):
+		raise MethodNotAllowed()			# method not allowed

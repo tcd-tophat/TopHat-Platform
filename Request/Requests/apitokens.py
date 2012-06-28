@@ -13,9 +13,6 @@ class Apitokens(Request):
 	def __init__(self):
 		super(Apitokens, self).__init__()
 
-	def _doGet(self, data):
-		raise MethodNotAllowed()			# method not allowed
-
 	def _doPost(self, dataObject):
 		if dataObject.has_key('username') and dataObject.has_key('password'):
 
@@ -53,9 +50,3 @@ class Apitokens(Request):
 			rdata["apitoken"] = getKey()
 
 			return self._response(rdata, CODE.CREATED)
-
-	def _doPut(self, data):
-		raise MethodNotAllowed()
-
-	def _doDelete(self, data):
-		raise MethodNotAllowed()
