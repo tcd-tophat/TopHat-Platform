@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
 				print "[LOADING NETWORKING....]"
 
-				p = ProtocolHandler("twisted")
+				p = ProtocolHandler("cherrypy")
 
 				p.setupNetworking()
 
