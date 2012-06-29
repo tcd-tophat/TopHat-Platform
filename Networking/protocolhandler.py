@@ -31,7 +31,10 @@ class ProtocolHandler:
 
 		RC.run()
 
-		return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
+		if RC.response is not None:
+			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+		else:
+			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
 	def import_item(self, name):
 	    """Import and return bar given the string foo.bar."""

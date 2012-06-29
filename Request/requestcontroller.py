@@ -6,6 +6,7 @@ class RequestController:
 	opcode = 0
 	uri = None
 	data = {}
+	response = None
 
 	def __init__(self, opcode, uri, data=None):
 		self.opcode = opcode
@@ -34,6 +35,8 @@ class RequestController:
 
 				print response.code
 				print response.data
+
+				self.response = response
 			except RequestError as e:
 				print "Request Failed"
 
