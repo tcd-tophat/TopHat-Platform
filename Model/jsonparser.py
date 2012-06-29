@@ -10,7 +10,8 @@ class JsonParser:
 
 	# Get JSON as object, if not StringType, returns None.
 	# Causes a ValueError to rise if invalid JSON is supplied
-	def getObject(self, data):
+	@staticmethod
+	def getObject(data):
 
 		mapped = None
 

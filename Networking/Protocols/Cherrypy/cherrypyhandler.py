@@ -1,6 +1,7 @@
 from urlparse import urlparse, parse_qs
 import cherrypy
 from Request.requestcontroller import RequestController
+from Model.jsonparser import JsonParser
 
 class RESTResource(object):
    """
@@ -31,7 +32,7 @@ class CherrypyHandler(RESTResource):
     def handle_GET(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
        	
-        RC = RequestController(0, retval, str(params))
+        RC = RequestController(0, retval, None)
 
         RC.run()
 
@@ -43,7 +44,10 @@ class CherrypyHandler(RESTResource):
     def handle_POST(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
         
-        RC = RequestController(1, retval, str(params))
+
+        print str(params['data'])
+        
+        RC = RequestController(1, retval, JsonParser.getObject(str(params['data'])))
 
         RC.run()
 
@@ -55,7 +59,7 @@ class CherrypyHandler(RESTResource):
     def handle_PUT(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
         
-        RC = RequestController(2, retval, str(params))
+        RC = RequestController(2, retval, params['data'])
 
         RC.run()
 
@@ -67,7 +71,7 @@ class CherrypyHandler(RESTResource):
     def handle_DELETE(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
         
-        RC = RequestController(3, retval, str(params))
+        RC = RequestController(3, retval, None)
 
         RC.run()
 
