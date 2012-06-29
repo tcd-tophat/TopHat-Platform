@@ -3,8 +3,8 @@ from Common.config import TopHatConfig
 import database
 import MySQLdb as mdb
 import mappererror
-import objectwatcher as OW
-import Model.domainobject
+from Model.Mapper import objectwatcher as OW
+from Model import domainobject
 import collection
 import identityobject
 
