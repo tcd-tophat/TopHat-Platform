@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from Mapper import objectwatcher
+from Model.Mapper import objectwatcher as OW
 import domainexception
 
 class DomainObject(object):
@@ -50,19 +50,19 @@ class DomainObject(object):
 
 	# Object Watcher Functions #
 	def __markDirty(self):
-		ow = objectwatcher._Objectwatcher()
+		ow = OW._Objectwatcher()
 		ow.addDirty(self)
 
 	def __markNew(self):
-		ow = objectwatcher._Objectwatcher()
+		ow = OW._Objectwatcher()
 		ow.addNew(self)
 
 	def __markDelete(self):
-		ow = objectwatcher._Objectwatcher()
+		ow = OW._Objectwatcher()
 		ow.addDelete(self)
 
 	def __markClean(self):
-		ow = objectwatcher._Objectwatcher()
+		ow = OW._Objectwatcher()
 		ow.addClean(self)
 
 	def markClean(self):

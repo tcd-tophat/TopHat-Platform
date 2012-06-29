@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
-import domainobject
-import domainexception
-import metadomainobject
+from Model import domainobject
+from Model import domainexception
+from Model import metadomainobject
 
 class User(metadomainobject.MetaDomainObject):
 

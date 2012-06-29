@@ -1,5 +1,5 @@
-import mapper
-import Model.user as user
+from Model.Mapper import mapper
+from Model import user
 
 class UserMapper(mapper.Mapper):
 

@@ -1,4 +1,3 @@
-import Model.domainobject
 
 class _Objectwatcher:
 	"""Singleton class that keeps track of every instance of a DomainObject in this system"""
@@ -15,6 +14,8 @@ class _Objectwatcher:
 
 	# make it a singleton class	
 	def __new__(cls, *args, **kwargs):
+		from Model import domainobject
+
 		if not cls._instance:
 			cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
 		return cls._instance
