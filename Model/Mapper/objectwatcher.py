@@ -14,15 +14,15 @@ class _Objectwatcher:
 
 	# make it a singleton class	
 	def __new__(cls, *args, **kwargs):
-		from Model import domainobject
-
 		if not cls._instance:
 			cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
 		return cls._instance
 
 	def add(self, obj):
 		"""Add an object to the watcher's list"""
-		if isinstance(obj, Model.domainobject.DomainObject):
+		from Model import domainobject
+		
+		if isinstance(obj, domainobject.DomainObject):
 			key = self.getGlobalName(obj)
 			self.__objects[key] = obj
 		else:
