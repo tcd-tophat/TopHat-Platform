@@ -1,5 +1,6 @@
 from urlparse import urlparse, parse_qs
 import cherrypy
+from Request.requestcontroller import RequestController
 
 class RESTResource(object):
    """
@@ -24,25 +25,53 @@ class RESTResource(object):
 
 class CherrypyHandler(RESTResource):
 
-
     def __init__(self, networking):
         self.networking = networking
 
     def handle_GET(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
        	
-        return self.networking.getHandler().networkingPush(0, retval, '')
+        RC = RequestController(0, retval, str(params))
+
+        RC.run()
+
+        if RC.response is not None:
+          return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+        else:
+          return "REPONSE: opcode="+str(0)+", uri="+str(retval)+", data"+str(params)
+
     def handle_POST(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
+        
+        RC = RequestController(1, retval, str(params))
 
-        return self.networking.getHandler().networkingPush(1, retval, str(params))
+        RC.run()
+
+        if RC.response is not None:
+          return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+        else:
+          return "REPONSE: opcode="+str(1)+", uri="+str(retval)+", data"+str(params)
 
     def handle_PUT(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
+        
+        RC = RequestController(2, retval, str(params))
 
-        return self.networking.getHandler().networkingPush(2, retval, str(params))
+        RC.run()
+
+        if RC.response is not None:
+          return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+        else:
+          return "REPONSE: opcode="+str(2)+", uri="+str(retval)+", data"+str(params)
 
     def handle_DELETE(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
+        
+        RC = RequestController(3, retval, str(params))
 
-        return self.networking.getHandler().networkingPush(3, retval, '')
+        RC.run()
+
+        if RC.response is not None:
+          return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+        else:
+          return "REPONSE: opcode="+str(3)+", uri="+str(retval)+", data"+str(params)

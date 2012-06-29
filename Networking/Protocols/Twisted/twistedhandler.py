@@ -1,5 +1,6 @@
 from twisted.web.resource import Resource
 from urlparse import urlparse, parse_qs
+from Request.requestcontroller import RequestController
 
 class TwistedHandler(Resource):
 
@@ -12,18 +13,41 @@ class TwistedHandler(Resource):
 		Resource.__init__(self)
 
 	def render_GET(self, request):
+		RC = RequestController(0, request.path, request.content.getvalue())
 
-		return self.networking.getHandler().networkingPush(0, request.path, request.content)
+		RC.run()
+
+		if RC.response is not None:
+			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+		else:
+			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
 	def render_POST(self, request):
-		try:
-			return self.networking.getHandler().networkingPush(1, request.path, request.args['json'])
-		except:
-			request.setResponseCode(500)
-			return ""
+		RC = RequestController(1, request.path, request.content.getvalue())
+
+		RC.run()
+
+		if RC.response is not None:
+			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+		else:
+			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
 	def render_PUT(self, request):
-		return self.networking.getHandler().networkingPush(2, request.path, request.content.getvalue())
+		RC = RequestController(2, request.path, request.content.getvalue())
+
+		RC.run()
+
+		if RC.response is not None:
+			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+		else:
+			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
 	def render_DELETE(self, request):
-		return self.networking.getHandler().networkingPush(3, request.path, request.content.getvalue())
+		RC = RequestController(3, request.path, request.content.getvalue())
+
+		RC.run()
+
+		if RC.response is not None:
+			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
+		else:
+			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)

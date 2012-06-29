@@ -1,6 +1,4 @@
-from Common.config import TopHatConfig
-kwargs = {"path":"/home/specialk/Dev/tophat/config.py"}
-TopHatConfig(**kwargs)
+
 
 from Networking.protocolhandler import ProtocolHandler
 import traceback, sys
