@@ -29,9 +29,11 @@ if __name__ == '__main__':
 				kwargs = {"path":"config.py"}
 				TopHatConfig(**kwargs)
 
+				config=TopHatConfig(**kwargs).getConfig()
+
 				print "[LOADING NETWORKING....]"
 
-				p = ProtocolHandler("twisted")
+				p = ProtocolHandler(config.Protocol)
 
 				p.setupNetworking()
 

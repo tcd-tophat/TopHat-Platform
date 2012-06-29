@@ -12,7 +12,7 @@ class ProtocolHandler:
 
 		mod = self.import_item('Networking.Protocols.%s.networking' % title)
 
-		getattr(mod, "Networking")(self)
+		getattr(mod, "Networking")()
 
 	def import_item(self, name):
 	    """Import and return bar given the string foo.bar."""

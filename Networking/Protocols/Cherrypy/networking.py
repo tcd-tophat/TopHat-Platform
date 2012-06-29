@@ -1,13 +1,10 @@
 import cherrypy
 from Networking.statuscodes import StatusCodes
+from Networking.network import Network
 
-class Networking:
+class Networking(Network):
 
-	protocol_handler = None
-
-	def __init__(self, protocol_handler):
-		self.protocol_handler = protocol_handler
-
+	def __init__(self):
 		self._registerStatusCodes()
 
 		from Networking.Protocols.Cherrypy.cherrypyhandler import CherrypyHandler
@@ -16,9 +13,6 @@ class Networking:
                          'server.socket_port': 8880,
                         }) 
 		cherrypy.quickstart(CherrypyHandler(self))
-
-	def getHandler(self):
-		return self.protocol_handler
 
 	def _registerStatusCodes(self):
 		StatusCodes.NONE = 0

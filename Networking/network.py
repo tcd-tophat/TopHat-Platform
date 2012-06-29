@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-class Protocol:
+class Network:
 
 	__metaclass__ = ABCMeta
 
