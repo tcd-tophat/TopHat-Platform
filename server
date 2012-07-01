@@ -23,7 +23,11 @@ if __name__ == '__main__':
 		else:
 				#TophatMain(opts.config)
 				from Common.config import loadConfig, TopHatConfig
+				from Common.miscellaneous import printTopHat
+
 				loadConfig(opts.config)
+
+				printTopHat()
 
 				from Common.config import TopHatConfig
 				kwargs = {"path":"config.py"}
