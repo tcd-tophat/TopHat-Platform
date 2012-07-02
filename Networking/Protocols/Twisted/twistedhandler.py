@@ -1,53 +1,58 @@
 from twisted.web.resource import Resource
 from urlparse import urlparse, parse_qs
-from Request.requestcontroller import RequestController
+from Controllers.datahandler import DataHandler
+from Model.jsonencoder import JsonEncoder
+from Networking.statuscodes import StatusCodes
 
 class TwistedHandler(Resource):
 
-	networking = None
+    networking = None
 
-	isLeaf = True
+    isLeaf = True
 
-	def __init__(self, networking):
-		self.networking = networking
-		Resource.__init__(self)
+    def __init__(self, networking):
+        self.networking = networking
+        self.datahandler = DataHandler()
+        Resource.__init__(self)
 
-	def render_GET(self, request):
-		RC = RequestController(0, request.path, request.content.getvalue())
+    def render_GET(self, request):
+        response = self.datahandler.handleIt(0, request.path, None)
 
-		RC.run()
+        if response.code >= 400:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
+        else:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson(response.data)
 
-		if RC.response is not None:
-			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
-		else:
-			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
+    def render_POST(self, request):
+        response = self.datahandler.handleIt(1, request.path, request.content.getvalue())
 
-	def render_POST(self, request):
-		RC = RequestController(1, request.path, request.content.getvalue())
+        if response.code >= 400:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
+        else:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson(response.data)
 
-		RC.run()
 
-		if RC.response is not None:
-			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
-		else:
-			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
 
-	def render_PUT(self, request):
-		RC = RequestController(2, request.path, request.content.getvalue())
+    def render_PUT(self, request):
+        response = self.datahandler.handleIt(2, request.path, request.content.getvalue())
 
-		RC.run()
+        if response.code >= 400:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
+        else:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson(response.data)
 
-		if RC.response is not None:
-			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
-		else:
-			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
+    def render_DELETE(self, request):
+        response = self.datahandler.handleIt(3, request.path, None)
 
-	def render_DELETE(self, request):
-		RC = RequestController(3, request.path, request.content.getvalue())
-
-		RC.run()
-
-		if RC.response is not None:
-			return "Resposne: code="+str(RC.response.code)+", data="+str(RC.response.data)
-		else:
-			return "REPONSE: opcode="+str(opcode)+", uri="+str(uri)+", data"+str(data)
+        if response.code >= 400:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson({"error_code": response.code, "error_message": response.data})
+        else:
+            request.setResponseCode(response.code)
+            return JsonEncoder.toJson(response.data)

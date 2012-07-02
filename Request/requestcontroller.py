@@ -1,5 +1,6 @@
 from requesterrors import RequestError
 from request import Request
+from response import Response
 
 class RequestController:
 
@@ -42,6 +43,7 @@ class RequestController:
 
 		except LookupError as e:
 			print "The requested URL does not exist. uri = %s " % self.uri
+			self.response = Response("The requested URL does not exist. uri = %s " % self.uri, 404)
 
 	def __importRequest(self, uri):
 		"""
