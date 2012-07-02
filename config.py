@@ -35,4 +35,4 @@ resources = [
 	('/', 'Jsontest')
 ]
 
-Protocol='cherrypy'
+Protocol='tpcustom'

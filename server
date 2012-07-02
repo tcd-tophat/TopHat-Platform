@@ -38,6 +38,3 @@ if __name__ == '__main__':
 				print "[LOADING NETWORKING....]"
 
 				p = ProtocolHandler(config.Protocol)
-
-				p.setupNetworking()
-

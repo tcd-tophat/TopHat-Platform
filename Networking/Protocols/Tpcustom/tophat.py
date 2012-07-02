@@ -9,7 +9,7 @@ from Common.miscellaneous import printTopHat
 from Common.config import TopHatConfig
 from Common.log import LogFile
 from Common.date import Timestamp
-from Controllers.networking import TopHatNetwork
+from Networking.Protocols.Tpcustom.networkhandler import TopHatNetwork
 from signal import signal, SIGINT
 from socket import AF_INET, AF_INET6
 
