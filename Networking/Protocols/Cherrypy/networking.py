@@ -4,13 +4,17 @@ from Networking.network import Network
 
 class Networking(Network):
 
-	def __init__(self):
+	_config = None
+
+	def __init__(self, config):
 		self._registerStatusCodes()
+
+		self._config = config
 
 		from Networking.Protocols.Cherrypy.cherrypyhandler import CherrypyHandler
 
-		cherrypy.config.update({'server.socket_host': '127.0.0.1', 
-                         'server.socket_port': 8880,
+		cherrypy.config.update({'server.socket_host': self._config.Interface, 
+                         'server.socket_port': self._config.Port,
                         }) 
 		cherrypy.quickstart(CherrypyHandler(self))
 

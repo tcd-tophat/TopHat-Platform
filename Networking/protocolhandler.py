@@ -2,9 +2,11 @@ class ProtocolHandler:
 
 	protocol = None
 	protocolName = None
+	config = None
 
-	def __init__(self, protocolName):
-		self.protocolName = protocolName
+	def __init__(self, config):
+		self.protocolName = config.Protocol
+		self.config = config
 		self.protocol = self.__importProtocol()
 
 	def __importProtocol(self):
@@ -12,7 +14,7 @@ class ProtocolHandler:
 
 		mod = self.import_item('Networking.Protocols.%s.networking' % title)
 
-		getattr(mod, "Networking")()
+		getattr(mod, "Networking")(self.config)
 
 	def import_item(self, name):
 	    """Import and return bar given the string foo.bar."""

@@ -6,13 +6,16 @@ from Networking.network import Network
 
 class Networking(Network):
 
-	def __init__(self):
+	_config = None
+
+	def __init__(self, config):
 		self._registerStatusCodes()
+		self._config = config
 
 		from twistedhandler import TwistedHandler
 		root = TwistedHandler(self)
 		factory = Site(root)
-		reactor.listenTCP(8880, factory)
+		reactor.listenTCP(self._config.Port, factory)
 		reactor.run()
 
 	def getHandler(self):

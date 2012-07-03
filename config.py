@@ -4,7 +4,7 @@ SSLCertPath= 'keys/tophat.crt'
 
 SSLCAPath = 'keys/ca.crt'		
 
-Port=443
+Port=8880
 
 Interface='0.0.0.0'
 
@@ -35,4 +35,4 @@ resources = [
 	('/', 'Jsontest')
 ]
 
-Protocol='tpcustom'
+Protocol='twisted'

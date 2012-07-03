@@ -32,6 +32,9 @@ def TophatMain(config_path):
 	config=TopHatConfig(path=config_path).getConfig()
 	printTopHat()
 
+	uidNumber = None
+	gidNumber = None
+
 	if config.Port < 1024:
 
 		if getuid() is not 0:
@@ -80,9 +83,10 @@ def TophatMain(config_path):
 		signal(SIGINT,Shutdown)
 		print "Listening on port %d, deadly." % config.Port
 
-
-	setgid(uidNumber)
-	setuid(gidNumber)
+	if uidNumber is not None and gidNumber is not None:
+		setgid(uidNumber)
+		setuid(gidNumber)
+	
 	print "[TopHat-Service started successfully]"
 	log = LogFile(config.LogFile)
 	log.write("TopHat Platform (c) TopHat Software 2012\n%s: Started\n" % Timestamp())

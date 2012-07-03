@@ -4,15 +4,15 @@ from Networking.network import Network
 
 class Networking(Network):
 
-	def __init__(self):
+	_config = None
+
+	def __init__(self, config):
 		self._registerStatusCodes()
+		self._config = config
 
 		from tophat import TophatMain
 
-		from Common.config import TopHatConfig
-		kwargs = {"path":"config.py"}
-
-		TophatMain(TopHatConfig(**kwargs))
+		TophatMain(self._config)
 
 	def _registerStatusCodes(self):
 		StatusCodes.NONE = 0
