@@ -4,6 +4,7 @@ from Request.response import Response
 from Networking.statuscodes import StatusCodes
 from Model.jsonencoder import JsonEncoder
 import traceback
+from Request.requesterrors import *
 
 class DataHandler:
 
@@ -30,6 +31,9 @@ class DataHandler:
 				response = RC.response
 			else:
 				response = Response("No data returned from requests controller.", StatusCodes.SERVER_ERROR)
+		except RequestError as e:
+			# Handles Errors raised in requests. Errors contain a message and errorcode.
+			response = Response(e.message, e.code)
 		except:
 			# Return Server error message with the stacktrace
 			response = Response(traceback.format_exc(), StatusCodes.SERVER_ERROR)

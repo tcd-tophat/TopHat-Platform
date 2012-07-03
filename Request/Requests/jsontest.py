@@ -11,5 +11,6 @@ class Jsontest(Request):
 	@requirelogin
 	def _doGet(self):
 		rdata = {}
-		rdata["crap"] = "datiubsfvius"
+		rdata["error_code"] = 200
+		rdata['message'] = "Test Call completed successfully"
 		return self._response(rdata, CODE.OK)

@@ -1,6 +1,7 @@
-from requesterrors import RequestError
+from requesterrors import RequestError, NotFound
 from request import Request
 from response import Response
+from Networking.statuscodes import StatusCodes as CODE
 
 class RequestController:
 
@@ -33,14 +34,10 @@ class RequestController:
 			elif self.opcode == 3:
 				response = request.delete()
 
-			print response.code
-			print response.data
-
 			self.response = response
 
 		except LookupError as e:
-			print "The requested resource does not exist. uri = %s " % self.uri
-			self.response = Response("The requested resource does not exist. uri = %s " % self.uri, 404)
+			raise NotFound("The requested resource does not exist. uri = %s " % self.uri)
 
 	def __importRequest(self, uri):
 		"""
