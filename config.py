@@ -32,7 +32,9 @@ resources = [
 	('/apitokens/', "Apitokens"),
 	('/users/', "Users"),
 	('/jsontest/', "Jsontest"),
-	('/', 'Jsontest')
+	('/', 'Jsontest'),
+	('/version/', "Version")
 ]
 
 Protocol='twisted'
+Version='0.1.2'
