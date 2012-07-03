@@ -24,22 +24,19 @@ class RequestController:
 		try:
 			request = self.__importRequest(self.uri)
 
-			try:
-				if self.opcode == 0:
-					response = request.get()
-				elif self.opcode == 1:
-					response = request.post(self.data)
-				elif self.opcode == 2:
-					response = request.put(self.data)
-				elif self.opcode == 3:
-					response = request.delete()
+			if self.opcode == 0:
+				response = request.get()
+			elif self.opcode == 1:
+				response = request.post(self.data)
+			elif self.opcode == 2:
+				response = request.put(self.data)
+			elif self.opcode == 3:
+				response = request.delete()
 
-				print response.code
-				print response.data
+			print response.code
+			print response.data
 
-				self.response = response
-			except RequestError as e:
-				print "Request Failed"
+			self.response = response
 
 		except LookupError as e:
 			print "The requested resource does not exist. uri = %s " % self.uri
