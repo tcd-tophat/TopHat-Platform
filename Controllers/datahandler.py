@@ -1,10 +1,11 @@
+import traceback
+
 from Request.requestcontroller import RequestController
 from Model.jsonparser import JsonParser
 from Request.response import Response
 from Networking.statuscodes import StatusCodes
 from Model.jsonencoder import JsonEncoder
-import traceback
-from Request.requesterrors import *
+from Request.requesterrors import RequestError
 
 class DataHandler:
 
