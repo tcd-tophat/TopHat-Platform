@@ -50,7 +50,10 @@ class CherrypyHandler(RESTResource):
         if retval == "//":
           retval = "/"
 
-        response = self.datahandler.handleIt(1, retval, params['data'])
+        if 'data' not in params:
+          params['data'] = ""
+
+        response = self.datahandler.handleIt(1, retval, str(params['data']))
 
         cherrypy.response.status = response.code
         return response.json
@@ -61,7 +64,10 @@ class CherrypyHandler(RESTResource):
         if retval == "//":
           retval = "/"
 
-        response = self.datahandler.handleIt(2, retval, params['data'])
+        if 'data' not in params:
+          params['data'] = ""
+
+        response = self.datahandler.handleIt(2, retval, str(params['data']))
 
         cherrypy.response.status = response.code
         return response.json

@@ -21,13 +21,25 @@ class TwistedHandler(Resource):
         return response.json
 
     def render_POST(self, request):
-        response = self.datahandler.handleIt(1, request.path, request.content.getvalue())
+        
+        try:
+            data = request.args['data'][0]
+        except:
+            data = ""
+
+        response = self.datahandler.handleIt(1, request.path, data)
 
         request.setResponseCode(response.code)
         return response.json
 
     def render_PUT(self, request):
-        response = self.datahandler.handleIt(2, request.path, request.content.getvalue())
+
+        try:
+            data = request.args['data'][0]
+        except:
+            data = ""
+
+        response = self.datahandler.handleIt(2, request.path, data)
 
         request.setResponseCode(response.code)
         return response.json

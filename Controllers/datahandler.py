@@ -35,6 +35,8 @@ class DataHandler:
 		except RequestError as e:
 			# Handles Errors raised in requests. Errors contain a message and errorcode.
 			response = Response(e.message, e.code)
+		except ValueError:
+			response = Response("JSON Data was invalid.", StatusCodes.BAD_REQUEST)
 		except:
 			# Return Server error message with the stacktrace
 			response = Response(traceback.format_exc(), StatusCodes.SERVER_ERROR)

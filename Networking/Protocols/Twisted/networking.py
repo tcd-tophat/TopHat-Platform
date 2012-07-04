@@ -25,6 +25,7 @@ class Networking(Network):
 		StatusCodes.NONE = 0
 		StatusCodes.OK = 200
 		StatusCodes.CREATED = 201
+		StatusCodes.BAD_REQUEST = 400
 		StatusCodes.UNAUTHORISED = 401
 		StatusCodes.NOT_FOUND = 404
 		StatusCodes.METHOD_NOT_ALLOWED = 405
