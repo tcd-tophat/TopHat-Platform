@@ -87,7 +87,10 @@ class RequestController:
 			if entry[0] == uri:
 				return entry[1]
 	
-		(uri, sep, self.arg) = self.uri[0:-1].rpartition("/")
+		if self.uri[-1:] == "/":
+			(uri, sep, self.arg) = self.uri[0:-1].rpartition("/")
+		else:
+			(uri, sep, self.arg) = self.uri.rpartition("/")
 
 		uri += sep
 
