@@ -6,3 +6,4 @@ def requirelogin(func):
 def requireapitoken(func):
 	print "Require API Token"
 	return func
+	

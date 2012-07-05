@@ -1,12 +1,10 @@
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
 from Networking.statuscodes import StatusCodes as CODE
+from Model.authentication import requireapitoken
 
 from Model.Mapper import usermapper as UM
 import MySQLdb as mdb
-
-# Decorator
-from Model.authentication import requireapitoken
 
 class Users(Request):
 
@@ -21,11 +19,16 @@ class Users(Request):
 
 	@requireapitoken
 	def _doGet(self):
-
 		if self.arg is not None:
 			try:
 				UserMapper = UM.UserMapper()
-				user = UserMapper.getUserByEmail(self.arg)
+
+				if self.arg.isdigit():
+					# Get the user by ID
+					user = UserMapper.find(self.arg)
+				else:
+					# Get the user by E-mail
+					user = UserMapper.getUserByEmail(self.arg)
 
 				if user is not None:
 

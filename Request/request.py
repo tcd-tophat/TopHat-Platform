@@ -11,7 +11,7 @@ class Request:
 	@abstractmethod
 	def __init__(self):
 		pass
-	
+
 	def get(self):
 		return self._doGet()
 

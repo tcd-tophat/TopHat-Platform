@@ -34,7 +34,7 @@ resources = [
 	('/jsontest/', "Jsontest"),
 	('/', 'Jsontest'),
 	('/version/', "Version"),
-	('/games/', "Games")
+	('/games/', "Games"),
 ]
 
 Protocol='cherrypy'
