@@ -24,6 +24,9 @@ class Request:
 	def delete(self):
 		return self._doDelete()
 
+	def setArg(self, arg):
+		self.arg = arg
+
 	def _response(self, data, code=CODE.OK):
 		return Response(data, code)
 

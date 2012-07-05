@@ -37,5 +37,5 @@ resources = [
 	('/games/', "Games")
 ]
 
-Protocol='twisted'
+Protocol='cherrypy'
 Version='0.1.2'

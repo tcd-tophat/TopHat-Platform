@@ -9,6 +9,7 @@ class RequestController:
 	uri = None
 	data = {}
 	response = None
+	arg = None
 
 	def __init__(self, opcode, uri, data=None):
 		self.opcode = opcode
@@ -22,8 +23,11 @@ class RequestController:
 		"""
 			Runs the request
 		"""
+
 		try:
 			request = self.__importRequest(self.uri)
+
+			request.setArg(self.arg)
 
 			if self.opcode == 0:
 				response = request.get()
@@ -78,6 +82,14 @@ class RequestController:
 				LookupError - no resource/request mapping found in the config file
 		"""
 		from Common.config import TopHatConfig
+
+		for entry in TopHatConfig.getKey("resources"):
+			if entry[0] == uri:
+				return entry[1]
+	
+		(uri, sep, self.arg) = self.uri[0:-1].rpartition("/")
+
+		uri += sep
 
 		for entry in TopHatConfig.getKey("resources"):
 			if entry[0] == uri:
