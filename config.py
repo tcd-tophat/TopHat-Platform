@@ -33,7 +33,8 @@ resources = [
 	('/users/', "Users"),
 	('/jsontest/', "Jsontest"),
 	('/', 'Jsontest'),
-	('/version/', "Version")
+	('/version/', "Version"),
+	('/games/', "Games")
 ]
 
 Protocol='twisted'

@@ -5,16 +5,16 @@ from Networking.statuscodes import StatusCodes as CODE
 # Decorator
 from Model.authentication import requireapitoken
 
-class Users(Request):
+class Kills(Request):
 
 	''' 
 		API Documentation
 		Documentation for the Core Request of Games is available from the TopHat wiki at:
-		http://wiki.tophat.ie/index.php?title=Core_Requests:_Users
+		http://wiki.tophat.ie/index.php?title=Core_Requests:_Kills
 	'''
 
 	def __init__(self):
-		super(Users, self).__init__()
+		super(Kills, self).__init__()
 
 	@requireapitoken
 	def _doGet(self):
