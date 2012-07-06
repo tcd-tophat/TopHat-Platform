@@ -89,3 +89,6 @@ class DomainObject(object):
 		except ImportError:
 			print "Unable to import Mapper." + moduleName + ". It does not exist"
 			return None
+			
+	def dict(self):
+		return {"id": self.getId()}
