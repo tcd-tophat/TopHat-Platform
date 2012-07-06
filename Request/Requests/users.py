@@ -57,7 +57,7 @@ class Users(Request):
 				user = User()
 
 				user.setEmail(dataObject["email"])
-				user.setPassword(dataObject["password"])
+				user.setPreHash(dataObject["password"])
 
 				UserMapper.insert(user)
 

@@ -44,13 +44,14 @@ class User(metadomainobject.MetaDomainObject):
 		self._email = email
 
 	def setPassword(self, password):
-		self.setHash(makeHash(password))
+		if password is not None:
+			password = str(password)
 
-	def setHash(self, hashed):
-		if hashed is not None:
-			hashed = str(hashed)
+		self._password = password
+		
 
-		self._password = hashed
+	def setPreHash(self, password):
+		self.setPassword(makeHash(password))
 
 	def setTime(self, time):
 		if type(time) is not datetime:

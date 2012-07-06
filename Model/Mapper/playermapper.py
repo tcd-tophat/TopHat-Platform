@@ -35,14 +35,16 @@ class PlayerMapper(mapper.Mapper):
 
 		UserMapper = usermapper.UserMapper()
 		user_ = UserMapper.find(data["user_id"])
-		player_.setUser(user_)
 
-		player_.setName(data["name"])
-		player_.setPhoto(data["photo"])
-		player_.setLat(data["lat"])
-		player_.setLon(data["lon"])
-		player_.setScore(data["score"])
-		player_.setTime(data["time"])
+		if user_ is not None:
+			player_.setUser(user_)
+
+			player_.setName(data["name"])
+			player_.setPhoto(data["photo"])
+			player_.setLat(data["lat"])
+			player_.setLon(data["lon"])
+			player_.setScore(data["score"])
+			player_.setTime(data["time"])
 
 		return player_
 
