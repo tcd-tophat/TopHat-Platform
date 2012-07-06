@@ -1,6 +1,12 @@
-from request import Request
-from requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
+from Request.request import Request
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
 from Networking.statuscodes import StatusCodes as CODE
+from Model.authentication import requireapitoken
+
+from Model.Mapper import usermapper as UM
+from Model.Mapper import gamemapper as GM
+from Model.Mapper import killmapper as KM
+import MySQLdb as mdb
 
 # Decorator
 from Model.authentication import requireapitoken
@@ -18,6 +24,70 @@ class Kills(Request):
 
 	@requireapitoken
 	def _doGet(self):
+		try:
+			
+			KillMapper = KM.KillMapper()
+			
+			if self.arg is not None:
+				if self.arg.isdigit():
+					# Get the user by ID
+					kill = KillMapper.find(self.arg)
+				else:
+					raise RequestError(CODE.BAD_REQUEST, "Kill must bed requested by ID")
+
+				if kill is not None:
+
+					killdict = {
+						"id": kill.getId(),
+						"verified": kill.getVerified(),
+						"time": str(kill.getTime()),
+						"victim": 
+							{	
+								"id": kill.getVictim().getId(),
+								"name": kill.getVictim().getName()
+							},
+						"killer": 
+							{	
+								"id": kill.getKiller().getId(),
+								"name": kill.getKiller().getName()
+							},
+					}
+
+					return self._response(killdict, CODE.OK)
+				else:
+					raise NotFound("This kill does not exist")
+			
+			else:
+
+				offset = 0
+				kills = KillMapper.findAll(offset, offset+50)
+
+				killslist = []
+
+				for kill in kills:
+					killslist.append({
+						"id": kill.getId(),
+						"verified": kill.getVerified(),
+						"time": str(kill.getTime()),
+						"victim": 
+							{	
+								"id": kill.getVictim().getId(),
+								"name": kill.getVictim().getName()
+							},
+						"killer": 
+							{	
+								"id": kill.getKiller().getId(),
+								"name": kill.getKiller().getName()
+							},
+					})
+
+				killdict = {"kills":killslist, "pagination_offset":offset, "max_perpage": 50}
+
+				return self._response(killdict, CODE.OK)
+
+		except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the kill database (%s: %s)" % e.args[0], e.args[1])
+
 		return self._response({}, CODE.UNIMPLEMENTED)
 
 	@requireapitoken
