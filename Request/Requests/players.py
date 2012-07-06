@@ -1,6 +1,12 @@
-from request import Request
-from requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
+from Request.request import Request
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
 from Networking.statuscodes import StatusCodes as CODE
+from Model.authentication import requireapitoken
+
+from Model.Mapper import usermapper as UM
+from Model.Mapper import gamemapper as GM
+from Model.Mapper import playermapper as PM
+import MySQLdb as mdb
 
 # Decorator
 from Model.authentication import requireapitoken
@@ -18,6 +24,39 @@ class Players(Request):
 
 	@requireapitoken
 	def _doGet(self):
+		try:
+			
+			PlayerMapper = PM.PlayerMapper()
+			
+			if self.arg is not None:
+				if self.arg.isdigit():
+					# Get the user by ID
+					player = PlayerMapper.find(self.arg)
+				else:
+					raise RequestError(CODE.BAD_REQUEST, "Games must bed requested by ID")
+
+				if player is not None:
+					return self._response(player.dict(), CODE.OK)
+				else:
+					raise NotFound("This player does not exist")
+			
+			else:
+
+				offset = 0
+				players = PlayerMapper.findAll(offset, offset+50)
+
+				playerslist = []
+
+				for player in players:
+					playerslist.append(player.dict())
+
+				playerslist = {"players":playerslist, "pagination_offset":offset, "max_perpage": 50}
+
+				return self._response(playerslist, CODE.OK)
+
+		except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the player database (%s: %s)" % e.args[0], e.args[1])
+
 		return self._response({}, CODE.UNIMPLEMENTED)
 
 	@requireapitoken

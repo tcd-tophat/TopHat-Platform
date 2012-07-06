@@ -63,3 +63,13 @@ class Game(domainobject.DomainObject):
 			raise domainexception.DomainException("Time attribute must be a datetime object not a %s" % type(time))
 
 		self._time = time
+
+	def dict(self):
+		return {
+					"id": self.getId(),
+					"name": self.getName(),
+					"game_type": self.getGameTypeName(),
+					"game_type_id": self.getGameTypeId(),
+					"time": str(self.getTime()),
+					"creator": self.getCreator().dict()
+				}

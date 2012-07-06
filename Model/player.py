@@ -96,3 +96,17 @@ class Player(domainobject.DomainObject):
 
 	def getTime(self):
 		return self._time
+
+	def dict(self):
+		return {
+					"id": self.getId(),
+					"name": self.getName(),
+					"player_user": self.getUser().dict(),
+					"game": self.getGame().dict(),
+					"longitude": self.getLon(),
+					"latitude": self.getLat(),
+					"photo": self.getPhoto(),
+					"score": self.getScore(),
+					"time": str(self.getTime())
+				}
+

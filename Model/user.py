@@ -69,3 +69,12 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getTime(self):
 		return self._time
+
+	def dict(self):
+		return {
+						"id": self.getId(),
+						"name": self.getName(),
+						"email": self.getEmail(),
+						"created": str(self.getTime()),
+						"joined_games": []
+				}

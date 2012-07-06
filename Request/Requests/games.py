@@ -32,21 +32,7 @@ class Games(Request):
 					raise RequestError(CODE.BAD_REQUEST, "Games must bed requested by ID")
 
 				if game is not None:
-
-					gamedict = {
-						"id": game.getId(),
-						"name": game.getName(),
-						"game_type": game.getGameTypeName(),
-						"game_type_id": game.getGameTypeId(),
-						"time": str(game.getTime()),
-						"creator": 
-							{	
-								"id": game.getCreator().getId(),
-								"name": game.getCreator().getName()
-							}
-					}
-
-					return self._response(gamedict, CODE.OK)
+					return self._response(game.dict(), CODE.OK)
 				else:
 					raise NotFound("This game does not exist")
 			
@@ -58,18 +44,7 @@ class Games(Request):
 				gameslist = []
 
 				for game in games:
-					gameslist.append({
-							"id": game.getId(),
-							"name": game.getName(),
-							"game_type": game.getGameTypeName(),
-							"game_type_id": game.getGameTypeId(),
-							"time": str(game.getTime()),
-							"creator": 
-							{	
-								"id": game.getCreator().getId(),
-								"name": game.getCreator().getName()
-							}
-						})
+					gameslist.append(game.dict())
 
 				gamedict = {"games":gameslist, "pagination_offset":offset, "max_perpage": 50}
 

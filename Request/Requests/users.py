@@ -31,15 +31,7 @@ class Users(Request):
 					user = UserMapper.getUserByEmail(self.arg)
 
 				if user is not None:
-
-					userdict = {
-						"id": user.getId(),
-						"name": user.getName(),
-						"email": user.getEmail(),
-						"joined_games": []
-					}
-
-					return self._response(userdict, CODE.OK)
+					return self._response(user.dict(), CODE.OK)
 				else:
 					raise NotFound("This user does not exist")
 			except mdb.DatabaseError, e:

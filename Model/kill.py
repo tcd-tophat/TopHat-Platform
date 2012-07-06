@@ -61,3 +61,12 @@ class Kill(domainobject.DomainObject):
 
 	def getTime(self):
 		return self._time
+
+	def dict(self):
+		return {
+			"id": self.getId(),
+			"verified": self.getVerified(),
+			"time": str(self.getTime()),
+			"victim": self.getVictim().dict(),
+			"killer": self.getKiller().dict(),
+		}
