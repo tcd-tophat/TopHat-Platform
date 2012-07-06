@@ -85,4 +85,24 @@ class Users(Request):
 
 	@requireapitoken
 	def _doDelete(self):
+		if self.arg is not None:
+			try:
+				UserMapper = UM.UserMapper()
+
+				if self.arg.isdigit():
+					# Get the user by ID
+					user = UserMapper.find(self.arg)
+				else:
+					# Get the user by E-mail
+					user = UserMapper.getUserByEmail(self.arg)
+				if user is not None:
+					UserMapper.delete(user)
+					return self._response({"message": "User Deleted Successfully."}, CODE.OK)
+				else:
+					raise NotFound("This user does not exist")
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
+		else:
+			raise MethodNotAllowed("You must provide the user ID or user EMAIL of the user to be deleted")
+
 		return self._response({}, CODE.UNIMPLEMENTED)

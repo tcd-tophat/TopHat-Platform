@@ -103,23 +103,23 @@ class Mapper:
 
 	def delete(self, obj):
 		"""Deletes a given object from the database"""
-		if not isinstance(obj, Model.domainobject.DomainObject):
+		if not isinstance(obj, domainobject.DomainObject):
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
-		if obj.getid() is -1:
+		if obj.getId() is -1:
 			raise mappererror.MapperError("You cannot delete an object that was never in the database. It has no id")
 
 		print "Deleting " + str(type(obj)) + " object " + str(obj.getId())
 
-		query = self._deleteStmt()
+		query = self._deleteStmt(obj)
 		params = (obj.getId(),)
 
-		return __executeOperation(query, params)		
+		return self.__executeOperation(query, params)		
 
 
 	def update(self, obj):
 		"""Updates a given object's records in the database"""
-		if not isinstance(obj, Model.domainobject.DomainObject) :
+		if not isinstance(obj, domainobject.DomainObject) :
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:		# can't update an object that has not been inserted

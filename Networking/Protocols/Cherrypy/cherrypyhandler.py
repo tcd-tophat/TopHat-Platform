@@ -77,6 +77,8 @@ class CherrypyHandler(RESTResource):
 
         if retval == "//":
           retval = "/"
-        
+
+        response = self.datahandler.handleIt(3, retval, None)
+
         cherrypy.response.status = response.code
         return response.json
