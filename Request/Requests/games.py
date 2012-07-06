@@ -20,10 +20,11 @@ class Games(Request):
 
 	@requireapitoken
 	def _doGet(self):
-		if self.arg is not None:
-			try:
-				GameMapper = GM.GameMapper()
-
+		try:
+			
+			GameMapper = GM.GameMapper()
+			
+			if self.arg is not None:
 				if self.arg.isdigit():
 					# Get the user by ID
 					game = GameMapper.find(self.arg)
@@ -48,10 +49,34 @@ class Games(Request):
 					return self._response(gamedict, CODE.OK)
 				else:
 					raise NotFound("This game does not exist")
-			except mdb.DatabaseError, e:
+			
+			else:
+
+				offset = 0
+				games = GameMapper.findAll(offset, offset+50)
+
+				gameslist = []
+
+				for game in games:
+					gameslist.append({
+							"id": game.getId(),
+							"name": game.getName(),
+							"game_type": game.getGameTypeName(),
+							"game_type_id": game.getGameTypeId(),
+							"time": str(game.getTime()),
+							"creator": 
+							{	
+								"id": game.getCreator().getId(),
+								"name": game.getCreator().getName()
+							}
+						})
+
+				gamedict = {"games":gameslist, "pagination_offset":offset, "max_perpage": 50}
+
+				return self._response(gamedict, CODE.OK)
+
+		except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the game database (%s: %s)" % e.args[0], e.args[1])
-		else:
-			raise RequestError(CODE.UNIMPLEMENTED, "Getting a list of games is currently unimplemented")
 
 		return self._response({}, CODE.UNIMPLEMENTED)
 
