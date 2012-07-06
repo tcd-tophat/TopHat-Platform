@@ -35,7 +35,7 @@ class ApitokenMapper(mapper.Mapper):
 	def _doInsert(self, obj):
 		# build query
 		# id, key, group_id
-		query = "INSERT INTO api_tokens VALUES(NULL, %s, 1, %s)"
+		query = "INSERT INTO "+self.tableName()+" VALUES(NULL, %s, 1, %s)"
 
 		params = (obj.getToken(), obj.getUser().getId())
 
@@ -57,7 +57,7 @@ class ApitokenMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE api_keys SET key = %s, user_id = %s WHERE id = %s LIMIT 1"
+		query = "UPDATE "+self.tableName()+" SET key = %s, user_id = %s WHERE id = %s LIMIT 1"
 		params = (obj.getToken(), obj.getUser().getId(), obj.getId())
 
 		# run the query
@@ -71,7 +71,7 @@ class ApitokenMapper(mapper.Mapper):
 			return False
 
 	def findTokenByUserId(self, user_id):
-		query = "SELECT * FROM api_keys WHERE user_id = %s LIMIT 1"
+		query = "SELECT * FROM "+self.tableName()+" WHERE user_id = %s LIMIT 1"
 		params = (user_id,)
 	
 		return self._getOne(query, params)

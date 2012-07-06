@@ -48,6 +48,10 @@ class DomainObject(object):
 
 		self._id = value
 
+			
+	def dict(self):
+		return {"id": self.getId()}
+
 	# Object Watcher Functions #
 	def __markDirty(self):
 		ow = OW._Objectwatcher()
@@ -89,6 +93,3 @@ class DomainObject(object):
 		except ImportError:
 			print "Unable to import Mapper." + moduleName + ". It does not exist"
 			return None
-			
-	def dict(self):
-		return {"id": self.getId()}

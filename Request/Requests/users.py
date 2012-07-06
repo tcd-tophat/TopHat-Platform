@@ -2,8 +2,12 @@ from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import requireapitoken
+from Common.apikeygen import getKey
 
 from Model.Mapper import usermapper as UM
+from Model.Mapper import apitokenmapper as ATM
+from Model.user import User
+from Model.apitoken import Apitoken
 import MySQLdb as mdb
 
 class Users(Request):
@@ -43,6 +47,36 @@ class Users(Request):
 
 	@requireapitoken
 	def _doPost(self, dataObject):
+
+		if "email" in dataObject and "password" in dataObject:
+			try:
+
+				UserMapper = UM.UserMapper()
+				ApitokenMapper = ATM.ApitokenMapper()
+
+				user = User()
+
+				user.setEmail(dataObject["email"])
+				user.setPassword(dataObject["password"])
+
+				UserMapper.insert(user)
+
+				# Retrieve user with ID this time
+				user = UserMapper.getUserByEmail(dataObject["email"])
+
+				token = Apitoken()
+
+				token.setUser(user)
+				token.setToken(getKey())
+
+				ApitokenMapper.insert(token)
+
+				return self._response(token.dict(), CODE.CREATED)
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise RequestError({}, CODE.BAD_REQUEST)
+
 		return self._response({}, CODE.UNIMPLEMENTED)
 
 	@requireapitoken

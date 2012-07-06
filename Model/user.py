@@ -3,6 +3,7 @@ from datetime import datetime
 from Model import domainobject
 from Model import domainexception
 from Model import metadomainobject
+from Common.passHash import makeHash
 
 class User(metadomainobject.MetaDomainObject):
 
@@ -43,10 +44,13 @@ class User(metadomainobject.MetaDomainObject):
 		self._email = email
 
 	def setPassword(self, password):
-		if password is not None:
-			password = str(password)
+		self.setHash(makeHash(password))
 
-		self._password = password
+	def setHash(self, hashed):
+		if hashed is not None:
+			hashed = str(hashed)
+
+		self._password = hashed
 
 	def setTime(self, time):
 		if type(time) is not datetime:

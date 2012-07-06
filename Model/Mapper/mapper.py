@@ -132,7 +132,7 @@ class Mapper:
 
 	def insert(self, obj):
 		"""Inserts this object into the database as its records"""
-		if not isinstance(obj, Model.domainobject.DomainObject):
+		if not isinstance(obj, domainobject.DomainObject):
 			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
 
 		print "Inserting new " + str(type(obj)) + " object " + str(obj.getId())
