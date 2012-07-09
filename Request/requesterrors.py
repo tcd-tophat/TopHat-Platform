@@ -12,6 +12,13 @@ class RequestError(exceptions.Exception):
 		self.code = code
 
 
+class BadRequest(RequestError):
+
+	def __init__(self, message):
+		self.code = CODE.BAD_REQUEST
+		self.message = message
+
+
 class NotFound(RequestError):
 
 	def __init__(self, message):

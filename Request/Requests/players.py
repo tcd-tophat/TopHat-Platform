@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import requireapitoken
 
@@ -33,7 +33,7 @@ class Players(Request):
 					# Get the user by ID
 					player = PlayerMapper.find(self.arg)
 				else:
-					raise RequestError(CODE.BAD_REQUEST, "Games must bed requested by ID")
+					raise BadRequest("Games must be requested by ID")
 
 				if player is not None:
 					return self._response(player.dict(), CODE.OK)
@@ -56,8 +56,6 @@ class Players(Request):
 
 		except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the player database (%s: %s)" % e.args[0], e.args[1])
-
-		return self._response({}, CODE.UNIMPLEMENTED)
 
 	@requireapitoken
 	def _doPost(self, dataObject):

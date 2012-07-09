@@ -48,8 +48,8 @@ class DomainObject(object):
 
 		self._id = value
 
-			
-	def dict(self):
+	@abstractmethod		
+	def dict(self, depth=0):
 		return {"id": self.getId()}
 
 	# Object Watcher Functions #

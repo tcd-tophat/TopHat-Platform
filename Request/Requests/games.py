@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import requireapitoken
 
@@ -29,12 +29,12 @@ class Games(Request):
 					# Get the user by ID
 					game = GameMapper.find(self.arg)
 				else:
-					raise RequestError(CODE.BAD_REQUEST, "Games must bed requested by ID")
+					raise BadRequest("Games must be requested by ID")
 
 				if game is not None:
 					return self._response(game.dict(), CODE.OK)
 				else:
-					raise NotFound("This game does not exist")
+					raise NotFound("There is no game identified by the number %i" % self.arg)
 			
 			else:
 
@@ -51,9 +51,7 @@ class Games(Request):
 				return self._response(gamedict, CODE.OK)
 
 		except mdb.DatabaseError, e:
-				raise ServerError("Unable to search the game database (%s: %s)" % e.args[0], e.args[1])
-
-		return self._response({}, CODE.UNIMPLEMENTED)
+			raise ServerError("Unable to search the game database (%s: %s)" % e.args[0], e.args[1])
 
 
 	@requireapitoken

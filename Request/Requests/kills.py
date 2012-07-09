@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import requireapitoken
 
@@ -33,7 +33,7 @@ class Kills(Request):
 					# Get the user by ID
 					kill = KillMapper.find(self.arg)
 				else:
-					raise RequestError(CODE.BAD_REQUEST, "Kill must bed requested by ID")
+					raise BadRequest("Kill must be requested by ID")
 
 				if kill is not None:
 					return self._response(kill.dict(), CODE.OK)

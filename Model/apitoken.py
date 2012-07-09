@@ -29,7 +29,7 @@ class Apitoken(domainobject.DomainObject):
 
 	def setUser(self, user_):
 		if not isinstance(user_, user.User):
-			raise domainexception.DomainException("Must reference a User object")
+			raise domainexception.DomainException("Must reference a User object not a %s" % str(type(user_)))
 
 		self._user = user_
 

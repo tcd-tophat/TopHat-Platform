@@ -11,7 +11,7 @@ class User(metadomainobject.MetaDomainObject):
 	_photo = None
 	_email = None
 	_password = None
-	_time = None
+	_time = datetime.now()
 	
 	def __init__(self, id_=None):
 		super(User, self).__init__(id_)
@@ -77,9 +77,10 @@ class User(metadomainobject.MetaDomainObject):
 
 	def dict(self):
 		return {
-						"id": self.getId(),
-						"name": self.getName(),
-						"email": self.getEmail(),
-						"created": str(self.getTime()),
-						"joined_games": []
+					"id": self.getId(),
+					"name": self.getName(),
+					"email": self.getEmail(),
+					"created": str(self.getTime()),
+					"photo": str(self.getPhoto())
+					"joined_games": []
 				}

@@ -14,7 +14,7 @@ class Apitokens(Request):
 		super(Apitokens, self).__init__()
 
 	def _doPost(self, dataObject):
-		if dataObject.has_key('username') and dataObject.has_key('password'):
+		if "username" in dataObject and "password" in dataObject:
 
 			username = dataObject['username']
 			password = dataObject['password']
