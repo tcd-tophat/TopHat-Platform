@@ -81,6 +81,6 @@ class User(metadomainobject.MetaDomainObject):
 					"name": self.getName(),
 					"email": self.getEmail(),
 					"created": str(self.getTime()),
-					"photo": str(self.getPhoto())
+					"photo": str(self.getPhoto()),
 					"joined_games": []
 				}
