@@ -75,7 +75,7 @@ class Users(Request):
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
 		else:
-			raise raise BadRequest("Required params email and password not sent")
+			raise BadRequest("Required params email and password not sent")
 
 	@requireapitoken
 	def _doPut(self, dataObject):

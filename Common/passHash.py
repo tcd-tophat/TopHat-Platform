@@ -40,7 +40,7 @@ def checkHash(password, hash_):
     hash_a = b64decode(hash_a)
     hash_b = pbkdf2_bin(password, salt, int(cost_factor), len(hash_a),
                         getattr(hashlib, hash_function))
-
+    
     if len(hash_a) != len(hash_b):  # we requested this from pbkdf2_bin()
         return False
 
