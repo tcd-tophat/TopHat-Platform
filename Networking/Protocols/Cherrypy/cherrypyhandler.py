@@ -63,8 +63,6 @@ class CherrypyHandler(RESTResource):
         if "apikey" in params: 
           key = params["apikey"]
 
-        print ket
-
         response = self.datahandler.handleIt(1, retval, key, str(params['data']))
 
         cherrypy.response.status = response.code
