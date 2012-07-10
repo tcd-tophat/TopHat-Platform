@@ -23,9 +23,10 @@ class Users(Request):
 
 	@requireapitoken
 	def _doGet(self):
-		if self.arg is not None:
-			try:
-				UserMapper = UM.UserMapper()
+		try:
+			UserMapper = UM.UserMapper()
+
+			if self.arg is not None:
 
 				if self.arg.isdigit():
 					# Get the user by ID
@@ -37,12 +38,23 @@ class Users(Request):
 				if user is not None:
 					return self._response(user.dict(), CODE.OK)
 				else:
-					raise NotFound("This user does not exist")
+						raise NotFound("This user does not exist")
 
-			except mdb.DatabaseError, e:
-				raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
-		else:
-			raise RequestError(CODE.UNIMPLEMENTED, "Getting a list of users is currently unimplemented")
+			else:
+				offset = 0
+				users = UserMapper.findAll(offset, offset+50)
+
+				userslist = []
+
+				for user in users:
+					userslist.append(user.dict())
+
+				userslist = {"users":userslist, "pagination_offset":offset, "max_perpage": 50}
+
+				return self._response(userslist, CODE.OK)
+
+		except mdb.DatabaseError, e:
+			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
 	@requireapitoken
 	def _doPost(self, dataObject):
