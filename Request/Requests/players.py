@@ -8,7 +8,7 @@ from Model.Mapper import playermapper as PM
 import MySQLdb as mdb
 
 # Decorator
-from Model.authentication import requirelogin
+from Model.authentication import require_login, require_super_user
 
 class Players(Request):
 
@@ -21,7 +21,8 @@ class Players(Request):
 	def __init__(self):
 		super(Players, self).__init__()
 
-	@requirelogin
+	@require_super_user
+	@require_login
 	def _doGet(self):
 		try:
 			
@@ -56,14 +57,14 @@ class Players(Request):
 		except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the player database (%s: %s)" % e.args[0], e.args[1])
 
-	@requirelogin
+	@require_login
 	def _doPost(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requirelogin
+	@require_login
 	def _doPut(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requirelogin
+	@require_login
 	def _doDelete(self):
 		return self._response({}, CODE.UNIMPLEMENTED)

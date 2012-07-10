@@ -1,5 +1,4 @@
 from Request.request import Request
-from Model.authentication import requirelogin
 from Networking.statuscodes import StatusCodes as CODE
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
 

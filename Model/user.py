@@ -11,6 +11,7 @@ class User(metadomainobject.MetaDomainObject):
 	_photo = None
 	_email = None
 	_password = None
+	_level = 1
 	_time = datetime.now()
 	
 	def __init__(self, id_=None):
@@ -59,6 +60,12 @@ class User(metadomainobject.MetaDomainObject):
 
 		self._time = time
 
+	def setAccessLevel(self, level):
+		if level is not None:
+			level = int(level)
+
+		self._level = level
+
 	# getters #
 	def getName(self):
 		return self._name
@@ -72,6 +79,9 @@ class User(metadomainobject.MetaDomainObject):
 	def getPassword(self):
 		return self._password
 
+	def getAccessLevel(self):
+		return self._level
+
 	def getTime(self):
 		return self._time
 
@@ -79,6 +89,7 @@ class User(metadomainobject.MetaDomainObject):
 		return {
 					"id": self.getId(),
 					"name": self.getName(),
+					"accesslevel": self.getAccessLevel(),
 					"email": self.getEmail(),
 					"created": str(self.getTime()),
 					"photo": str(self.getPhoto()),

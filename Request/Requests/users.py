@@ -1,7 +1,7 @@
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
-from Model.authentication import requirelogin
+from Model.authentication import require_login, require_super_user
 from Common.apikeygen import getKey
 
 from Model.Mapper import usermapper as UM
@@ -21,7 +21,7 @@ class Users(Request):
 	def __init__(self):
 		super(Users, self).__init__()
 
-	@requirelogin
+	@require_login
 	def _doGet(self):
 		try:
 			UserMapper = UM.UserMapper()
@@ -88,7 +88,7 @@ class Users(Request):
 		else:
 			raise BadRequest("Required params email and password not sent")
 
-	@requirelogin
+	@require_login
 	def _doPut(self, dataObject):
 
 		if "name" in dataObject or "email" in dataObject or "photo" in dataObject:
@@ -125,7 +125,7 @@ class Users(Request):
 		else:
 			raise BadRequest("The minimum required fields were not provided, which include but are not limited to 'name', 'email' and 'photo'.")
 
-	@requirelogin
+	@require_login
 	def _doDelete(self):
 		if self.arg is not None:
 			try:

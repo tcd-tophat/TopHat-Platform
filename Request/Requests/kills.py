@@ -8,7 +8,7 @@ from Model.Mapper import killmapper as KM
 import MySQLdb as mdb
 
 # Decorator
-from Model.authentication import requirelogin
+from Model.authentication import require_login
 
 class Kills(Request):
 
@@ -21,7 +21,7 @@ class Kills(Request):
 	def __init__(self):
 		super(Kills, self).__init__()
 
-	@requirelogin
+	@require_login
 	def _doGet(self):
 		try:
 			
@@ -58,14 +58,14 @@ class Kills(Request):
 
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requirelogin
+	@require_login
 	def _doPost(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requirelogin
+	@require_login
 	def _doPut(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requirelogin
+	@require_login
 	def _doDelete(self):
 		return self._response({}, CODE.UNIMPLEMENTED)
