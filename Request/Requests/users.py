@@ -56,7 +56,6 @@ class Users(Request):
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
-	@requirelogin
 	def _doPost(self, dataObject):
 
 		if "email" in dataObject and "password" in dataObject:
