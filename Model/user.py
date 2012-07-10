@@ -89,7 +89,6 @@ class User(metadomainobject.MetaDomainObject):
 		return {
 					"id": self.getId(),
 					"name": self.getName(),
-					"accesslevel": self.getAccessLevel(),
 					"email": self.getEmail(),
 					"created": str(self.getTime()),
 					"photo": str(self.getPhoto()),
