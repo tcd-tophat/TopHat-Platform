@@ -34,7 +34,7 @@ class Games(Request):
 				if game is not None:
 					return self._response(game.dict(), CODE.OK)
 				else:
-					raise NotFound("There is no game identified by the number %i" % self.arg)
+					raise NotFound("There is no game identified by the number %s" % self.arg)
 			
 			else:
 
