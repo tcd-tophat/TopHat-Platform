@@ -41,8 +41,8 @@ class CherrypyHandler(RESTResource):
 
         key = None
 
-        if "apikey" in params:
-          key = params["apikey"]
+        if "apitoken" in params:
+          key = params["apitoken"]
 
         response = self.datahandler.handleIt(0, retval, key, None)
 
@@ -60,8 +60,8 @@ class CherrypyHandler(RESTResource):
 
         key = None
 
-        if "apikey" in params: 
-          key = params["apikey"]
+        if "apitoken" in params: 
+          key = params["apitoken"]
 
         response = self.datahandler.handleIt(1, retval, key, str(params['data']))
 
@@ -80,8 +80,8 @@ class CherrypyHandler(RESTResource):
 
         key = None
 
-        if "apikey" in params:
-          key = params["apikey"]
+        if "apitoken" in params:
+          key = params["apitoken"]
 
         response = self.datahandler.handleIt(2, retval, key, str(params['data']))
 
@@ -96,8 +96,8 @@ class CherrypyHandler(RESTResource):
 
         key = None
 
-        if "apikey" in params:
-          key = params["apikey"]
+        if "apitoken" in params:
+          key = params["apitoken"]
 
         response = self.datahandler.handleIt(3, retval, key,  None)
 
