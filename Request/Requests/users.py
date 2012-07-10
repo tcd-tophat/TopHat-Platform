@@ -91,7 +91,40 @@ class Users(Request):
 
 	@requireapitoken
 	def _doPut(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		if "name" in dataObject or "email" in dataObject or "photo" in dataObject:
+			try:
+
+				UserMapper = UM.UserMapper()
+
+				if self.arg.isdigit():
+					# Get the user by ID
+					user = UserMapper.find(self.arg)
+				else:
+					# Get the user by E-mail
+					user = UserMapper.getUserByEmail(self.arg)
+
+				if user is not None:
+					
+					if "name" in dataObject:
+						user.setName(dataObject["name"])
+					
+					if "email" in dataObject:
+						user.setEmail(dataObject["email"])
+
+					if "photo" in dataObject:
+						user.setPhoto(dataObject["photo"])
+
+					UserMapper.update(user)
+
+					return self._response(user.dict(), CODE.CREATED)
+				else:
+					raise NotFound("This user does not exist")
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("The minimum required fields were not provided, which include but are not limited to 'name', 'email' and 'photo'.")
 
 	@requireapitoken
 	def _doDelete(self):
