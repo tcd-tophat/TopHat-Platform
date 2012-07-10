@@ -75,3 +75,9 @@ class ApitokenMapper(mapper.Mapper):
 		params = (user_id,)
 	
 		return self._getOne(query, params)
+
+	def findUserByTokenId(self, token_id):
+		query = "SELECT * FROM "+self.tableName()+" WHERE "+self.tableName()+".key = %s LIMIT 1"
+		params = (token_id,)
+	
+		return self._getOne(query, params)

@@ -39,7 +39,12 @@ class CherrypyHandler(RESTResource):
         if retval == "//":
           retval = "/"
 
-        response = self.datahandler.handleIt(0, retval, None)
+        key = None
+
+        if "apikey" in params:
+          key = params["apikey"]
+
+        response = self.datahandler.handleIt(0, retval, key, None)
 
         cherrypy.response.status = response.code
         return response.json
@@ -53,7 +58,14 @@ class CherrypyHandler(RESTResource):
         if 'data' not in params:
           params['data'] = ""
 
-        response = self.datahandler.handleIt(1, retval, str(params['data']))
+        key = None
+
+        if "apikey" in params: 
+          key = params["apikey"]
+
+        print ket
+
+        response = self.datahandler.handleIt(1, retval, key, str(params['data']))
 
         cherrypy.response.status = response.code
         return response.json
@@ -67,7 +79,13 @@ class CherrypyHandler(RESTResource):
         if 'data' not in params:
           params['data'] = ""
 
-        response = self.datahandler.handleIt(2, retval, str(params['data']))
+
+        key = None
+
+        if "apikey" in params:
+          key = params["apikey"]
+
+        response = self.datahandler.handleIt(2, retval, key, str(params['data']))
 
         cherrypy.response.status = response.code
         return response.json
@@ -78,7 +96,12 @@ class CherrypyHandler(RESTResource):
         if retval == "//":
           retval = "/"
 
-        response = self.datahandler.handleIt(3, retval, None)
+        key = None
+
+        if "apikey" in params:
+          key = params["apikey"]
+
+        response = self.datahandler.handleIt(3, retval, key,  None)
 
         cherrypy.response.status = response.code
         return response.json

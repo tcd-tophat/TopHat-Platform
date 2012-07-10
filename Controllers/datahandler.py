@@ -12,19 +12,19 @@ class DataHandler:
 	def __init__(self):
 		pass
 
-	def handleIt(self, opcode, uri, data):
+	def handleIt(self, opcode, uri, key, data):
 
 		response = None
 
 		try:
 			if opcode == 0:
-				RC = RequestController(opcode, uri, None)
+				RC = RequestController(opcode, uri, key, None)
 			elif opcode == 1:
-				RC = RequestController(opcode, uri, JsonParser.getObject(data))
+				RC = RequestController(opcode, uri, key, JsonParser.getObject(data))
 			elif opcode == 2:
-				RC = RequestController(opcode, uri, JsonParser.getObject(data))
+				RC = RequestController(opcode, uri, key, JsonParser.getObject(data))
 			elif opcode == 3:
-				RC = RequestController(opcode, uri, None)
+				RC = RequestController(opcode, uri, key, None)
 
 			RC.run()
 

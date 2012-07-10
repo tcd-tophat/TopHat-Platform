@@ -10,10 +10,12 @@ class RequestController:
 	data = {}
 	response = None
 	arg = None
+	key = None
 
-	def __init__(self, opcode, uri, data=None):
+	def __init__(self, opcode, uri, key, data=None):
 		self.opcode = opcode
 		self.uri = uri
+		self.key = key
 
 		self.data = {}
 		if data is not None: 
@@ -28,6 +30,7 @@ class RequestController:
 			request = self.__importRequest(self.uri)
 
 			request.setArg(self.arg)
+			request.setApiKey(self.key)
 
 			if self.opcode == 0:
 				response = request.get()

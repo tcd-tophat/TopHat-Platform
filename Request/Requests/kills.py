@@ -1,7 +1,6 @@
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
-from Model.authentication import requireapitoken
 
 from Model.Mapper import usermapper as UM
 from Model.Mapper import gamemapper as GM
@@ -9,7 +8,7 @@ from Model.Mapper import killmapper as KM
 import MySQLdb as mdb
 
 # Decorator
-from Model.authentication import requireapitoken
+from Model.authentication import requirelogin
 
 class Kills(Request):
 
@@ -22,7 +21,7 @@ class Kills(Request):
 	def __init__(self):
 		super(Kills, self).__init__()
 
-	@requireapitoken
+	@requirelogin
 	def _doGet(self):
 		try:
 			
@@ -59,14 +58,14 @@ class Kills(Request):
 
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requireapitoken
+	@requirelogin
 	def _doPost(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requireapitoken
+	@requirelogin
 	def _doPut(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requireapitoken
+	@requirelogin
 	def _doDelete(self):
 		return self._response({}, CODE.UNIMPLEMENTED)

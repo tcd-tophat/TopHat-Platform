@@ -1,7 +1,7 @@
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
-from Model.authentication import requireapitoken
+from Model.authentication import requirelogin
 from Common.apikeygen import getKey
 
 from Model.Mapper import usermapper as UM
@@ -21,7 +21,7 @@ class Users(Request):
 	def __init__(self):
 		super(Users, self).__init__()
 
-	@requireapitoken
+	@requirelogin
 	def _doGet(self):
 		try:
 			UserMapper = UM.UserMapper()
@@ -56,7 +56,7 @@ class Users(Request):
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
-	@requireapitoken
+	@requirelogin
 	def _doPost(self, dataObject):
 
 		if "email" in dataObject and "password" in dataObject:
@@ -89,7 +89,7 @@ class Users(Request):
 		else:
 			raise BadRequest("Required params email and password not sent")
 
-	@requireapitoken
+	@requirelogin
 	def _doPut(self, dataObject):
 
 		if "name" in dataObject or "email" in dataObject or "photo" in dataObject:
@@ -126,7 +126,7 @@ class Users(Request):
 		else:
 			raise BadRequest("The minimum required fields were not provided, which include but are not limited to 'name', 'email' and 'photo'.")
 
-	@requireapitoken
+	@requirelogin
 	def _doDelete(self):
 		if self.arg is not None:
 			try:

@@ -1,7 +1,7 @@
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
-from Model.authentication import requireapitoken
+from Model.authentication import requirelogin
 
 from Model.Mapper import usermapper as UM
 from Model.Mapper import gamemapper as GM
@@ -18,7 +18,7 @@ class Games(Request):
 	def __init__(self):
 		super(Games, self).__init__()
 
-	@requireapitoken
+	@requirelogin
 	def _doGet(self):
 		try:
 			
@@ -54,14 +54,14 @@ class Games(Request):
 			raise ServerError("Unable to search the game database (%s: %s)" % e.args[0], e.args[1])
 
 
-	@requireapitoken
+	@requirelogin
 	def _doPost(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requireapitoken
+	@requirelogin
 	def _doPut(self, dataObject):
 		return self._response({}, CODE.UNIMPLEMENTED)
 
-	@requireapitoken
+	@requirelogin
 	def _doDelete(self):
 		return self._response({}, CODE.UNIMPLEMENTED)

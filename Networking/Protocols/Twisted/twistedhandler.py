@@ -15,7 +15,13 @@ class TwistedHandler(Resource):
         Resource.__init__(self)
 
     def render_GET(self, request):
-        response = self.datahandler.handleIt(0, request.path, None)
+
+        key = None
+
+        if "apikey" in request.args:
+            key = request.args['apikey']
+
+        response = self.datahandler.handleIt(0, request.path, key, None)
 
         request.setResponseCode(response.code)
         return response.json
@@ -27,7 +33,12 @@ class TwistedHandler(Resource):
         except:
             data = ""
 
-        response = self.datahandler.handleIt(1, request.path, data)
+        key = None
+
+        if "apikey" in request.args:
+            key = request.args['apikey']
+
+        response = self.datahandler.handleIt(1, request.path, key, data)
 
         request.setResponseCode(response.code)
         return response.json
@@ -39,13 +50,23 @@ class TwistedHandler(Resource):
         except:
             data = ""
 
-        response = self.datahandler.handleIt(2, request.path, data)
+        key = None
+
+        if "apikey" in request.args:
+            key = request.args['apikey']
+
+        response = self.datahandler.handleIt(2, request.path, key, data)
 
         request.setResponseCode(response.code)
         return response.json
 
     def render_DELETE(self, request):
-        response = self.datahandler.handleIt(3, request.path, None)
+        key = None
+
+        if "apikey" in request.args:
+            key = request.args['apikey']
+
+        response = self.datahandler.handleIt(3, request.path, key, None)
 
         request.setResponseCode(response.code)
         return response.json

@@ -8,9 +8,12 @@ class Jsontest(Request):
 	def __init__(self,):
 		super(Jsontest, self).__init__()
 
-	@requirelogin
 	def _doGet(self):
-		rdata = {}
+
+		if self.user == None:
+			rdata = {}
+		else:
+			rdata = self.user.dict()
 		rdata["error_code"] = 200
 		rdata['message'] = "Test Call completed successfully"
 		return self._response(rdata, CODE.OK)
