@@ -35,23 +35,29 @@ class Users(Request):
 					# Get the user by E-mail
 					user = UserMapper.getUserByEmail(self.arg)
 
-				if user is not None:
-					return self._response(user.dict(), CODE.OK)
+				if self.user.getAccessLevel() is 5 or self.user.getId() == user.getId():
+					if user is not None:
+						return self._response(user.dict(), CODE.OK)
+					else:
+							raise NotFound("This user does not exist")
 				else:
-						raise NotFound("This user does not exist")
+					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
 			else:
-				offset = 0
-				users = UserMapper.findAll(offset, offset+50)
+				if self.user.getAccessLevel() is 5:
+					offset = 0
+					users = UserMapper.findAll(offset, offset+50)
 
-				userslist = []
+					userslist = []
 
-				for user in users:
-					userslist.append(user.dict())
+					for user in users:
+						userslist.append(user.dict())
 
-				userslist = {"users":userslist, "pagination_offset":offset, "max_perpage": 50}
+					userslist = {"users":userslist, "pagination_offset":offset, "max_perpage": 50}
 
-				return self._response(userslist, CODE.OK)
+					return self._response(userslist, CODE.OK)
+				else:
+					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
@@ -104,19 +110,21 @@ class Users(Request):
 					user = UserMapper.getUserByEmail(self.arg)
 
 				if user is not None:
-					
-					if "name" in dataObject:
-						user.setName(dataObject["name"])
-					
-					if "email" in dataObject:
-						user.setEmail(dataObject["email"])
+					if self.user.getId() is user.getId() or self.user.getAccessLevel() is 5:
+						if "name" in dataObject:
+							user.setName(dataObject["name"])
+						
+						if "email" in dataObject:
+							user.setEmail(dataObject["email"])
 
-					if "photo" in dataObject:
-						user.setPhoto(dataObject["photo"])
+						if "photo" in dataObject:
+							user.setPhoto(dataObject["photo"])
 
-					UserMapper.update(user)
+						UserMapper.update(user)
 
-					return self._response(user.dict(), CODE.CREATED)
+						return self._response(user.dict(), CODE.CREATED)
+					else:
+						raise Unauthorised("You do not have sufficient privileges to modify this user")
 				else:
 					raise NotFound("This user does not exist")
 				
@@ -137,11 +145,15 @@ class Users(Request):
 				else:
 					# Get the user by E-mail
 					user = UserMapper.getUserByEmail(self.arg)
-				if user is not None:
-					UserMapper.delete(user)
-					return self._response({"message": "User Deleted Successfully."}, CODE.OK)
+
+				if self.user.getId() is user.getId() or self.user.getAccessLevel() is 5:
+					if user is not None:
+						UserMapper.delete(user)
+						return self._response({"message": "User Deleted Successfully."}, CODE.OK)
+					else:
+						raise NotFound("This user does not exist")
 				else:
-					raise NotFound("This user does not exist")
+					raise Unauthorised("You do not have sufficient privileges to delete this user")
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 		else:
