@@ -70,12 +70,13 @@ class Users(Request):
 				UserMapper = UM.UserMapper()
 				ApitokenMapper = ATM.ApitokenMapper()
 
-				user = User()
 
 				# Get the user by E-mail
-				user = UserMapper.getUserByEmail(dataObject["email"])
+				acidtest = UserMapper.getUserByEmail(dataObject["email"])
 
-				if user is None:
+				if acidtest is None:
+					user = User()
+
 					user.setEmail(dataObject["email"])
 					user.setPreHash(dataObject["password"])
 
