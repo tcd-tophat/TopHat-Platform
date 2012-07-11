@@ -72,22 +72,28 @@ class Users(Request):
 
 				user = User()
 
-				user.setEmail(dataObject["email"])
-				user.setPreHash(dataObject["password"])
-
-				UserMapper.insert(user)
-
-				# Retrieve user with ID this time
+				# Get the user by E-mail
 				user = UserMapper.getUserByEmail(dataObject["email"])
 
-				token = Apitoken()
+				if user is None:
+					user.setEmail(dataObject["email"])
+					user.setPreHash(dataObject["password"])
 
-				token.setUser(user)
-				token.setToken(getKey())
+					UserMapper.insert(user)
 
-				ApitokenMapper.insert(token)
+					# Retrieve user with ID this time
+					user = UserMapper.getUserByEmail(dataObject["email"])
 
-				return self._response(token.dict(), CODE.CREATED)
+					token = Apitoken()
+
+					token.setUser(user)
+					token.setToken(getKey())
+
+					ApitokenMapper.insert(token)
+
+					return self._response(token.dict(), CODE.CREATED)
+				else:
+					raise RequestError(CODE.CONFLICT, "A user with that e-mail address exists already.")
 				
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])

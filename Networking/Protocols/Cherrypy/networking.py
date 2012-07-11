@@ -26,5 +26,6 @@ class Networking(Network):
 		StatusCodes.UNAUTHORISED = 401
 		StatusCodes.NOT_FOUND = 404
 		StatusCodes.METHOD_NOT_ALLOWED = 405
+		StatusCodes.CONFLICT = 409
 		StatusCodes.SERVER_ERROR = 500
 		StatusCodes.UNIMPLEMENTED = 501
