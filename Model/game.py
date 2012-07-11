@@ -64,12 +64,15 @@ class Game(domainobject.DomainObject):
 
 		self._time = time
 
-	def dict(self):
-		return {
-					"id": self.getId(),
-					"name": self.getName(),
-					"game_type": self.getGameTypeName(),
-					"game_type_id": self.getGameTypeId(),
-					"time": str(self.getTime()),
-					"creator": self.getCreator().dict()
-				}
+	def dict(self, depth=0):
+		if depth < 0:
+			return self.getId()
+		else:
+			return {
+				"id": self.getId(),
+				"name": self.getName(),
+				"game_type": self.getGameTypeName(),
+				"game_type_id": self.getGameTypeId(),
+				"time": str(self.getTime()),
+				"creator": self.getCreator().dict(depth-1)
+			}

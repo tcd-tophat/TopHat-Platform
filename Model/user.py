@@ -85,12 +85,15 @@ class User(metadomainobject.MetaDomainObject):
 	def getTime(self):
 		return self._time
 
-	def dict(self):
-		return {
-					"id": self.getId(),
-					"name": self.getName(),
-					"email": self.getEmail(),
-					"created": str(self.getTime()),
-					"photo": str(self.getPhoto()),
-					"joined_games": []
-				}
+	def dict(self, depth=0):
+		if depth < 0:
+			return self.getId()
+		else:
+			return {
+				"id": self.getId(),
+				"name": self.getName(),
+				"email": self.getEmail(),
+				"created": str(self.getTime()),
+				"photo": str(self.getPhoto()),
+				"joined_games": []
+			}

@@ -36,8 +36,11 @@ class Apitoken(domainobject.DomainObject):
 	def getUser(self):
 		return self._user
 
-	def dict(self):
-		return {
-			"user": self.getUser().dict(),
-			"apitoken": self.getToken()
-		}
+	def dict(self, depth=0):
+		if depth < 0:
+			return self.getId()
+		else:	
+			return {
+				"user": self.getUser().dict(),
+				"apitoken": self.getToken()
+			}
