@@ -39,7 +39,7 @@ class Users(Request):
 					if user is not None:
 						return self._response(user.dict(), CODE.OK)
 					else:
-							raise NotFound("This user does not exist")
+						raise NotFound("This user does not exist")
 				else:
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
@@ -142,28 +142,33 @@ class Users(Request):
 
 	@require_login
 	def _doDelete(self):
-		if self.arg is not None:
-			try:
-				UserMapper = UM.UserMapper()
-
-				if self.arg.isdigit():
-					# Get the user by ID
-					user = UserMapper.find(self.arg)
-				else:
-					# Get the user by E-mail
-					user = UserMapper.getUserByEmail(self.arg)
-
-				if self.user.getId() is user.getId() or self.user.getAccessLevel() is 5:
-					if user is not None:
-						UserMapper.delete(user)
-						return self._response({"message": "User Deleted Successfully."}, CODE.OK)
-					else:
-						raise NotFound("This user does not exist")
-				else:
-					raise Unauthorised("You do not have sufficient privileges to delete this user")
-			except mdb.DatabaseError, e:
-				raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
-		else:
+		if self.arg is None:
 			raise MethodNotAllowed("You must provide the user ID or user EMAIL of the user to be deleted")
+		
+		# get the user if it exists
+		try:
+			UserMapper = UM.UserMapper()
 
-		return self._response({}, CODE.UNIMPLEMENTED)
+			if self.arg.isdigit():
+				user = UserMapper.find(self.arg)
+			else:
+				# Get the user by E-mail
+				user = UserMapper.getUserByEmail(self.arg)
+		except mdb.DatabaseError, e:
+			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
+
+		if user is None:
+			raise NotFound("There is no user identified by %s" % self.arg)
+
+		# check user has the priviledges
+		if not self.user.getId() is user.getId() or not self.user.accessLevel('delete_users'):
+			raise Unauthorised("You do not have sufficient privileges to delete this user")
+
+		# delete the user from the data base
+		result = UserMapper.delete(user)
+
+		if result:
+			return self._response({"message": "User Deleted Successfully."}, CODE.OK)
+		else:
+			raise ServerError("Unable to delete the user")
+			

@@ -1,11 +1,13 @@
 import domainobject
 import domainexception
 import user
+from Common import permissions
 
 class Apitoken(domainobject.DomainObject):
 
 	_token = None
 	_user = None
+	_group = 1
 
 	def __init__(self, id_=None):
 		super(Apitoken, self).__init__(id_)
@@ -31,16 +33,31 @@ class Apitoken(domainobject.DomainObject):
 		if not isinstance(user_, user.User):
 			raise domainexception.DomainException("Must reference a User object not a %s" % str(type(user_)))
 
+		user_.setToken(self)
+
 		self._user = user_
 
 	def getUser(self):
 		return self._user
+
+	def setGroup(self, group):
+		self._group = int(group)
+
+	def getGroup(self):
+		return self._group
 
 	def dict(self, depth=0):
 		if depth < 0:
 			return self.getId()
 		else:	
 			return {
-				"user": self.getUser().dict(),
+				"user": self.getUser().dict(depth-1),
 				"apitoken": self.getToken()
 			}
+
+	def checkPermission(self, permission):
+		# check the list of permissions
+		if PERMISSIONS[permission] == self._group:
+			return True
+		else:
+			return False

@@ -3,6 +3,7 @@ import time
 
 import Model.kill
 import playermapper as PM
+from deferredobject import DeferredObject
 
 class KillMapper(mapper.Mapper):
 
@@ -29,11 +30,11 @@ class KillMapper(mapper.Mapper):
 		kill_ = Model.kill.Kill(data["id"])
 
 		PlayerMapper = PM.PlayerMapper()
-		killer = PlayerMapper.find(data["killer_player_id"])
-		victim = PlayerMapper.find(data["victim_player_id"])
+		#killer = PlayerMapper.find(data["killer_player_id"])
+		#victim = PlayerMapper.find(data["victim_player_id"])
 
-		kill_.setKiller(killer)
-		kill_.setVictim(victim)
+		kill_.setKiller(data["killer_player_id"])
+		kill_.setVictim(data["victim_player_id"])
 
 		kill_.setVerified(data["verified"])
 		kill_.setTime(data["time"])

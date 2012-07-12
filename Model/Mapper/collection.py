@@ -41,6 +41,9 @@ class Collection(object):
 	def __setitem__(self, key):
 		raise Exception("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
 
+	def __len__(self):
+		return self.__total
+
 	def add(self, obj):
 		"""Non-type safe method to add objects to this collection"""
 		# notify access for lazy load

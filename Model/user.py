@@ -3,6 +3,7 @@ from datetime import datetime
 from Model import domainobject
 from Model import domainexception
 from Model import metadomainobject
+from Model import apitoken
 from Common.passHash import makeHash
 
 class User(metadomainobject.MetaDomainObject):
@@ -11,7 +12,7 @@ class User(metadomainobject.MetaDomainObject):
 	_photo = None
 	_email = None
 	_password = None
-	_level = 1
+	_token = None
 	_time = datetime.now()
 	
 	def __init__(self, id_=None):
@@ -60,11 +61,15 @@ class User(metadomainobject.MetaDomainObject):
 
 		self._time = time
 
-	def setAccessLevel(self, level):
-		if level is not None:
-			level = int(level)
+	def setToken(self, tokem):
+		if token is not None:
+			if not isinstance(token, apitoken.Apitoken):
+				raise domainexception.DomainException("Token must be an API Token Model Object")
 
-		self._level = level
+		self._token = token
+
+	def accessLevel(self, permission):
+		return self._level.checkPermission(permission)
 
 	# getters #
 	def getName(self):
@@ -78,9 +83,6 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getPassword(self):
 		return self._password
-
-	def getAccessLevel(self):
-		return self._level
 
 	def getTime(self):
 		return self._time

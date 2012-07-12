@@ -24,13 +24,13 @@ class Kill(domainobject.DomainObject):
 
 	# Setters #
 	def setKiller(self, killer):
-		if not isinstance(killer, player.Player):
+		if not isinstance(killer, player.Player) and not isinstance(killer, int):
 			raise domainexception.DomainException("Killer must be a Player object")
 
 		self._killer = killer
 
 	def setVictim(self, victim):
-		if not isinstance(victim, player.Player):
+		if not isinstance(victim, player.Player) and not isinstance(victim, int):
 			raise domainexception.DomainException("Victim must be a Player Object")
 
 		self._victim = victim
@@ -51,9 +51,17 @@ class Kill(domainobject.DomainObject):
 
 	# Getters #
 	def getKiller(self):
+		if isinstance(self._killer, int):
+			from Model.Mapper.playermapper import PlayerMapper
+			self._kller = PlayerMapper().find(self._killer)
+
 		return self._killer
 
 	def getVictim(self):
+		if isinstance(self._victim, int):
+			from Model.Mapper.playermapper import PlayerMapper
+			self._kller = PlayerMapper().find(self._victim)
+
 		return self._victim
 
 	def getVerified(self):
@@ -62,11 +70,14 @@ class Kill(domainobject.DomainObject):
 	def getTime(self):
 		return self._time
 
-	def dict(self):
-		return {
-			"id": self.getId(),
-			"verified": self.getVerified(),
-			"time": str(self.getTime()),
-			"victim": self.getVictim().dict(),
-			"killer": self.getKiller().dict(),
-		}
+	def dict(self, depth=0):
+		if depth < 0:
+			return self.getId()
+		else:
+			return {
+				"id": self.getId(),
+				"verified": self.getVerified(),
+				"time": str(self.getTime()),
+				"victim": self.getVictim().dict(depth-1),
+				"killer": self.getKiller().dict(depth-1),
+			}

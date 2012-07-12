@@ -27,6 +27,7 @@ class ApitokenMapper(mapper.Mapper):
 		apitoken_ = Model.apitoken.Apitoken(data["id"])
 
 		apitoken_.setToken(data["key"])
+		apitoken_.setGroup(data["group_id"])
 		UserMapper = UM.UserMapper()
 		apitoken_.setUser(UserMapper.find(data["user_id"]))
 
@@ -35,9 +36,9 @@ class ApitokenMapper(mapper.Mapper):
 	def _doInsert(self, obj):
 		# build query
 		# id, key, group_id
-		query = "INSERT INTO "+self.tableName()+" VALUES(NULL, %s, 1, %s)"
+		query = "INSERT INTO " + self.tableName() + " VALUES(NULL, %s, %s, %s)"
 
-		params = (obj.getToken(), obj.getUser().getId())
+		params = (obj.getToken(), obj.getGroup(), obj.getUser().getId())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -57,8 +58,8 @@ class ApitokenMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE "+self.tableName()+" SET key = %s, user_id = %s WHERE id = %s LIMIT 1"
-		params = (obj.getToken(), obj.getUser().getId(), obj.getId())
+		query = "UPDATE " + self.tableName() + " SET key = %s, user_id = %s, group_id = %s WHERE id = %s LIMIT 1"
+		params = (obj.getToken(), obj.getUser().getId(), obj.getGroup(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -71,13 +72,13 @@ class ApitokenMapper(mapper.Mapper):
 			return False
 
 	def findTokenByUserId(self, user_id):
-		query = "SELECT * FROM "+self.tableName()+" WHERE user_id = %s LIMIT 1"
+		query = "SELECT * FROM " + self.tableName() + " WHERE user_id = %s LIMIT 1"
 		params = (user_id,)
 	
 		return self._getOne(query, params)
 
-	def findUserByTokenId(self, token_id):
-		query = "SELECT * FROM "+self.tableName()+" WHERE "+self.tableName()+".key = %s LIMIT 1"
+	def findByKey(self, token_id):
+		query = "SELECT * FROM " + self.tableName() + " WHERE key = %s LIMIT 1"
 		params = (token_id,)
 	
 		return self._getOne(query, params)
