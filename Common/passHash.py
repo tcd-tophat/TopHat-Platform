@@ -49,4 +49,4 @@ def checkHash(password, hash_):
     diff = 0
     for char_a, char_b in izip(hash_a, hash_b):
         diff |= ord(char_a) ^ ord(char_b)
-    return diff == 0
+    return diff is 0

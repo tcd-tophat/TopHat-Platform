@@ -32,13 +32,13 @@ class RequestController:
 			request.setArg(self.arg)
 			request.setApiKey(self.key)
 
-			if self.opcode == 0:
+			if self.opcode is 0:
 				response = request.get()
-			elif self.opcode == 1:
+			elif self.opcode is 1:
 				response = request.post(self.data)
-			elif self.opcode == 2:
+			elif self.opcode is 2:
 				response = request.put(self.data)
-			elif self.opcode == 3:
+			elif self.opcode is 3:
 				response = request.delete()
 
 			self.response = response

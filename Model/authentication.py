@@ -4,7 +4,7 @@ def require_login(func):
 	def wrapper(self, *args, **kwargs):
 		
 		# User has not been loaded
-		if self.user == None:
+		if self.user is None:
 			raise Unauthorised("You must be authenticated in order to use this resource.")
 
 		return func(self, *args, **kwargs)
@@ -14,7 +14,7 @@ def require_super_user(func):
 	def wrapper(self, *args, **kwargs):
 		
 		# User has not been loaded
-		if self.user == None:
+		if self.user is None:
 			raise Unauthorised("You must be authenticated in order to use this resource.")
 
 		elif self.user.accessLevel('super_user'):

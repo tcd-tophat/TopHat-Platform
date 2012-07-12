@@ -17,13 +17,13 @@ class DataHandler:
 		response = None
 
 		try:
-			if opcode == 0:
+			if opcode is 0:
 				RC = RequestController(opcode, uri, key, None)
-			elif opcode == 1:
+			elif opcode is 1:
 				RC = RequestController(opcode, uri, key, JsonParser.getObject(data))
-			elif opcode == 2:
+			elif opcode is 2:
 				RC = RequestController(opcode, uri, key, JsonParser.getObject(data))
-			elif opcode == 3:
+			elif opcode is 3:
 				RC = RequestController(opcode, uri, key, None)
 
 			RC.run()

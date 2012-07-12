@@ -9,7 +9,7 @@ class Jsontest(Request):
 
 	def _doGet(self):
 
-		if self.user == None:
+		if self.user is None:
 			rdata = {}
 		else:
 			rdata = self.user.dict()
