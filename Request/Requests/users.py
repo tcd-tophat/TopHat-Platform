@@ -3,6 +3,7 @@ from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNot
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import require_login, require_super_user
 from Common.apikeygen import getKey
+from Common.utils import checkEmail
 
 from Model.Mapper import usermapper as UM
 from Model.Mapper import apitokenmapper as ATM
@@ -64,6 +65,8 @@ class Users(Request):
 
 	def _doPost(self, dataObject):
 
+		print str(dataObject)
+
 		if "email" in dataObject and "password" in dataObject:
 			try:
 
@@ -76,6 +79,9 @@ class Users(Request):
 
 				if acidtest is None:
 					user = User()
+
+					if not checkEmail(dataObject["email"]):
+						raise BadRequest("The e-mail supplied was invalid.")
 
 					user.setEmail(dataObject["email"])
 					user.setPreHash(dataObject["password"])

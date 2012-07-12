@@ -1,4 +1,4 @@
-import random
+from os import urandom
 
 def getKey():
-	return hex(random.getrandbits(256))[2:-1]
+	return urandom(64).encode('hex')[:64]
