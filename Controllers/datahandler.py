@@ -1,4 +1,4 @@
-import traceback
+import traceback, sys
 
 from Request.requestcontroller import RequestController
 from Model.jsonparser import JsonParser
@@ -36,6 +36,7 @@ class DataHandler:
 			# Handles Errors raised in requests. Errors contain a message and errorcode.
 			response = Response(e.message, e.code)
 		except ValueError:
+			traceback.print_exc(file=sys.stdout)
 			response = Response("JSON Data was invalid.", StatusCodes.BAD_REQUEST)
 		except:
 			# Return Server error message with the stacktrace

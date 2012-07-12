@@ -65,6 +65,8 @@ class Users(Request):
 
 	def _doPost(self, dataObject):
 
+		print str(dataObject)
+
 		if "email" in dataObject and "password" in dataObject:
 			try:
 
