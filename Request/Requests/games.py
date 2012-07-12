@@ -5,6 +5,7 @@ from Model.authentication import require_login
 
 from Model.Mapper import usermapper as UM
 from Model.Mapper import gamemapper as GM
+from Model.game import Game
 import MySQLdb as mdb
 
 class Games(Request):
@@ -56,7 +57,24 @@ class Games(Request):
 
 	@require_login
 	def _doPost(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		if "name" in dataObject:
+			try:
+
+				GameMapper = GM.GameMapper()
+
+				# Get the user by E-mail
+				game = Game()
+
+				game.setName(dataObject["name"])
+				game.setCreator(self.user)
+
+				return self._response(game.dict(), CODE.CREATED)
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("Required params email and password not sent")
 
 	@require_login
 	def _doPut(self, dataObject):
