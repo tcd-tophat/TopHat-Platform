@@ -45,7 +45,7 @@ class Users(Request):
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
 			else:
-				if self.user.getAccessLevel() is 5:
+				if self.user.accessLevel("super_user"):
 					offset = 0
 					users = UserMapper.findAll(offset, offset+50)
 
@@ -125,7 +125,7 @@ class Users(Request):
 					user = UserMapper.getUserByEmail(self.arg)
 
 				if user is not None:
-					if self.user.getId() is user.getId() or self.user.getAccessLevel() is 5:
+					if self.user.getId() is user.getId() or self.user.accessLevel("super_user"):
 						if "name" in dataObject:
 							user.setName(dataObject["name"])
 						
