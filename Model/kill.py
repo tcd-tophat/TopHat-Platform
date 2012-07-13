@@ -24,14 +24,14 @@ class Kill(domainobject.DomainObject):
 
 	# Setters #
 	def setKiller(self, killer):
-		if not isinstance(killer, player.Player) and not isinstance(killer, int):
+		if not isinstance(killer, player.Player):
 			raise domainexception.DomainException("Killer must be a Player object")
 
 		self._killer = killer
 
 	def setVictim(self, victim):
-		if not isinstance(victim, player.Player) and not isinstance(victim, int):
-			raise domainexception.DomainException("Victim must be a Player Object")
+		if not isinstance(victim, player.Player):
+			raise domainexception.DomainException("Victim must be a Player object")
 
 		self._victim = victim
 
