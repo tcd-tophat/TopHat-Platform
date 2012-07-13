@@ -3,7 +3,7 @@ import time
 
 import Model.kill
 import playermapper as PM
-from deferredobject import DeferredObject
+#from deferredobject import DeferredObject
 
 class KillMapper(mapper.Mapper):
 

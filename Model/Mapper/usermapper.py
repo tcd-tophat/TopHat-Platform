@@ -29,7 +29,6 @@ class UserMapper(mapper.Mapper):
 		usr.setPhoto(data["photo"])
 		usr.setEmail(data["email"])
 		usr.setPassword(data["password"])
-		usr.setAccessLevel(data["accesslevel"])
 		usr.setTime(data["time"])
 
 		return usr

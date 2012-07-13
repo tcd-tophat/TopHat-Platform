@@ -86,15 +86,17 @@ class Users(Request):
 					user.setEmail(dataObject["email"])
 					user.setPreHash(dataObject["password"])
 
-					UserMapper.insert(user)
-
-					# Retrieve user with ID this time
-					user = UserMapper.getUserByEmail(dataObject["email"])
-
 					token = Apitoken()
 
 					token.setUser(user)
 					token.setToken(getKey())
+
+					user.setToken(user)
+
+					UserMapper.insert(user)
+
+					# Retrieve user with ID this time
+					user = UserMapper.getUserByEmail(dataObject["email"])
 
 					ApitokenMapper.insert(token)
 

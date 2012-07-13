@@ -53,14 +53,14 @@ class Kill(domainobject.DomainObject):
 	def getKiller(self):
 		if isinstance(self._killer, int):
 			from Model.Mapper.playermapper import PlayerMapper
-			self._kller = PlayerMapper().find(self._killer)
+			self._killer = PlayerMapper().find(self._killer)
 
 		return self._killer
 
 	def getVictim(self):
 		if isinstance(self._victim, int):
 			from Model.Mapper.playermapper import PlayerMapper
-			self._kller = PlayerMapper().find(self._victim)
+			self._victim = PlayerMapper().find(self._victim)
 
 		return self._victim
 

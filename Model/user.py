@@ -1,4 +1,5 @@
 import re
+import Model
 from datetime import datetime
 from Model import domainobject
 from Model import domainexception
@@ -61,15 +62,21 @@ class User(metadomainobject.MetaDomainObject):
 
 		self._time = time
 
-	def setToken(self, tokem):
+	def setToken(self, token):
 		if token is not None:
-			if not isinstance(token, apitoken.Apitoken):
+			if not isinstance(token, Model.apitoken.Apitoken):
 				raise domainexception.DomainException("Token must be an API Token Model Object")
 
 		self._token = token
 
+	def setAccessLevel(self, level):
+		if self._token is not None:
+			self._token.setGroup(level)
+		else:
+			raise domainexception.DomainException("Token associated to user is invalid.")
+
 	def accessLevel(self, permission):
-		return self._level.checkPermission(permission)
+		return self._token.checkPermission(permission)
 
 	# getters #
 	def getName(self):
@@ -86,6 +93,9 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getTime(self):
 		return self._time
+
+	def getToken(self):
+		return self._token
 
 	def dict(self, depth=0):
 		if depth < 0:
