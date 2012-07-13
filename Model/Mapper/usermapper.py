@@ -35,8 +35,8 @@ class UserMapper(mapper.Mapper):
 
 	def _doInsert(self, obj):
 		# build query
-		query = "INSERT INTO users VALUES(NULL, %s, %s, %s, %s, %s, NULL)"
-		params = (obj.getName(), obj.getAccessLevel(), obj.getPhoto(), obj.getEmail(), obj.getPassword())
+		query = "INSERT INTO users VALUES(NULL, %s, %s, %s, %s, NULL)"
+		params = (obj.getName(), obj.getPhoto(), obj.getEmail(), obj.getPassword())
 
 		# run the query
 		cursor = self.db.getCursor()
