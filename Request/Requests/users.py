@@ -91,7 +91,7 @@ class Users(Request):
 					token.setUser(user)
 					token.setToken(getKey())
 
-					user.setToken(user)
+					user.setToken(token)
 
 					UserMapper.insert(user)
 
