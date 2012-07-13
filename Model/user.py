@@ -15,7 +15,11 @@ class User(metadomainobject.MetaDomainObject):
 	_password = None
 	_token = None
 	_time = datetime.now()
-	
+
+	# collection vars
+	_games = None
+
+	# magic methods
 	def __init__(self, id_=None):
 		super(User, self).__init__(id_)
 
@@ -97,15 +101,29 @@ class User(metadomainobject.MetaDomainObject):
 	def getToken(self):
 		return self._token
 
+	def getGames(self):
+		if self._games is None:
+			from Model.Mapper.gamemapper import GameMapper
+			GM = GameMapper()
+			self._games = GM.findByUser(self)
+
+		return self._games
+
 	def dict(self, depth=0):
 		if depth < 0:
 			return self.getId()
 		else:
+			# build a list of the games' dict
+			gameslist = []
+			if depth > 0: # only get if not excessive
+				for game in self.getGames():
+					gameslist.append(game.dict(depth-1))
+
 			return {
 				"id": self.getId(),
 				"name": self.getName(),
 				"email": self.getEmail(),
 				"created": str(self.getTime()),
 				"photo": str(self.getPhoto()),
-				"joined_games": []
+				"joined_games": gameslist
 			}

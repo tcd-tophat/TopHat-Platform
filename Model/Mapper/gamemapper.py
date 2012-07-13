@@ -1,6 +1,8 @@
 import mapper
 import Model.game
 import usermapper as UM
+import mappererror
+import deferredcollection
 
 class GameMapper(mapper.Mapper):
 
@@ -76,3 +78,19 @@ class GameMapper(mapper.Mapper):
 			return True
 		else:
 			return False
+
+	def findByUser(self, user, start=0, number=50):
+		if start < 0:
+			raise mappererror.MapperError("The start point must be a positive int")
+
+		if number > 50:
+			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+
+		query = """SELECT g.*, gt.name as game_type_name 
+					FROM games g 
+					LEFT JOIN user_games ug ON ug.game_id = g.id 
+					LEFT JOIN game_types gt ON g.game_type_id = gt.id 
+					WHERE ug.user_id = %s LIMIT %s, %s"""
+		params = (user.getId(), start, start+number)
+
+		return deferredcollection.DeferredCollection(self, query, params)

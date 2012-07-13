@@ -39,8 +39,6 @@ class Mapper:
 		if old:
 			return old
 
-		# check memcache
-
 		# gonna have to load object off the disk (database server)
 		query = self._selectStmt()
 		parameters = (id_,)
@@ -65,22 +63,17 @@ class Mapper:
 
 		return obj
 
-	def findAll(self, start = 0, number = 50):
-		"""Finds all the objects in such a table from start to (start + number)"""
+	def _findMany(self, query, start=0, number=50):
+		"""Stock stuff for finding multiple records at the same time limited by the limit factors"""
 		# check that the limit params are not off the wall
 		if start < 0:
-			print "The start point must be a positive int"
-			start = 0
+			raise mappererror.MapperError("The start point must be a positive int")
 
 		if number > 50:
-			print "You cannot select more than 50 rows at one time"
-			number = 50
-
-		# build the query
-		query = self._selectAllStmt()
-		params = (start, start + number)
+			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
 
 		# run the qurery
+		params = (start, start + number)
 		cursor = self.db.getCursor()
 		rowsAffected = cursor.execute(query, params)
 		data = cursor.fetchall()
@@ -90,6 +83,14 @@ class Mapper:
 			return collection.Collection(data, self) 		# create a collection object for the results
 		else:
 			return None
+
+	def findAll(self, start=0, number=50):
+		"""Finds all the objects in such a table from start to (start + number)"""
+		# build the query
+		query = self._selectAllStmt()
+
+		# run
+		return self._findMany(query, start, number)
 
 	def __executeOperation(self, query, params):
 		cursor = self.db.getCursor()

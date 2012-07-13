@@ -1,22 +1,22 @@
 class Collection(object):
 	"""A non-type safe collection of raw data from the database that it will turn into objects on request. This class is iterable"""
 
-	__mapper = None
-	__total = 0
-	__raw = []
+	_mapper = None
+	_total = 0
+	_raw = []
 
-	__pointer = 0
-	__objects = []
+	_pointer = 0
+	_objects = []
 
 	def __init__(self, raw=None, mapper=None):
-		self.__mapper = mapper
-		self.__raw = raw
-		self.__objects = []
+		self._mapper = mapper
+		self._raw = raw
+		self._objects = []
 
 		if raw is not None:
-			self.__total = len(raw)
+			self._total = len(raw)
 		else:
-			self.__total = 0
+			self._total = 0
 
 	def __iter__(self):
 		"""Makes the class iterable"""
@@ -24,7 +24,7 @@ class Collection(object):
 
 	def __contains__(self, v):
 		"""Allows users to check if an item exists in the collection"""
-		if v in self.__objects:
+		if v in self._objects:
 			return True
 		else:
 			return False
@@ -42,7 +42,7 @@ class Collection(object):
 		raise Exception("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
 
 	def __len__(self):
-		return self.__total
+		return self._total
 
 	def add(self, obj):
 		"""Non-type safe method to add objects to this collection"""
@@ -50,8 +50,8 @@ class Collection(object):
 		self._notifyAccess()
 
 		# add to list of objects
-		self.__objects.append(obj)
-		self.__total += 1
+		self._objects.append(obj)
+		self._total += 1
 
 	def __getRow(self, row):
 		"""Gets a row, returning the already created object or building said object from raw data if it doesn't already exist"""
@@ -59,28 +59,29 @@ class Collection(object):
 		self._notifyAccess()
 
 		# test if row is outside range
-		if row < 0 or row >= self.__total:
+		if row < 0 or row >= self._total:
 			return None
 
 		# check if it exists in a list of already made objects
-		if row > 0 and row < len(self.__objects):
-			return self.__objects[row]
+		if row > 0 and row < len(self._objects):
+			return self._objects[row]
 
 		# if not empty create and return the object made from that data
-		if self.__raw[row] is not None:
-			self.__objects.insert(row, self.__mapper.createObject(self.__raw[row]))
-			return self.__objects[row]
+		if self._raw[row] is not None:
+			self._objects.insert(row, self._mapper.createObject(self._raw[row]))
+			return self._objects[row]
 		else:
 			return None
 
 	def next(self):
 		"""Gets the next row - main part of what makes this class iterable"""
-		row = self.__getRow(self.__pointer) # gets the latest row
+		row = self.__getRow(self._pointer) # gets the latest row
 
-		if row is None:					
+		if row is None:
+			self.rewind()					
 			raise StopIteration			# tells the iterator that we are done and to stop iterating
 		else:
-			self.__pointer += 1			# increment counter
+			self._pointer += 1			# increment counter
 			return row
 
 	def _notifyAccess(self):
@@ -89,8 +90,8 @@ class Collection(object):
 
 	def rewind(self):
 		"""Brings the pointer back to the start of the list of objects"""
-		self.__pointer = 0
+		self._pointer = 0
 
 	def getTotal(self):
 		"""Returns the total number of objects stored in this collection"""
-		return self.__total
+		return self._total
