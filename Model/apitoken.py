@@ -1,6 +1,5 @@
 import domainobject
 import domainexception
-import user
 from Common import permissions
 
 class Apitoken(domainobject.DomainObject):
