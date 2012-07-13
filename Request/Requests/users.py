@@ -36,7 +36,7 @@ class Users(Request):
 					# Get the user by E-mail
 					user = UserMapper.getUserByEmail(self.arg)
 
-				if self.user.getAccessLevel() is 5 or self.user.getId() == user.getId():
+				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
 					if user is not None:
 						return self._response(user.dict(), CODE.OK)
 					else:
