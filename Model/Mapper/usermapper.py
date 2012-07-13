@@ -55,8 +55,8 @@ class UserMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE users SET name = %s, accesslevel = %s, email = %s, photo = %s, password = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getAccessLevel(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId())
+		query = "UPDATE users SET name = %s, email = %s, photo = %s, password = %s WHERE id = %s LIMIT 1"
+		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
