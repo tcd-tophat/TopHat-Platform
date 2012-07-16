@@ -88,16 +88,12 @@ class Users(Request):
 
 					token = Apitoken()
 
-					print "pretoken"
 					token.setUser(user)
 					token.setToken(getKey())
 
 					user.setToken(token)
 
-					print "insert"
 					UserMapper.insert(user)
-
-					print "insert managed"
 
 					# Retrieve user with ID this time
 					user = UserMapper.getUserByEmail(dataObject["email"])

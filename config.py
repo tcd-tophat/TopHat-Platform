@@ -36,7 +36,8 @@ resources = [
 	('/version/', "Version"),
 	('/games/', "Games"),
 	('/kills/', "Kills"),
-	('/players/', "Players")
+	('/players/', "Players"),
+	('/gametypes/', "Gametypes")
 ]
 
 Protocol='cherrypy'

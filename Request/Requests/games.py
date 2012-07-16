@@ -29,6 +29,8 @@ class Games(Request):
 				if self.arg.isdigit():
 					# Get the user by ID
 					game = GameMapper.find(self.arg)
+				elif self.arg == "types":
+					return self._response({}, CODE.UNIMPLEMENTED)
 				else:
 					raise BadRequest("Games must be requested by ID")
 

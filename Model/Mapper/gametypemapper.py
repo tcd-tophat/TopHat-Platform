@@ -19,14 +19,14 @@ class GameTypeMapper(mapper.Mapper):
 		return "SELECT t.* FROM "+self.tableName()+" t WHERE t.id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT t.* FROM "+self.tableName()+" t WHERE t.id = %s LIMIT %s, %s"	
+		return "SELECT t.* FROM "+self.tableName()+" t LIMIT %s, %s"	
 
 	def _deleteStmt(self, obj):
 		return "DELETE FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
 		
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
-		game_type_ = Model.gamettype.GameType(data["id"])
+		game_type_ = Model.gametype.GameType(data["id"])
 
 		game_type_.setName(data["name"])
 

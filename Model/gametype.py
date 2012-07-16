@@ -8,7 +8,7 @@ class GameType(domainobject.DomainObject):
 	_name = "Unnamed Game Type"		# public name of the game type
 
 	def __init__(self, id_=None):
-		super(Game, self).__init__(id_)
+		super(GameType, self).__init__(id_)
 
 	def __str__(self):
 		return str(self.getId()) + " " +self._name
