@@ -36,7 +36,7 @@ class CherrypyHandler(RESTResource):
     def handle_GET(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
 
-        if retval == "//":
+        if retval is "//":
           retval = "/"
 
         key = None
@@ -52,7 +52,7 @@ class CherrypyHandler(RESTResource):
     def handle_POST(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
 
-        if retval == "//":
+        if retval is "//":
           retval = "/"
 
         if 'data' not in params:
@@ -71,7 +71,7 @@ class CherrypyHandler(RESTResource):
     def handle_PUT(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
 
-        if retval == "//":
+        if retval is "//":
           retval = "/"
 
         if 'data' not in params:
@@ -91,7 +91,7 @@ class CherrypyHandler(RESTResource):
     def handle_DELETE(self, *vpath, **params):
         retval = "/"+str('/'.join(vpath))+"/"
 
-        if retval == "//":
+        if retval is "//":
           retval = "/"
 
         key = None

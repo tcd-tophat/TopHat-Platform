@@ -88,12 +88,16 @@ class Users(Request):
 
 					token = Apitoken()
 
+					print "pretoken"
 					token.setUser(user)
 					token.setToken(getKey())
 
 					user.setToken(token)
 
+					print "insert"
 					UserMapper.insert(user)
+
+					print "insert managed"
 
 					# Retrieve user with ID this time
 					user = UserMapper.getUserByEmail(dataObject["email"])
@@ -105,6 +109,8 @@ class Users(Request):
 					raise RequestError(CODE.CONFLICT, "A user with that e-mail address exists already.")
 				
 			except mdb.DatabaseError, e:
+				import traceback, sys
+				traceback.print_exc(file=sys.stdout)
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
 		else:
 			raise BadRequest("Required params email and password not sent")

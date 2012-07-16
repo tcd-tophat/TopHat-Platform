@@ -11,6 +11,7 @@ class Networking(Network):
 
 		self._config = config
 
+		# This is done here are the _register status cdes method must be called before the handler is imported.
 		from Networking.Protocols.Cherrypy.cherrypyhandler import CherrypyHandler
 
 		cherrypy.config.update({'server.socket_host': self._config.Interface, 

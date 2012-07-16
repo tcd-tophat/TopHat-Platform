@@ -58,6 +58,10 @@ class Games(Request):
 	@require_login
 	def _doPost(self, dataObject):
 
+		# The game creation should have no arguments.
+		if self.arg is not None:
+			return self._response({}, CODE.UNIMPLEMENTED)
+
 		if "name" in dataObject:
 			try:
 
@@ -68,6 +72,9 @@ class Games(Request):
 
 				game.setName(dataObject["name"])
 				game.setCreator(self.user)
+				game.setGameTypeId(0)
+
+				GameMapper.insert(game)
 
 				return self._response(game.dict(), CODE.CREATED)
 				
