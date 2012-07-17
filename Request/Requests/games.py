@@ -35,7 +35,7 @@ class Games(Request):
 					raise BadRequest("Games must be requested by ID")
 
 				if game is not None:
-					return self._response(game.dict(), CODE.OK)
+					return self._response(game.dict(3), CODE.OK)
 				else:
 					raise NotFound("There is no game identified by the number %s" % self.arg)
 			
@@ -47,7 +47,7 @@ class Games(Request):
 				gameslist = []
 
 				for game in games:
-					gameslist.append(game.dict())
+					gameslist.append(game.dict(3))
 
 				gamedict = {"games":gameslist, "pagination_offset":offset, "max_perpage": 50}
 
@@ -74,11 +74,11 @@ class Games(Request):
 
 				game.setName(dataObject["name"])
 				game.setCreator(self.user)
-				game.setGameTypeId(0)
+				game.setGameTypeId(dataObject[""])
 
 				GameMapper.insert(game)
 
-				return self._response(game.dict(), CODE.CREATED)
+				return self._response(game.dict(3), CODE.CREATED)
 				
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])

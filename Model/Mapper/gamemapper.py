@@ -1,6 +1,7 @@
 import mapper
 import Model.game
 import usermapper as UM
+import gametypemapper as GTM
 import mappererror
 import deferredcollection
 
@@ -33,8 +34,11 @@ class GameMapper(mapper.Mapper):
 		creator = UserMapper.find(data["creator"])
 		game_.setCreator(creator)
 
+		GameTypeMapper = GTM.GameTypeMapper()
+		gametype = GameTypeMapper.find(data["game_type_id"])
+		game_.setGameType(gametype)
+
 		game_.setName(data["name"])
-		game_.setGameTypeId(data["game_type_id"])
 		game_.setGameTypeName(data["game_type_name"])
 		game_.setTime(data["time"])
 
