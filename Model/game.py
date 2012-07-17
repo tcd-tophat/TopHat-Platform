@@ -9,14 +9,13 @@ class Game(domainobject.DomainObject):
 	_name = "Unnamed Game"		# public name of the game 
 	_creator = None 			# user who created the game
 	_gameType = None			# type of game by id
-	_gameTypeName = ""			# public name of game type
 	_time = None
 
 	def __init__(self, id_=None):
 		super(Game, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.getId()) + " " + self._gameTypeName + ": " + self._name + "  created by " + self._creator.getName() + " (" + str(self._creator.getId()) + ")"
+		return str(self.getId()) + " Name " + ": " + self._name + "  created by " + self._creator.getName() + " (" + str(self._creator.getId()) + ") - GameType: "+self._gameType.getId()
 
 	def getName(self):
 		return self._name
@@ -26,9 +25,6 @@ class Game(domainobject.DomainObject):
 
 	def getGameType(self):
 		return self._gameType
-
-	def getGameTypeName(self):
-		return self._gameTypeName
 
 	def getTime(self):
 		return self._time
@@ -50,13 +46,6 @@ class Game(domainobject.DomainObject):
 			raise domainexception.DomainException("gametype must be an instance of the GameType object")
 
 		self._gameType = gameType
-
-	def setGameTypeName(self, name):
-		if name is not None:
-			if len(name) > 50:
-				raise domainexception.DomainException("Name of the Game type must be less that 50")
-
-			self._gameTypeName = name
 
 	def setTime(self, time):
 		if type(time) is not datetime:

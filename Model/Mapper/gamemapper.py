@@ -39,7 +39,6 @@ class GameMapper(mapper.Mapper):
 		game_.setGameType(gametype)
 
 		game_.setName(data["name"])
-		game_.setGameTypeName(data["game_type_name"])
 		game_.setTime(data["time"])
 
 		return game_
@@ -50,7 +49,7 @@ class GameMapper(mapper.Mapper):
 		query = "INSERT INTO games VALUES(NULL, %s, %s, %s, NULL)"
 
 		# convert boolean value to int bool
-		params = (obj.getName(), obj.getGameTypeId(), obj.getCreator().getId())
+		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId())
 
 		# run the query
 		cursor = self.db.getCursor()

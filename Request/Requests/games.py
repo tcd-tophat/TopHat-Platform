@@ -5,6 +5,7 @@ from Model.authentication import require_login
 
 from Model.Mapper import usermapper as UM
 from Model.Mapper import gamemapper as GM
+from Model.Mapper import gametypemapper as GTM
 from Model.game import Game
 import MySQLdb as mdb
 
@@ -64,8 +65,18 @@ class Games(Request):
 		if self.arg is not None:
 			return self._response({}, CODE.UNIMPLEMENTED)
 
-		if "name" in dataObject:
+		if "name" and "game_type_id" in dataObject:
 			try:
+				GameTypeMapper = GTM.GameTypeMapper()
+
+				if dataObject["game_type_id"] is not None and dataObject["game_type_id"].isdigit():
+					# Get the user by ID
+					gametype = GameTypeMapper.find(dataObject["game_type_id"])
+
+					if gametype is None:
+						raise NotFound("The specified game type does not exist.")
+				else:
+					raise BadRequest("Argument provided for this game type is invalid.")
 
 				GameMapper = GM.GameMapper()
 
@@ -74,7 +85,7 @@ class Games(Request):
 
 				game.setName(dataObject["name"])
 				game.setCreator(self.user)
-				game.setGameTypeId(dataObject[""])
+				game.setGameType(gametype)
 
 				GameMapper.insert(game)
 
@@ -83,7 +94,7 @@ class Games(Request):
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
 		else:
-			raise BadRequest("Required params email and password not sent")
+			raise BadRequest("Required params name and game_type_id not sent")
 
 	@require_login
 	def _doPut(self, dataObject):
