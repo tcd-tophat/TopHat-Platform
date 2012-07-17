@@ -70,7 +70,7 @@ class GameMapper(mapper.Mapper):
 	def _doUpdate(self, obj):
 		# build the query
 		query = "UPDATE games SET name = %s, game_type_id = %s, creator = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getGameTypeId(), obj.getCreator().getId(), obj.getId())
+		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()

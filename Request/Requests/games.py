@@ -98,8 +98,79 @@ class Games(Request):
 
 	@require_login
 	def _doPut(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		# The game creation should have no arguments.
+		if self.arg is None:
+			raise BadRequest("An ID must be supplied in order to update a game.")
+
+		if "name" or "game_type_id" in dataObject:
+			try:
+				GameMapper = GM.GameMapper()
+
+				if self.arg.isdigit():
+					# Get the user by ID
+					game = GameMapper.find(self.arg)
+				else:
+					raise BadRequest("Games must be requested by ID")
+
+				if game is None:
+					raise NotFound("There is no game identified by the number %s" % self.arg)
+
+				if "game_type_id" in dataObject:
+
+					GameTypeMapper = GTM.GameTypeMapper()
+
+					if dataObject["game_type_id"] is not None and dataObject["game_type_id"].isdigit():
+						# Get the user by ID
+						gametype = GameTypeMapper.find(dataObject["game_type_id"])
+
+						if gametype is None:
+							raise NotFound("The specified game type does not exist.")
+						else:
+							game.setGameType(gametype)
+					else:
+						raise BadRequest("Argument provided for this game type is invalid.")
+
+				if "name" in dataObject:
+					game.setName(dataObject["name"])
+
+				GameMapper.update(game)
+
+				return self._response(game.dict(3), CODE.CREATED)
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("Required params name or game_type_id not sent")
 
 	@require_login
 	def _doDelete(self):
-		return self._response({}, CODE.UNIMPLEMENTED)
+		if self.arg is None:
+			raise MethodNotAllowed("You must provide the ID of the game to be deleted")
+		GameMapper = GM.GameMapper()
+
+		# get the user if it exists
+		try:
+			if self.arg.isdigit():
+				# Get the user by ID
+				game = GameMapper.find(self.arg)
+			else:
+				raise BadRequest("Games must be requested by ID")
+
+		except mdb.DatabaseError, e:
+			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
+
+		if game is None:
+				raise NotFound("There is no game identified by the number %s" % self.arg)
+
+		# check user has the priviledges
+		if not self.user.getId() == game.getCreator().getId() and not self.user.accessLevel('super_user'):
+			raise Unauthorised("You do not have sufficient privileges to delete this game.")
+
+		# delete the user from the data base
+		result = GameMapper.delete(game)
+
+		if result:
+			return self._response({"message": "Game Deleted Successfully."}, CODE.OK)
+		else:
+			raise ServerError("Unable to delete the game")

@@ -171,7 +171,7 @@ class Users(Request):
 			raise NotFound("There is no user identified by %s" % self.arg)
 
 		# check user has the priviledges
-		if not self.user.getId() is user.getId() or not self.user.accessLevel('delete_users'):
+		if not self.user.getId() is user.getId() and not self.user.accessLevel('delete_users'):
 			raise Unauthorised("You do not have sufficient privileges to delete this user")
 
 		# delete the user from the data base
