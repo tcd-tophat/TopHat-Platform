@@ -57,10 +57,18 @@ class Game(domainobject.DomainObject):
 		if depth < 0:
 			return self.getId()
 		else:
-			return {
-				"id": self.getId(),
-				"name": self.getName(),
-				"game_type": self.getGameType().dict(depth-1),
-				"time": str(self.getTime()),
-				"creator": self.getCreator().dict(depth-1)
-			}
+			if self.getTime() is not None:
+				return {
+					"id": self.getId(),
+					"name": self.getName(),
+					"game_type": self.getGameType().dict(depth-1),
+					"time": str(self.getTime()),
+					"creator": self.getCreator().dict(depth-1)
+				}
+			else:
+				return {
+					"id": self.getId(),
+					"name": self.getName(),
+					"game_type": self.getGameType().dict(depth-1),
+					"creator": self.getCreator().dict(depth-1)
+				}
