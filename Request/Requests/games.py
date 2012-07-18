@@ -116,6 +116,10 @@ class Games(Request):
 				if game is None:
 					raise NotFound("There is no game identified by the number %s" % self.arg)
 
+				# check user has the priviledges
+				if not self.user.getId() == game.getCreator().getId() and not self.user.accessLevel('super_user'):
+					raise Unauthorised("You do not have sufficient privileges to delete this game.")
+
 				if "game_type_id" in dataObject:
 
 					GameTypeMapper = GTM.GameTypeMapper()
