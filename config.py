@@ -32,7 +32,7 @@ resources = [
 	('/apitokens/', "Apitokens"),
 	('/users/', "Users"),
 	('/jsontest/', "Jsontest"),
-	('/', 'Jsontest'),
+	('/', 'Version'),
 	('/version/', "Version"),
 	('/games/', "Games"),
 	('/kills/', "Kills"),
@@ -42,3 +42,5 @@ resources = [
 
 Protocol='cherrypy'
 Version='0.1.2'
+GameVersion='0.0.1'
+ServerTitle='TopHat Platform Testing Server'

@@ -12,8 +12,14 @@ class Version(Request):
 		from Common.config import TopHatConfig
 
 		self._version = TopHatConfig.getKey("Version")
+		self._gameVersion = TopHatConfig.getKey("GameVersion")
+		self._serverName = TopHatConfig.getKey("ServerTitle")
 
 	def _doGet(self):
-		rdata = {}
-		rdata["version"] = self._version
+		rdata = {
+					"platform":		"TopHat.ie Server Platform",
+					"version": 		self._version,
+					"game_version":	self._gameVersion,
+					"server_name":	self._serverName
+				}
 		return self._response(rdata, CODE.OK)
