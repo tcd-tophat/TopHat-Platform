@@ -17,13 +17,13 @@ class PlayerMapper(mapper.Mapper):
 		return "players"
 
 	def _selectStmt(self):
-		return "SELECT * FROM players WHERE id = %s LIMIT 1"
+		return "SELECT * FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM players LIMIT %s, %s"	
+		return "SELECT * FROM "+self.tableName()+" LIMIT %s, %s"	
 
 	def _deleteStmt(self, obj):
-		return "DELETE FROM players WHERE id = %s LIMIT 1"
+		return "DELETE FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
@@ -51,7 +51,7 @@ class PlayerMapper(mapper.Mapper):
 	def _doInsert(self, obj):
 		# build query
 		# id, name, photo, game_id, user_id, lat, lon, score, time
-		query = "INSERT INTO player VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
+		query = "INSERT INTO "+self.tableName()+" VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
 
 		# convert boolean value to int bool
 		params = (obj.getName(), obj.getPhoto(), obj.getGame().getId(), 

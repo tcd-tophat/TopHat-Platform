@@ -5,6 +5,7 @@ from Networking.statuscodes import StatusCodes as CODE
 from Model.Mapper import usermapper as UM
 from Model.Mapper import gamemapper as GM
 from Model.Mapper import playermapper as PM
+from Model.player import Player
 import MySQLdb as mdb
 
 # Decorator
@@ -59,7 +60,39 @@ class Players(Request):
 
 	@require_login
 	def _doPost(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		if "name" and "game" and "photo" in dataObject:
+			try:
+				GameMapper = GM.GameMapper()
+
+				if dataObject["game"] is not None and dataObject["game"].isdigit():
+					# Get the user by ID
+					game = GameMapper.find(dataObject["game"])
+
+					if game is None:
+						raise NotFound("The specified game type does not exist.")
+				else:
+					raise BadRequest("Argument provided for this game type is invalid.")
+
+				PlayerMapper = PM.PlayerMapper()
+
+				player = Player()
+
+				player.setName(dataObject["name"])
+				player.setGame(game)
+				player.setPhoto(dataObject["photo"])
+				player.setUser(self.user)
+
+				PlayerMapper.insert(player)
+
+				GameMapper.joinGame(self.user, player)
+
+				return self._response(game.dict(3), CODE.CREATED)
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("Required params name, game and photo not sent")
 
 	@require_login
 	def _doPut(self, dataObject):

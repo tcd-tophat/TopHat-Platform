@@ -82,6 +82,29 @@ class GameMapper(mapper.Mapper):
 		else:
 			return False
 
+	def joinGame(self, user, game):
+		# build query
+		# id, name, game_type_id, creator
+		query = "INSERT INTO user_games VALUES(NULL, %s, %s)"
+
+		# convert boolean value to int bool
+		params = (user.getId(), game.getId())
+
+		# run the query
+		cursor = self.db.getCursor()
+		rowsAffected = cursor.execute(query, params)
+
+		cursor.close()
+
+		# only if rows were changed return a success response
+		if rowsAffected > 0:
+			return True
+		else:
+			return False
+
+	def leaveGame(self, user):
+		pass
+
 	def findByUser(self, user, start=0, number=50):
 		if start < 0:
 			raise mappererror.MapperError("The start point must be a positive int")
