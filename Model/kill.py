@@ -72,7 +72,7 @@ class Kill(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			return {
 				"id": self.getId(),

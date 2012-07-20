@@ -111,7 +111,7 @@ class User(metadomainobject.MetaDomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			# build a list of the games' dict
 			gameslist = []

@@ -101,7 +101,7 @@ class Player(domainobject.DomainObject):
 		# User may have been deleted, ensure crash does not occur.
 		if self.getUser() is not None:
 			if depth < 0:
-				return self.getId()
+				return { "id": self.getId() }
 			else:
 				return {
 					"id": self.getId(),

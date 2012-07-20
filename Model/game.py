@@ -55,7 +55,7 @@ class Game(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			if self.getTime() is not None:
 				return {
