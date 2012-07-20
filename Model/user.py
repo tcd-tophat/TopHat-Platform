@@ -105,7 +105,7 @@ class User(metadomainobject.MetaDomainObject):
 		if self._games is None:
 			from Model.Mapper.gamemapper import GameMapper
 			GM = GameMapper()
-			self._games = GM.findByUser(self)
+			self._games = GM.findPlayingByUser(self)
 
 		return self._games
 

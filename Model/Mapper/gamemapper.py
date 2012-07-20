@@ -105,6 +105,20 @@ class GameMapper(mapper.Mapper):
 	def leaveGame(self, user):
 		pass
 
+	def findPlayingByUser(self, user, start=0, number=50):
+		if start < 0:
+			raise mappererror.MapperError("The start point must be a positive int")
+
+		if number > 50:
+			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+
+		query = """SELECT *
+					FROM user_games
+					WHERE user_id = %s LIMIT %s, %s"""
+		params = (user.getId(), start, start+number)
+
+		return deferredcollection.DeferredCollection(self, query, params)
+
 	def findByUser(self, user, start=0, number=50):
 		if start < 0:
 			raise mappererror.MapperError("The start point must be a positive int")

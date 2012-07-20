@@ -38,7 +38,7 @@ class Users(Request):
 
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
 					if user is not None:
-						return self._response(user.dict(), CODE.OK)
+						return self._response(user.dict(1), CODE.OK)
 					else:
 						raise NotFound("This user does not exist")
 				else:
