@@ -87,7 +87,7 @@ class Players(Request):
 
 				GameMapper.joinGame(self.user, player)
 
-				return self._response(game.dict(3), CODE.CREATED)
+				return self._response(player.dict(3), CODE.CREATED)
 				
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
