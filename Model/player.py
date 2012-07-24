@@ -67,10 +67,11 @@ class Player(domainobject.DomainObject):
 		self._score = score
 
 	def setTime(self, time_):
-		if type(time_) is not datetime:
-			raise domainexception.DomainException("Time must a datetime object")
+		if time_ is not None:
+			if type(time_) is not datetime:
+				raise domainexception.DomainException("Time must a datetime object")
 
-		self._time = time_
+			self._time = time_
 
 	# Getters #
 	def getName(self):

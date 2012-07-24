@@ -96,7 +96,36 @@ class Players(Request):
 
 	@require_login
 	def _doPut(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		if  "id" and ("name" or "photo") in dataObject:
+			try:
+
+				PlayerMapper = PM.PlayerMapper()
+
+				if dataObject["id"] is not None and dataObject["id"].isdigit():
+					# Get the user by ID
+					player = PlayerMapper.find(dataObject["id"])
+
+					if player is None:
+						raise NotFound("The specified game type does not exist.")
+				else:
+					raise BadRequest("Argument provided for this player type is invalid.")
+
+				if player.getUser() is self.user or self.user.accessLevel('super_user'):
+					if "name" in dataObject:
+						player.setName(dataObject["name"])
+
+					if "photo" in dataObject:
+						player.setPhoto(dataObject["photo"])
+
+					PlayerMapper.update(player)
+
+				return self._response(player.dict(3), CODE.CREATED)
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("Required params name, game and photo not sent")
 
 	@require_login
 	def _doDelete(self):
