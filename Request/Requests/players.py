@@ -129,4 +129,33 @@ class Players(Request):
 
 	@require_login
 	def _doDelete(self):
-		return self._response({}, CODE.UNIMPLEMENTED)
+		if self.arg is None:
+			raise MethodNotAllowed("You must provide the ID of the game to be deleted")
+		
+		PlayerMapper = PM.PlayerMapper()
+
+		# get the user if it exists
+		try:
+			if self.arg.isdigit():
+				# Get the user by ID
+				player = PlayerMapper.find(self.arg)
+			else:
+				raise BadRequest("Games must be requested by ID")
+
+		except mdb.DatabaseError, e:
+			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
+
+		if player is None:
+				raise NotFound("There is no game identified by the number %s" % self.arg)
+
+		# check user has the priviledges
+		if not self.user.getId() == player.getUser().getId() and not self.user.accessLevel('super_user'):
+			raise Unauthorised("You do not have sufficient privileges to delete this game.")
+
+		# delete the user from the data base
+		result = PlayerMapper.delete(player)
+
+		if result:
+			return self._response({"message": "Game Deleted Successfully."}, CODE.OK)
+		else:
+			raise ServerError("Unable to delete the game")
