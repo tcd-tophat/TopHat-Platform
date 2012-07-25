@@ -38,7 +38,7 @@ class Users(Request):
 
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
 					if user is not None:
-						return self._response(user.dict(1), CODE.OK)
+						return self._response(user.dict(3), CODE.OK)
 					else:
 						raise NotFound("This user does not exist")
 				else:
@@ -52,7 +52,7 @@ class Users(Request):
 					userslist = []
 
 					for user in users:
-						userslist.append(user.dict())
+						userslist.append(user.dict(3))
 
 					userslist = {"users":userslist, "pagination_offset":offset, "max_perpage": 50}
 
