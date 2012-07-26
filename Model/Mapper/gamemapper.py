@@ -29,12 +29,13 @@ class GameMapper(mapper.Mapper):
 		"""Builds the game object given the draw data returned from the database query"""
 		game_ = Model.game.Game(data["id"])
 
-		print "WTF: "+str(data)
-
 		# get creator User object
 		UserMapper = UM.UserMapper()
-		creator = UserMapper.find(data["creator"])
-		game_.setCreator(creator)
+		try:
+			creator = UserMapper.find(data["creator"])
+			game_.setCreator(creator)
+		except:
+			pass
 
 		GameTypeMapper = GTM.GameTypeMapper()
 		gametype = GameTypeMapper.find(data["game_type_id"])
