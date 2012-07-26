@@ -1,3 +1,5 @@
+import sys, traceback
+
 from abc import abstractmethod, ABCMeta
 from requesterrors import ServerError, MethodNotAllowed, Unauthorised
 from response import Response
@@ -53,6 +55,7 @@ class Request:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
 
 			except:
+				traceback.print_exc(file=sys.stdout)
 				raise Unauthorised("An invalid API token was supplied.")
 
 	def _response(self, data, code=CODE.OK):

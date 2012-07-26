@@ -1,4 +1,4 @@
 PERMISSIONS = {
-	'delete_users':5,
-	'super_user':5
+	'delete_users':2,
+	'super_user':2
 }
