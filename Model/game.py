@@ -15,7 +15,7 @@ class Game(domainobject.DomainObject):
 		super(Game, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.getId()) + " Name " + ": " + self._name + "  created by " + self._creator.getName() + " (" + str(self._creator.getId()) + ") - GameType: "+self._gameType.getId()
+		return str(self.getId()) + " Name " + ": " + self._name + "  created by {" + str(self._creator) + "}  - GameType: "+str(self._gameType.getId())
 
 	def getName(self):
 		return self._name

@@ -65,15 +65,16 @@ class Players(Request):
 			try:
 				GameMapper = GM.GameMapper()
 
-				if dataObject["game"] is not None and dataObject["game"].isdigit():
+				if dataObject["game"] is not None and str(dataObject["game"]).isdigit():
 					# Get the user by ID
-					game = GameMapper.find(dataObject["game"])
+					game = GameMapper.find(str(dataObject["game"]))
 
 					if game is None:
 						raise NotFound("The specified game type does not exist.")
 				else:
 					raise BadRequest("Argument provided for this game type is invalid.")
 
+				print "GAME GOOD "+str(game)
 				PlayerMapper = PM.PlayerMapper()
 
 				player = Player()
@@ -84,6 +85,7 @@ class Players(Request):
 				player.setUser(self.user)
 
 				PlayerMapper.insert(player)
+				print "PLAYER GOOD "+str(player)
 
 				GameMapper.joinGame(self.user, player)
 
