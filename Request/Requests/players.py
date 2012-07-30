@@ -34,7 +34,7 @@ class Players(Request):
 					# Get the user by ID
 					player = PlayerMapper.find(self.arg)
 				else:
-					raise BadRequest("Games must be requested by ID")
+					raise BadRequest("Players must be requested by ID")
 
 				if player is not None:
 					return self._response(player.dict(), CODE.OK)
@@ -70,9 +70,9 @@ class Players(Request):
 					game = GameMapper.find(str(dataObject["game"]))
 
 					if game is None:
-						raise NotFound("The specified game type does not exist.")
+						raise NotFound("The specified player type does not exist.")
 				else:
-					raise BadRequest("Argument provided for this game type is invalid.")
+					raise BadRequest("Argument provided for this player type is invalid.")
 
 				print "GAME GOOD "+str(game)
 				PlayerMapper = PM.PlayerMapper()
@@ -109,7 +109,7 @@ class Players(Request):
 					player = PlayerMapper.find(dataObject["id"])
 
 					if player is None:
-						raise NotFound("The specified game type does not exist.")
+						raise NotFound("The specified player type does not exist.")
 				else:
 					raise BadRequest("Argument provided for this player type is invalid.")
 
@@ -132,7 +132,7 @@ class Players(Request):
 	@require_login
 	def _doDelete(self):
 		if self.arg is None:
-			raise MethodNotAllowed("You must provide the ID of the game to be deleted")
+			raise MethodNotAllowed("You must provide the ID of the player to be deleted")
 		
 		PlayerMapper = PM.PlayerMapper()
 
@@ -142,22 +142,22 @@ class Players(Request):
 				# Get the user by ID
 				player = PlayerMapper.find(self.arg)
 			else:
-				raise BadRequest("Games must be requested by ID")
+				raise BadRequest("Players must be requested by ID")
 
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
 		if player is None:
-				raise NotFound("There is no game identified by the number %s" % self.arg)
+				raise NotFound("There is no player identified by the number %s" % self.arg)
 
 		# check user has the priviledges
 		if not self.user.getId() == player.getUser().getId() and not self.user.accessLevel('super_user'):
-			raise Unauthorised("You do not have sufficient privileges to delete this game.")
+			raise Unauthorised("You do not have sufficient privileges to delete this player.")
 
 		# delete the user from the data base
 		result = PlayerMapper.delete(player)
 
 		if result:
-			return self._response({"message": "Game Deleted Successfully."}, CODE.OK)
+			return self._response({"message": "Player Deleted Successfully."}, CODE.OK)
 		else:
-			raise ServerError("Unable to delete the game")
+			raise ServerError("Unable to delete the player")
