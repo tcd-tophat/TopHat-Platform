@@ -23,6 +23,9 @@ class User(metadomainobject.MetaDomainObject):
 	def __init__(self, id_=None):
 		super(User, self).__init__(id_)
 
+		#For some reason we are having errors due to the games variable.
+		self._games = None
+
 	def __str__(self):
 		return str(self.getId()) + " " + self._name + " " + str(self._email)
 
