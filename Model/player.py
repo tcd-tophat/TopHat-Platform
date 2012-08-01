@@ -100,6 +100,10 @@ class Player(domainobject.DomainObject):
 		return self._time
 
 	def dict(self, depth=0):
+
+		if self._game is None:
+			return {}
+
 		# User may have been deleted, ensure crash does not occur.
 		if self.getUser() is not None:
 			if depth < 0:
