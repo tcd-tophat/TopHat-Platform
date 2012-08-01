@@ -36,10 +36,11 @@ class Player(domainobject.DomainObject):
 		self._photo = photo
 
 	def setGame(self, game_):
-		if not isinstance(game_, game.Game):
-			raise domainexception.DomainException("Game attribute must be a reference to another Game object")
+		if game_ is not None:
+			if not isinstance(game_, game.Game):
+				raise domainexception.DomainException("Game attribute must be a reference to another Game object")
 
-		self._game = game_
+			self._game = game_
 
 	def setUser(self, user_):
 		if not isinstance(user_, user.User):
