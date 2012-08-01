@@ -104,12 +104,14 @@ class User(metadomainobject.MetaDomainObject):
 	def getToken(self):
 		return self._token
 
+	def loadGames(self):
+		from Model.Mapper.gamemapper import GameMapper
+		GM = GameMapper()
+		self._games = GM.findByUser(self)
+
 	def getGames(self):
 		if self._games is None:
-			from Model.Mapper.gamemapper import GameMapper
-			GM = GameMapper()
-			self._games = GM.findByUser(self)
-
+			self.loadGames()
 		return self._games
 
 	def dict(self, depth=0):
