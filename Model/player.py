@@ -101,6 +101,7 @@ class Player(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 
+		# Encountered a weird corrupted game item from DB. Better to log this and then return empty set
 		if self._game is None:
 			return {}
 
