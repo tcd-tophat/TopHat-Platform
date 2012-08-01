@@ -3,6 +3,7 @@ import domainobject
 import user
 import gametype
 import domainexception
+from Model.Mapper.playermapper import PlayerMapper
 
 class Game(domainobject.DomainObject):
 
@@ -53,6 +54,18 @@ class Game(domainobject.DomainObject):
 
 		self._time = time
 
+	def getPlayersInGame(self, depth=0):
+		PM = PlayerMapper()
+		players = PM.getPlayersInGame(self)
+
+		playerslist = []
+		
+		if depth > 0 and players is not None: # only get if not excessive
+			for player in players:
+				playerslist.append(player.dict(depth-1))
+
+		return playerslist
+
 	def dict(self, depth=0):
 		if depth < 0:
 			return { "id": self.getId() }
@@ -63,6 +76,7 @@ class Game(domainobject.DomainObject):
 					"name": self.getName(),
 					"game_type": self.getGameType().dict(depth-1),
 					"time": str(self.getTime()),
+					"players": self.getPlayersInGame(depth-1),
 					"creator": self.getCreator().dict(depth-1)
 				}
 			else:
@@ -70,5 +84,6 @@ class Game(domainobject.DomainObject):
 					"id": self.getId(),
 					"name": self.getName(),
 					"game_type": self.getGameType().dict(depth-1),
+					"players": self.getPlayersInGame(depth-1),
 					"creator": self.getCreator().dict(depth-1)
 				}

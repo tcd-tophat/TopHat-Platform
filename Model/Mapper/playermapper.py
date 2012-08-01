@@ -91,3 +91,10 @@ class PlayerMapper(mapper.Mapper):
 			return True
 		else:
 			return False
+
+	def getPlayersInGame(self, game, start=0, number=50):
+		# build the query
+		query = "SELECT * FROM "+self.tableName()+" WHERE game_id = '%s'" % (game.getId())
+		return self._findMany(query+"LIMIT %s, %s", start, number)
+
+		
