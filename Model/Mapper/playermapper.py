@@ -32,7 +32,7 @@ class PlayerMapper(mapper.Mapper):
 		GameMapper = gamemapper.GameMapper()
 		game_ = GameMapper.find(data["game_id"])
 
-		# If the game is deleted and the player is still linked, then errors can occur.
+		# If the game is deleted and the player is still linked, then errors can occur
 		player_.setGame(game_)
 
 		UserMapper = usermapper.UserMapper()
