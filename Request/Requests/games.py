@@ -45,6 +45,9 @@ class Games(Request):
 				offset = 0
 				games = GameMapper.findAll(offset, offset+50)
 
+				if games is None:
+					raise NotFound("There are no games on this system.")
+
 				gameslist = []
 
 				for game in games:
