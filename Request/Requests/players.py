@@ -46,6 +46,9 @@ class Players(Request):
 				offset = 0
 				players = PlayerMapper.findAll(offset, offset+50)
 
+				if players is None:
+					raise NotFound("There are no players on this system.")
+
 				playerslist = []
 
 				for player in players:
