@@ -13,7 +13,7 @@ class Player(domainobject.DomainObject):
 	_lat = 0.0			
 	_lon = 0.0 			
 	_score = 0			
-	_time = 0 		
+	_time = datetime.now() 		
 
 	def __init__(self, id_=None):
 		super(Player, self).__init__(id_)
