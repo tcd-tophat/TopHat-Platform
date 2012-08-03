@@ -120,9 +120,12 @@ class User(metadomainobject.MetaDomainObject):
 		else:
 			# build a list of the games' dict
 			gameslist = []
-			if depth > 0: # only get if not excessive
-				for game in self.getGames():
-					gameslist.append(game.dict(depth-1))
+			games = self.getGames()
+			if games is not None:
+
+				if depth > 0: # only get if not excessive
+					for game in self.getGames():
+						gameslist.append(game.dict(depth-1))
 
 			return {
 				"id": self.getId(),
