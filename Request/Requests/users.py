@@ -40,7 +40,7 @@ class Users(Request):
 					raise NotFound("This user does not exist")
 
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
-					return self._response(user.dict(3), CODE.OK)
+					greturn self._response(user.dict(2), CODE.OK)
 				else:
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
@@ -52,7 +52,7 @@ class Users(Request):
 					userslist = []
 
 					for user in users:
-						userslist.append(user.dict(3))
+						userslist.append(user.dict(2))
 
 					userslist = {"users":userslist, "pagination_offset":offset, "max_perpage": 50}
 
