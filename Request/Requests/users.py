@@ -36,11 +36,11 @@ class Users(Request):
 					# Get the user by E-mail
 					user = UserMapper.getUserByEmail(self.arg)
 
+				if user is None:
+					raise NotFound("This user does not exist")
+
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
-					if user is not None:
-						return self._response(user.dict(3), CODE.OK)
-					else:
-						raise NotFound("This user does not exist")
+					return self._response(user.dict(3), CODE.OK)
 				else:
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
@@ -61,7 +61,7 @@ class Users(Request):
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
 		except mdb.DatabaseError, e:
-			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
+			raise ServerError("Unable to search the user database (%s: %s)" % (e.args[0], e.args[1]))
 
 	def _doPost(self, dataObject):
 
