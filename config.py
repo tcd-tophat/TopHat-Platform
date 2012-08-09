@@ -14,6 +14,7 @@ Group='tophat'
 
 Threads=6
 
+PIDFile = 'tophat.pid'
 #EncryptionMethod=SSLEncryption
 
 LogFile='/var/log/tophat/tophat.log'
@@ -39,8 +40,8 @@ resources = [
 	('/players/', "Players"),
 	('/gametypes/', "Gametypes")
 ]
+from  Networking.Protocols.Cherrypy import Protocol
 
-Protocol='cherrypy'
 Version='0.1.2'
 GameVersion='0.0.1'
 ServerTitle='TopHat Platform Testing Server'

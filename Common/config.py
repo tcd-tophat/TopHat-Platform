@@ -101,6 +101,8 @@ def loadConfig(path):
 		if not hasattr(conf, 'MySQLDatabase'):
 				raise Exception('Please specify what database name TopHat will use to connect to the MySQL DB \nMySQLDatabase=\'dbname\'')
 				exit(1)
+		if not hasattr(conf, 'PIDFile'):
+				raise Exception('Please specify the file where the TopHat Server will store it\'s Process ID.\nPIDFile=\'tophat.pid\'')
 
 		if not hasattr(conf, 'DBDriver'):
 				raise Exception('Please specify what database driver you want to use with TopHat. More information available at http://wiki.tophat.ie.\nDBDriver = \'MySQL\'')

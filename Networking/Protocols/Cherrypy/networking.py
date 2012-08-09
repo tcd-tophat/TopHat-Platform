@@ -1,23 +1,25 @@
-import cherrypy
+from cherrypy import config as CherryPyConfig, quickstart
 from Networking.statuscodes import StatusCodes
-from Networking.network import Network
+from Networking.baseprotocol import BaseProtocol
 
-class Networking(Network):
+class Protocol(BaseProtocol):
 
 	_config = None
 
 	def __init__(self, config):
+		super(Protocol, self).__init__(config)
 		self._registerStatusCodes()
+		
 
-		self._config = config
-
-		# This is done here are the _register status cdes method must be called before the handler is imported.
+	
+	def loop(self):
 		from Networking.Protocols.Cherrypy.cherrypyhandler import CherrypyHandler
+		quickstart(CherrypyHandler(self))
+	def bind(self):
 
-		cherrypy.config.update({'server.socket_host': self._config.Interface, 
+		CherryPyConfig.update({'server.socket_host': self._config.Interface, 
                          'server.socket_port': self._config.Port,
                         }) 
-		cherrypy.quickstart(CherrypyHandler(self))
 
 	def _registerStatusCodes(self):
 		StatusCodes.NONE = 0
