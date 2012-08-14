@@ -39,7 +39,7 @@ class Collection(object):
 			raise IndexError
 
 	def __setitem__(self, key):
-		raise Exception("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
+		raise TypeError("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
 
 	def __len__(self):
 		return self._total

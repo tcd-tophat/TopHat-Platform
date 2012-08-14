@@ -17,7 +17,7 @@ class Mapper:
 			cnf = TopHatConfig
 			self.db = database.Database(cnf.getKey("MySQLHost"), cnf.getKey("MySQLUser"), cnf.getKey("MySQLPass"), cnf.getKey("MySQLDatabase"))
 		except KeyError:
-			raise RuntimeError("Cannot load database details from the config file")
+			raise mdb.OperationalError("Cannot load database details from the config file")
 
 	def _getOne(self, query, params):
 		"""Given the SQL query with placeholders and the params to be bound get one object from the database. Returns made object."""
@@ -67,10 +67,10 @@ class Mapper:
 		"""Stock stuff for finding multiple records at the same time limited by the limit factors"""
 		# check that the limit params are not off the wall
 		if start < 0:
-			raise mappererror.MapperError("The start point must be a positive int")
+			raise mdb.ProgrammingError("The start point must be a positive int")
 
 		if number > 50:
-			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+			raise mdb.ProgrammingError("You cannot select more than 50 rows at one time")
 
 		# run the qurery
 		params = (start, start + number)
@@ -105,10 +105,10 @@ class Mapper:
 	def delete(self, obj):
 		"""Deletes a given object from the database"""
 		if not isinstance(obj, domainobject.DomainObject):
-			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
+			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:
-			raise mappererror.MapperError("You cannot delete an object that was never in the database. It has no id")
+			raise mdb.ProgrammingError("You cannot delete an object that was never in the database. It has no id")
 
 		print "Deleting " + str(type(obj)) + " object " + str(obj.getId())
 
@@ -121,10 +121,10 @@ class Mapper:
 	def update(self, obj):
 		"""Updates a given object's records in the database"""
 		if not isinstance(obj, domainobject.DomainObject) :
-			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
+			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:		# can't update an object that has not been inserted
-			raise mappererror.MapperError("You can only update objects that are in the database, please insert this object first")
+			raise mdb.ProgrammingError("You can only update objects that are in the database, please insert this object first")
 
 		print "Update " + str(type(obj)) + " object " + str(obj.getId())
 
@@ -134,7 +134,7 @@ class Mapper:
 	def insert(self, obj):
 		"""Inserts this object into the database as its records"""
 		if not isinstance(obj, domainobject.DomainObject):
-			raise mappererror.MapperError("This function expects a DomainObject object as the input parameter")
+			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		print "Inserting new " + str(type(obj)) + " object " + str(obj.getId())
 
@@ -150,17 +150,17 @@ class Mapper:
 
 		# check we get an instance of identityObject
 		if not isinstance(identityObj, identityobject.IdentityObject):
-			raise mappererror.MapperError("Must pass in an identityObject")
+			raise mdb.ProgrammingError("Must pass in an identityObject")
 
 		# Check the range parameters are valid
 		if limitStart < 0:
-			raise mappererror.MapperError("The start point must be a positive int")
+			raise mdb.ProgrammingError("The start point must be a positive int")
 
 		if limitDistance > 50:
-			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+			raise mdb.ProgrammingError("You cannot select more than 50 rows at one time")
 
 		if limitDistance < 1:
-			raise mappererror.MapperError("You must select at least one row")
+			raise mdb.ProgrammingError("You must select at least one row")
 
 		# =======================================
 		# build the query from the identityObject's data

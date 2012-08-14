@@ -25,8 +25,7 @@ class Database:
 			self.__con = mdb.connect(host=self.__hostname, user=self.__user, passwd=self.__password, db=self.__dbname, use_unicode=True, charset="utf8")
 
 		except mdb.Error, e:
-			print "Database Error: %d: %s" % (e.args[0], e.args[1])
-			sys.exit(1)
+			raise mdb.OperationalError("Database Error: %d: %s" % (e.args[0], e.args[1]))
 			
 	def __close(self):
 		"""Closes the connection to the database if it still exists"""
