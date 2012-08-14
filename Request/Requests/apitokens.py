@@ -3,6 +3,7 @@ from Model.Mapper import apitokenmapper as ATM
 from Common.apikeygen import getKey
 from Common.passHash import checkHash
 from Networking.statuscodes import StatusCodes as CODE
+from Model.user import User
 
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
@@ -39,6 +40,7 @@ class Apitokens(Request):
 				ATM_ = ATM.ApitokenMapper()
 				
 				rdata["apitoken"] = ATM_.findTokenByUserId(selectedUser.getId()).getToken()
+				rdata["user"] = selectedUser
 
 				return self._response(rdata, CODE.CREATED)
 
@@ -49,5 +51,9 @@ class Apitokens(Request):
 			# Anonymous login
 			rdata = {}
 			rdata["apitoken"] = getKey()
+
+			blank = User()
+			blank.setToken(rdata["apitoken"])
+			rdata["user"] = blank
 
 			return self._response(rdata, CODE.CREATED)

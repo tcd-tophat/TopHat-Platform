@@ -40,7 +40,7 @@ class Users(Request):
 					raise NotFound("This user does not exist")
 
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
-					greturn self._response(user.dict(2), CODE.OK)
+					return self._response(user.dict(2), CODE.OK)
 				else:
 					raise Unauthorised("You do not have sufficient privileges access this resource.")
 
@@ -65,49 +65,45 @@ class Users(Request):
 
 	def _doPost(self, dataObject):
 
-		print str(dataObject)
-
 		if "email" in dataObject and "password" in dataObject:
+			UserMapper = UM.UserMapper()
+			ApitokenMapper = ATM.ApitokenMapper()
+
+			# Build user and token objects
+			user = User()
+
+			if not checkEmail(dataObject["email"]):
+				raise BadRequest("The e-mail supplied was invalid.")
+
+			user.setEmail(dataObject["email"])
+			user.setPreHash(dataObject["password"])
+
+			token = Apitoken()
+
+			token.setUser(user)
+			token.setToken(getKey())
+
+			user.setToken(token)
+
+			# Save changes to user
 			try:
+				UserMapper.insert(user)
 
-				UserMapper = UM.UserMapper()
-				ApitokenMapper = ATM.ApitokenMapper()
+			# handle the possibility the user already exists
+			except mdb.IntegrityError, e:
+				raise RequestError(CODE.CONFLICT, "A user with that e-mail address exists already.")
 
-
-				# Get the user by E-mail
-				acidtest = UserMapper.getUserByEmail(dataObject["email"])
-
-				if acidtest is None:
-					user = User()
-
-					if not checkEmail(dataObject["email"]):
-						raise BadRequest("The e-mail supplied was invalid.")
-
-					user.setEmail(dataObject["email"])
-					user.setPreHash(dataObject["password"])
-
-					token = Apitoken()
-
-					token.setUser(user)
-					token.setToken(getKey())
-
-					user.setToken(token)
-
-					UserMapper.insert(user)
-
-					# Retrieve user with ID this time
-					user = UserMapper.getUserByEmail(dataObject["email"])
-
-					ApitokenMapper.insert(token)
-
-					return self._response(token.dict(), CODE.CREATED)
-				else:
-					raise RequestError(CODE.CONFLICT, "A user with that e-mail address exists already.")
-				
+			# handle all other DB errors
 			except mdb.DatabaseError, e:
-				import traceback, sys
-				traceback.print_exc(file=sys.stdout)
-				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+				raise ServerError("Unable to create user in the database (%s)" % e.args[1])
+
+			# save the apitoken
+			try:
+				ApitokenMapper.insert(token)
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to save apitoken in the database (%s)" % e.args[1])
+
+			return self._response(token.dict(), CODE.CREATED)	
 		else:
 			raise BadRequest("Required params email and password not sent")
 
