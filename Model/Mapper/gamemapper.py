@@ -88,29 +88,6 @@ class GameMapper(mapper.Mapper):
 		else:
 			return False
 
-	def joinGame(self, user, game):
-		# build query
-		# id, name, game_type_id, creator
-		query = "INSERT INTO user_games VALUES(NULL, %s, %s)"
-
-		# convert boolean value to int bool
-		params = (user.getId(), game.getId())
-
-		# run the query
-		cursor = self.db.getCursor()
-		rowsAffected = cursor.execute(query, params)
-
-		cursor.close()
-
-		# only if rows were changed return a success response
-		if rowsAffected > 0:
-			return True
-		else:
-			return False
-
-	def leaveGame(self, user):
-		pass
-
 	def findByUser(self, user, start=0, number=50):
 		if start < 0:
 			raise mdb.ProgrammingError("The start point must be a positive int")
@@ -120,9 +97,10 @@ class GameMapper(mapper.Mapper):
 
 		query = """SELECT g.*, gt.name as game_type_name 
 					FROM games g 
-					LEFT JOIN user_games ug ON ug.game_id = g.id 
 					LEFT JOIN game_types gt ON g.game_type_id = gt.id 
-					WHERE ug.user_id = %s LIMIT %s, %s"""
+					LEFT JOIN players p ON p.game_id = g.id 
+					LEFT JOIN users u ON p.user_id = u.id 
+					WHERE u.id = %s LIMIT %s, %s"""
 		params = (user.getId(), start, start+number)
 
 		return deferredcollection.DeferredCollection(self, query, params)

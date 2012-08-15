@@ -90,8 +90,6 @@ class Players(Request):
 				PlayerMapper.insert(player)
 				print "PLAYER GOOD "+str(player)
 
-				GameMapper.joinGame(self.user, player)
-
 				return self._response(player.dict(3), CODE.CREATED)
 				
 			except mdb.DatabaseError, e:
