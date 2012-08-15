@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
+from Request.requesterrors import NotFound, ServerError, BadRequest, Forbidden
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import require_login
 
@@ -121,7 +121,7 @@ class Games(Request):
 
 				# check user has the priviledges
 				if not self.user.getId() == game.getCreator().getId() and not self.user.accessLevel('super_user'):
-					raise Unauthorised("You do not have sufficient privileges to delete this game.")
+					raise Forbidden("You do not have sufficient privileges to delete this game.")
 
 				if "game_type_id" in dataObject:
 
@@ -153,7 +153,7 @@ class Games(Request):
 	@require_login
 	def _doDelete(self):
 		if self.arg is None:
-			raise MethodNotAllowed("You must provide the ID of the game to be deleted")
+			raise BadRequest("You must provide the ID of the game to be deleted")
 		GameMapper = GM.GameMapper()
 
 		# get the user if it exists
@@ -172,7 +172,7 @@ class Games(Request):
 
 		# check user has the priviledges
 		if not self.user.getId() == game.getCreator().getId() and not self.user.accessLevel('super_user'):
-			raise Unauthorised("You do not have sufficient privileges to delete this game.")
+			raise Forbidden("You do not have sufficient privileges to delete this game.")
 
 		# delete the user from the data base
 		result = GameMapper.delete(game)

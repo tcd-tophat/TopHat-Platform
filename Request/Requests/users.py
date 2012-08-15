@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
+from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, BadRequest, Forbidden, Conflict
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import require_login, require_super_user
 from Common.apikeygen import getKey
@@ -15,7 +15,7 @@ class Users(Request):
 
 	''' 
 		API Documentation
-		Documentation for the Core Request of Games is available from the TopHat wiki at:
+		Documentation for the Core Request of Users is available from the TopHat wiki at:
 		http://wiki.tophat.ie/index.php?title=Core_Requests:_Users
 	'''
 
@@ -42,7 +42,7 @@ class Users(Request):
 				if self.user.accessLevel("super_user") or self.user.getId() == user.getId():
 					return self._response(user.dict(2), CODE.OK)
 				else:
-					raise Unauthorised("You do not have sufficient privileges access this resource.")
+					raise Forbidden()
 
 			else:
 				if self.user.accessLevel("super_user"):
@@ -58,7 +58,7 @@ class Users(Request):
 
 					return self._response(userslist, CODE.OK)
 				else:
-					raise Unauthorised("You do not have sufficient privileges access this resource.")
+					raise Forbidden()
 
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % (e.args[0], e.args[1]))
@@ -83,15 +83,13 @@ class Users(Request):
 			token.setUser(user)
 			token.setToken(getKey())
 
-			user.setToken(token)
-
 			# Save changes to user
 			try:
 				UserMapper.insert(user)
 
 			# handle the possibility the user already exists
 			except mdb.IntegrityError, e:
-				raise RequestError(CODE.CONFLICT, "A user with that e-mail address exists already.")
+				raise Conflict(CODE.CONFLICT, "A user with that e-mail address exists already.")
 
 			# handle all other DB errors
 			except mdb.DatabaseError, e:
@@ -137,7 +135,7 @@ class Users(Request):
 
 						return self._response(user.dict(), CODE.CREATED)
 					else:
-						raise Unauthorised("You do not have sufficient privileges to modify this user")
+						raise Forbidden()
 				else:
 					raise NotFound("This user does not exist")
 				
@@ -168,7 +166,7 @@ class Users(Request):
 
 		# check user has the priviledges
 		if not self.user.getId() is user.getId() and not self.user.accessLevel('delete_users'):
-			raise Unauthorised("You do not have sufficient privileges to delete this user")
+			raise Forbidden()
 
 		# delete the user from the data base
 		result = UserMapper.delete(user)

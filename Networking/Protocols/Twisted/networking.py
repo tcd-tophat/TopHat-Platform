@@ -27,6 +27,7 @@ class Networking(Network):
 		StatusCodes.CREATED = 201
 		StatusCodes.BAD_REQUEST = 400
 		StatusCodes.UNAUTHORISED = 401
+		StatusCodes.FORBIDDEN = 403
 		StatusCodes.NOT_FOUND = 404
 		StatusCodes.METHOD_NOT_ALLOWED = 405
 		StatusCodes.CONFLICT = 409

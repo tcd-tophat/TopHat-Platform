@@ -4,6 +4,7 @@ from datetime import datetime
 from Model import domainobject
 from Model import domainexception
 from Model import metadomainobject
+from Model.game import Game
 from Model.apitoken import Apitoken
 from Common.passHash import makeHash
 
@@ -104,15 +105,21 @@ class User(metadomainobject.MetaDomainObject):
 	def getToken(self):
 		return self._token
 
-	def loadGames(self):
+	def _loadGames(self):
 		from Model.Mapper.gamemapper import GameMapper
 		GM = GameMapper()
 		self._games = GM.findByUser(self)
 
 	def getGames(self):
 		if self._games is None:
-			self.loadGames()
+			self._loadGames()
 		return self._games
+
+	def addGame(self, game_):
+		if not isinstance(game_, Model.game.Game):
+			raise domainexception.DomainException("Must be an instance of the Game Model object")
+
+		self._games.add(game_)
 
 	def dict(self, depth=0):
 		if depth < 0:
@@ -122,7 +129,6 @@ class User(metadomainobject.MetaDomainObject):
 			gameslist = []
 			games = self.getGames()
 			if games is not None:
-
 				if depth > 0: # only get if not excessive
 					for game in self.getGames():
 						gameslist.append(game.dict(depth-1))

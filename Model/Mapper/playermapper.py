@@ -93,8 +93,15 @@ class PlayerMapper(mapper.Mapper):
 			return False
 
 	def getPlayersInGame(self, game, start=0, number=50):
-		# build the query
-		query = "SELECT * FROM "+self.tableName()+" WHERE game_id = '%s'" % (game.getId())
-		return self._findMany(query+" LIMIT %s, %s", start, number)
+		# check func params
+		if start < 0:
+			raise mdb.ProgrammingError("Start point must be a postive int")
 
-		
+		if number > 50:
+			raise mdb.ProgrammingError("Cannot select more than 50 rows at once")
+
+		# build the query
+		query = "SELECT * FROM players WHERE game_id = %s LIMIT %s, %s"
+		params = (game.getId(), start, number)
+
+		return deferredcollection.DeferredCollection(self, query, params)

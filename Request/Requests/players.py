@@ -1,5 +1,5 @@
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed, RequestError, BadRequest
+from Request.requesterrors import NotFound, ServerError, Unauthorised, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 
 from Model.Mapper import usermapper as UM
@@ -135,7 +135,7 @@ class Players(Request):
 	@require_login
 	def _doDelete(self):
 		if self.arg is None:
-			raise MethodNotAllowed("You must provide the ID of the player to be deleted")
+			raise BadRequest("You must provide the ID of the player to be deleted")
 		
 		PlayerMapper = PM.PlayerMapper()
 

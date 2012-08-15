@@ -6,10 +6,16 @@ from Networking.statuscodes import StatusCodes as CODE
 from Model.user import User
 
 from Request.request import Request
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
+from Request.requesterrors import NotFound, ServerError, Unauthorised
 import MySQLdb as mdb
 
 class Apitokens(Request):
+
+	''' 
+		API Documentation
+		Documentation for the Core Request of API Tokens is available from the TopHat wiki at:
+		http://wiki.tophat.ie/index.php?title=Apitoken
+	'''
 
 	def __init__(self):
 		super(Apitokens, self).__init__()

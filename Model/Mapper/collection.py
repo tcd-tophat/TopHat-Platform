@@ -78,7 +78,7 @@ class Collection(object):
 		row = self.__getRow(self._pointer) # gets the latest row
 
 		if row is None:
-			self.rewind()					
+			self.rewind()				# reset the pointer so we can iterate over this collection again	
 			raise StopIteration			# tells the iterator that we are done and to stop iterating
 		else:
 			self._pointer += 1			# increment counter

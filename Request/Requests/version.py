@@ -1,6 +1,5 @@
 from Request.request import Request
 from Networking.statuscodes import StatusCodes as CODE
-from Request.requesterrors import NotFound, ServerError, Unauthorised, MethodNotAllowed
 
 class Version(Request):
 

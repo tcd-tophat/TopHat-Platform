@@ -4,6 +4,7 @@ import usermapper as UM
 import gametypemapper as GTM
 import mappererror
 import deferredcollection
+import MySQLdb as mdb
 
 class GameMapper(mapper.Mapper):
 
@@ -43,16 +44,18 @@ class GameMapper(mapper.Mapper):
 
 		game_.setName(data["name"])
 		game_.setTime(data["time"])
+		game_.setStartTime(data["start_time"])
+		game_.setEndTime(data["end_time"])
 
 		return game_
 
 	def _doInsert(self, obj):
 		# build query
 		# id, name, game_type_id, creator
-		query = "INSERT INTO games VALUES(NULL, %s, %s, %s, NOW() )"
+		query = "INSERT INTO games VALUES(NULL, %s, %s, %s, NOW(), %s, %s)"
 
 		# convert boolean value to int bool
-		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId())
+		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId(), obj.getStartTime(), obj.getEndTime())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -72,8 +75,8 @@ class GameMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE games SET name = %s, game_type_id = %s, creator = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId(), obj.getId())
+		query = "UPDATE games SET name = %s, game_type_id = %s, creator = %s, start_time = %s, end_time = %s WHERE id = %s LIMIT 1"
+		params = (obj.getName(), obj.getGameType().getId(), obj.getCreator().getId(), obj.getStartTime(), obj.getEndTime(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -110,10 +113,10 @@ class GameMapper(mapper.Mapper):
 
 	def findByUser(self, user, start=0, number=50):
 		if start < 0:
-			raise mappererror.MapperError("The start point must be a positive int")
+			raise mdb.ProgrammingError("The start point must be a positive int")
 
 		if number > 50:
-			raise mappererror.MapperError("You cannot select more than 50 rows at one time")
+			raise mdb.ProgrammingError("You cannot select more than 50 rows at one time")
 
 		query = """SELECT g.*, gt.name as game_type_name 
 					FROM games g 
