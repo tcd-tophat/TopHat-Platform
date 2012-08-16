@@ -73,7 +73,7 @@ class Game(domainobject.DomainObject):
 		self._startTime = time
 
 	def setEndTime(self, time):
-		if type(time) is not datetime or time in not None:
+		if type(time) is not datetime or time is not None:
 			raise domainexception.DomainException("The end time must be either empty or a datetime object")
 
 		self._endTime = time
