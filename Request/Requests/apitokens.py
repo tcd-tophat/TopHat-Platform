@@ -4,7 +4,7 @@ from Common.apikeygen import getKey
 from Common.passHash import checkHash
 from Networking.statuscodes import StatusCodes as CODE
 from Model.user import User
-
+from Model.apitoken import Apitoken
 from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised
 import MySQLdb as mdb
@@ -56,10 +56,14 @@ class Apitokens(Request):
 		else:
 			# Anonymous login
 			rdata = {}
-			rdata["apitoken"] = getKey()
+
+			token = Apitoken()
+			token.setToken(getKey())
+
+			rdata["apitoken"] = token.getToken()
 
 			blank = User()
-			blank.setToken(rdata["apitoken"])
-			rdata["user"] = blank
+			blank.setToken(token)
+			rdata["user"] = blank.dict()
 
 			return self._response(rdata, CODE.CREATED)
