@@ -67,20 +67,36 @@ class Game(domainobject.DomainObject):
 		self._time = time
 
 	def setStartTime(self, time):
+<<<<<<< HEAD
 		if type(time) is not datetime and time is not None:
 			raise domainexception.DomainException("The start time must be either empty or a datetime object not %s" % str(type(time)))
+=======
+		if time is not None:
+			if type(time) is not datetime:
+				raise domainexception.DomainException("The start time must be either empty or a datetime object")
+>>>>>>> 45ffdbfa588c879e6634069f9708f8b3988ef95c
 
 		self._startTime = time
 
 	def setEndTime(self, time):
+<<<<<<< HEAD
 		if type(time) is not datetime and time is not None:
 			raise domainexception.DomainException("The end time must be either empty or a datetime object not %s" % str(type(time)))
+=======
+		if time is not None:
+			if type(time) is not datetime:
+				raise domainexception.DomainException("The end time must be either empty or a datetime object")
+>>>>>>> 45ffdbfa588c879e6634069f9708f8b3988ef95c
 
 		self._endTime = time
 
 	def getPlayers(self):
 		# check have we gotten the list already
+<<<<<<< HEAD
 		if self._players:
+=======
+		if not self._players:
+>>>>>>> 45ffdbfa588c879e6634069f9708f8b3988ef95c
 			PM = PlayerMapper()
 			self._players = PM.getPlayersInGame(self)
 

@@ -7,7 +7,7 @@ class Kill(domainobject.DomainObject):
 	_killer = None	
 	_victim = None
 	_verified = False
-	_time = 0
+	_time = datetime.now()
 
 	def __init__(self, id_=None):
 		super(Kill, self).__init__(id_)
