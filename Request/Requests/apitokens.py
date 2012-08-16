@@ -46,7 +46,7 @@ class Apitokens(Request):
 				ATM_ = ATM.ApitokenMapper()
 				
 				rdata["apitoken"] = ATM_.findTokenByUserId(selectedUser.getId()).getToken()
-				rdata["user"] = selectedUser
+				rdata["user"] = selectedUser.dict()
 
 				return self._response(rdata, CODE.CREATED)
 

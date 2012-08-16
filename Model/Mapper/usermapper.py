@@ -30,7 +30,6 @@ class UserMapper(mapper.Mapper):
 		usr.setEmail(data["email"])
 		usr.setPassword(data["password"])
 		usr.setTime(data["time"])
-		usr.loadGames()
 
 		return usr
 
