@@ -51,7 +51,7 @@ class Games(Request):
 				gameslist = []
 
 				for game in games:
-					gameslist.append(game.dict(3))
+					gameslist.append(game.dict(2))
 
 				gamedict = {"games":gameslist, "pagination_offset":offset, "max_perpage": 50}
 

@@ -1,5 +1,6 @@
 import sys
 
+import deferredcollection
 import mapper
 import Model.player
 import usermapper
