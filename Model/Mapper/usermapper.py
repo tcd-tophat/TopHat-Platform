@@ -1,5 +1,4 @@
 from Model.Mapper import mapper
-from Model import user
 
 class UserMapper(mapper.Mapper):
 
@@ -23,16 +22,16 @@ class UserMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Specifics required to build a User object given persistent storage data"""
-		usr = user.User(data["id"])
+		from Model.user import User
+		user_ = User(data["id"])
 
-		usr.setName(data["name"])
-		usr.setPhoto(data["photo"])
-		usr.setEmail(data["email"])
-		usr.setPassword(data["password"])
-		usr.setTime(data["time"])
-		usr.loadGames()
+		user_.setName(data["name"])
+		user_.setPhoto(data["photo"])
+		user_.setEmail(data["email"])
+		user_.setPassword(data["password"])
+		user_.setTime(data["time"])
 
-		return usr
+		return user_
 
 	def _doInsert(self, obj):
 		# build query

@@ -1,6 +1,5 @@
 from cherrypy import config as CherryPyConfig, quickstart
 from Networking.statuscodes import StatusCodes
-from Networking.baseprotocol import BaseProtocol
 
 class Protocol(BaseProtocol):
 

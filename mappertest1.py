@@ -4,12 +4,10 @@ def main():
 	from Common.config import TopHatConfig
 
 	#setup the config
-	kwargs = {"path":"/home/specialk/Dev/tophat/config.py"}
-	TopHatConfig(**kwargs)
+	TopHatConfig(path="/home/specialk/Dev/tophat/config.py")
 
 	# do the other stuff
 	import Model.user
-	import Model.usermetadata
 	from Model.Mapper import usermapper as UM
 
 	UserMapper = UM.UserMapper()
@@ -19,7 +17,8 @@ def main():
 	for game in usr1.getGames():
 		print game
 
-	print usr1.dict(3)
+	print usr1.dict(1)
+
 
 	# Testing Identity Object
 	#from Mapper import identityobject
