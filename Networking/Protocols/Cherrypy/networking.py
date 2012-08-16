@@ -1,5 +1,6 @@
 from cherrypy import config as CherryPyConfig, quickstart
 from Networking.statuscodes import StatusCodes
+from Networking.baseprotocol import BaseProtocol
 
 class Protocol(BaseProtocol):
 
@@ -14,6 +15,7 @@ class Protocol(BaseProtocol):
 	def loop(self):
 		from Networking.Protocols.Cherrypy.cherrypyhandler import CherrypyHandler
 		quickstart(CherrypyHandler(self))
+
 	def bind(self):
 
 		CherryPyConfig.update({'server.socket_host': self._config.Interface, 

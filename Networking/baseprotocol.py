@@ -9,3 +9,14 @@ class BaseProtocol:
 	def __init__(self, config):
 		self._config = config
 
+	@abstractmethod
+	def loop(self):
+		pass
+
+	@abstractmethod
+	def bind(self):
+		pass
+
+	@abstractmethod
+	def _registerStatusCodes(self):
+		pass
