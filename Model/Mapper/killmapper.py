@@ -30,8 +30,6 @@ class KillMapper(mapper.Mapper):
 		kill_ = Model.kill.Kill(data["id"])
 
 		PlayerMapper = PM.PlayerMapper()
-		#killer = data["killer_player_id"]
-		#victim = data["victim_player_id"]
 		killer = PlayerMapper.find(data["killer_player_id"])
 		victim = PlayerMapper.find(data["victim_player_id"])
 

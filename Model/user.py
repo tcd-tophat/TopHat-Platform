@@ -123,15 +123,14 @@ class User(metadomainobject.MetaDomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return { "id": self.getId() }
+			return self.getId()
 		else:
 			# build a list of the games' dict
 			gameslist = []
 			games = self.getGames()
-			if games is not None:
-				if depth > 0: # only get if not excessive
-					for game in self.getGames():
-						gameslist.append(game.dict(depth-1))
+			if games:
+				for game in games:
+					gameslist.append(game.dict(depth-1))
 
 			return {
 				"id": self.getId(),

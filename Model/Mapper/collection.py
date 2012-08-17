@@ -1,3 +1,5 @@
+import copy
+
 class Collection(object):
 	"""A non-type safe collection of raw data from the database that it will turn into objects on request. This class is iterable"""
 
@@ -20,7 +22,7 @@ class Collection(object):
 
 	def __iter__(self):
 		"""Makes the class iterable"""
-		return self
+		return copy.copy(self)
 
 	def __contains__(self, v):
 		"""Allows users to check if an item exists in the collection"""
@@ -42,7 +44,15 @@ class Collection(object):
 		raise TypeError("You cannot alter the contains of a collection. You may add an item to the collection using the add(obj) method.")
 
 	def __len__(self):
+		self._notifyAccess()
+		
 		return self._total
+
+	def __bool__(self):
+		if len(self) > 0:
+			return True
+		else:
+			return False
 
 	def add(self, obj):
 		"""Non-type safe method to add objects to this collection"""
@@ -55,7 +65,6 @@ class Collection(object):
 
 	def __getRow(self, row):
 		"""Gets a row, returning the already created object or building said object from raw data if it doesn't already exist"""
-
 		self._notifyAccess()
 
 		# test if row is outside range
@@ -63,7 +72,7 @@ class Collection(object):
 			return None
 
 		# check if it exists in a list of already made objects
-		if row > 0 and row < len(self._objects):
+		if row >= 0 and row < len(self._objects):
 			return self._objects[row]
 
 		# if not empty create and return the object made from that data
