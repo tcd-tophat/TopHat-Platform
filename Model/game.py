@@ -14,12 +14,10 @@ class Game(domainobject.DomainObject):
 	_startTime = None
 	_endTime = None
 
-	_players = []				# collection of players
+	_players = None				# collection of players
 
 	def __init__(self, id_=None):
 		super(Game, self).__init__(id_)
-
-		self._players = []
 
 	def __str__(self):
 		return str(self.getId()) + " Name " + ": " + self._name + "  created by {" + str(self._creator) + "}  - GameType: "+str(self._gameType.getId())
@@ -80,7 +78,7 @@ class Game(domainobject.DomainObject):
 
 	def getPlayers(self):
 		# check have we gotten the list already
-		if not self._players:
+		if self._players is None:
 			PM = PlayerMapper()
 			self._players = PM.getPlayersInGame(self)
 
@@ -88,13 +86,14 @@ class Game(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return { "id": self.getId() }
+			return self.getId()
 		else:
 			playerlist = []
-			if self.getPlayers() is not None:
-				if depth > 0: # only get if not excessive
-					for player in self.getPlayers():
-						playerlist.append(player.dict(depth-1))
+			players = self.getPlayers()
+			if players:
+				
+				for player in players:
+					playerlist.append(player.dict(depth-1))
 
 			if self.getTime() is not None:
 				return {

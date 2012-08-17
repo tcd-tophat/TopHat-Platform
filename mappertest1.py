@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 def main():
+	from Networking.protocolhandler import ProtocolHandler
 	from Common.config import TopHatConfig
 
 	#setup the config
@@ -9,36 +10,13 @@ def main():
 	# do the other stuff
 	import Model.user
 	from Model.Mapper import usermapper as UM
+	from Model.Mapper import gamemapper as GM
 
-	UserMapper = UM.UserMapper()
-	usr1 = UserMapper.find(1)
-	print usr1
-	print usr1.getGames()
-	for game in usr1.getGames():
-		print game
+	Mapper = UM.UserMapper()
+	u = Mapper.find(1)
 
-	print usr1.dict(1)
-
-
-	# Testing Identity Object
-	#from Mapper import identityobject
-	#IO = identityobject.IdentityObject(None, user.User)
-	#IO.field("name").eq("Kevin Baker")
-
-	#usersSelect = UserMapper.selectIdentity(IO, 0, 5)
-	#if usersSelect:
-	#	for usrS in usersSelect:
-	#		print usrS
-
-	#usr1 = UserMapper.find(1)
-	#usr1.setEmail("kevin@tophat.ie")
-
-	#OW.printAll()
-
-	#print usr1.getEmail()
-
-	# make all changes to DB before closing it
-	#OW.magicSaveAll()
+	from pprint import pprint
+	pprint(u.dict(3))
 
 if __name__ == "__main__":
     main()

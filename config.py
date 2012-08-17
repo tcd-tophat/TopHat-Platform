@@ -40,7 +40,7 @@ resources = [
 	('/players/', "Players"),
 	('/gametypes/', "Gametypes")
 ]
-from  Networking.Protocols.Cherrypy import Protocol
+from Networking.Protocols.Cherrypy import Protocol
 
 Version='0.1.2'
 GameVersion='0.0.1'
