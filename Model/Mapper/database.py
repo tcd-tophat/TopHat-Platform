@@ -11,8 +11,6 @@ class Database:
 		self.__user = username
 		self.__password = password
 		self.__dbname = dbname
-
-		self.__connect()
 	
 	def __del__(self):
 		self.__close()	 # on detruction of object close the connection to the DB
@@ -35,4 +33,8 @@ class Database:
 
 	def getCursor(self):
 		"""Returns the cursor handler to the database with the setting of data being returned as an assocative array on"""
+		# now that we need a connection ask for one
+		self.__connect()
+
+		# give them their access cursor back
 		return self.__con.cursor(cursorclass=mdb.cursors.DictCursor)
