@@ -36,10 +36,11 @@ class GameMapper(mapper.Mapper):
 		game_.setCreator(creator)
 
 		# Build the game type information
+		gt_data = {}
 		gt_data["id"] = data["game_type_id"]
 		gt_data["name"] = data["game_type_name"]
-		GameTypeMapper = GMT.GameTypeMapper()
-		gametype = GTM._createObject(gt_data)		# advantage is the object is added to the object watcher for future references
+		GameTypeMapper = GTM.GameTypeMapper()
+		gametype = GameTypeMapper.createObject(gt_data)		# advantage is the object is added to the object watcher for future references
 		game_.setGameType(gametype)
 
 		game_.setName(data["name"])
