@@ -1,6 +1,5 @@
 import mapper
 import Model.game
-import Model.gametype
 import usermapper as UM
 import gametypemapper as GTM
 import mappererror
@@ -36,9 +35,11 @@ class GameMapper(mapper.Mapper):
 		creator = UserMapper.find(data["creator"])
 		game_.setCreator(creator)
 
-		# Setup the game type information
-		gametype = Model.gametype.GameType(data["game_type_id"])
-		gametype.setName(data["game_type_name"])
+		# Build the game type information
+		gt_data["id"] = data["game_type_id"]
+		gt_data["name"] = data["game_type_name"]
+		GameTypeMapper = GMT.GameTypeMapper()
+		gametype = GTM._createObject(gt_data)		# advantage is the object is added to the object watcher for future references
 		game_.setGameType(gametype)
 
 		game_.setName(data["name"])
