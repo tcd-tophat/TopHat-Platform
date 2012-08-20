@@ -1,5 +1,6 @@
 import mapper
 import Model.game
+import Model.gametype
 import usermapper as UM
 import gametypemapper as GTM
 import mappererror
@@ -32,14 +33,12 @@ class GameMapper(mapper.Mapper):
 
 		# get creator User object
 		UserMapper = UM.UserMapper()
-		try:
-			creator = UserMapper.find(data["creator"])
-			game_.setCreator(creator)
-		except:
-			pass
+		creator = UserMapper.find(data["creator"])
+		game_.setCreator(creator)
 
-		GameTypeMapper = GTM.GameTypeMapper()
-		gametype = GameTypeMapper.find(data["game_type_id"])
+		# Setup the game type information
+		gametype = Model.gametype.GameType(data["game_type_id"])
+		gametype.setName(data["game_type_name"])
 		game_.setGameType(gametype)
 
 		game_.setName(data["name"])
