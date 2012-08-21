@@ -77,6 +77,7 @@ class Users(Request):
 
 			user.setEmail(dataObject["email"])
 			user.setPreHash(dataObject["password"])
+			user.setRegistered(True)
 
 			token = Apitoken()
 
@@ -89,7 +90,7 @@ class Users(Request):
 
 			# handle the possibility the user already exists
 			except mdb.IntegrityError, e:
-				raise Conflict(CODE.CONFLICT, "A user with that e-mail address exists already.")
+				raise Conflict("A user with that e-mail address exists already.")
 
 			# handle all other DB errors
 			except mdb.DatabaseError, e:
@@ -101,7 +102,7 @@ class Users(Request):
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to save apitoken in the database (%s)" % e.args[1])
 
-			return self._response(token.dict(), CODE.CREATED)	
+			return self._response(token.dict(2), CODE.CREATED)	
 		else:
 			raise BadRequest("Required params email and password not sent")
 

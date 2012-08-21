@@ -15,6 +15,7 @@ class User(metadomainobject.MetaDomainObject):
 	_password = None
 	_token = None
 	_time = datetime.now()
+	_registered = False
 
 	# collection vars
 	_games = None
@@ -44,11 +45,13 @@ class User(metadomainobject.MetaDomainObject):
 		self._photo = photo
 
 	def setEmail(self, email):
-		email = str(email)
 
-		pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-		if not re.match(pattern, email):
-			raise domainexception.DomainException("That is not a valid email address")
+		if email is not None:
+			email = str(email)
+
+			pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+			if not re.match(pattern, email):
+				raise domainexception.DomainException("That is not a valid email address")
 
 		# email checking needs to be added to user
 		self._email = email
@@ -75,6 +78,9 @@ class User(metadomainobject.MetaDomainObject):
 				raise domainexception.DomainException("Token must be an API Token Model Object")
 
 		self._token = token
+
+	def setRegistered(self, reg):
+		self._registered = reg
 
 	def setAccessLevel(self, level):
 		if self._token is not None:
@@ -103,6 +109,9 @@ class User(metadomainobject.MetaDomainObject):
 
 	def getToken(self):
 		return self._token
+
+	def getRegistered(self):
+		return self._registered
 
 	def _loadGames(self):
 		from Model.Mapper.gamemapper import GameMapper
@@ -137,5 +146,6 @@ class User(metadomainobject.MetaDomainObject):
 				"email": self.getEmail(),
 				"created": str(self.getTime()),
 				"photo": str(self.getPhoto()),
-				"joined_games": gameslist
+				"joined_games": gameslist,
+				"registered": self.getRegistered()
 			}
