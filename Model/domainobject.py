@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from Model.Mapper import objectwatcher as OW
-import domainexception
+from Model.Mapper.objectwatcher import ObjectWatcher as OW
+from Model.domainexception import DomainException
 
 class DomainObject(object):
 	"""Abstract base class for any object that is compatible with the Mapper for storage in the persistent storage"""
@@ -17,18 +17,17 @@ class DomainObject(object):
 
 		self.__markClean()				# during setup we have updated some of the attributes, make sure we don't update DB without any changes
 
-	def __setattr__(self, attr, value, setVar=True):
+	def __setattr__(self, attr, value):
 		"""Whenever an attribute of this object is changed the object is marked dirty and needs to be updated in persistent storage"""
 		if attr in self.__dict__:							# check the attr exists
 			prevValue = self.__dict__[attr]					# if so set the prevValue to its value
 		else:
 			prevValue = None
 
-		if setVar:
-			self.__dict__[attr] = value						# set the attribute in the dictionary
+		self.__dict__[attr] = value
 
-		if prevValue != value or setVar is False: 			# when any attribute is changed the object is marked for update
-			self.__markDirty()						
+		if prevValue != value: 			# when any attribute is changed the object is marked for update
+			self.__markDirty()
 
 	def __str__(self):
 		return str(self.__class__) + str(self._id)
@@ -41,10 +40,10 @@ class DomainObject(object):
 		try:
 			value = int(value)
 		except ValueError:
-			raise domainexception.DomainException("The id must be an integer")
+			raise DomainException("The id must be an integer")
 
 		if value < 0:
-			raise domainexception.DomainException("The id must be greater than one")
+			raise DomainException("The id must be greater than one")
 
 		self._id = value
 
@@ -54,19 +53,19 @@ class DomainObject(object):
 
 	# Object Watcher Functions #
 	def __markDirty(self):
-		ow = OW._Objectwatcher()
+		ow = OW()
 		ow.addDirty(self)
 
 	def __markNew(self):
-		ow = OW._Objectwatcher()
+		ow = OW()
 		ow.addNew(self)
 
 	def __markDelete(self):
-		ow = OW._Objectwatcher()
+		ow = OW()
 		ow.addDelete(self)
 
 	def __markClean(self):
-		ow = OW._Objectwatcher()
+		ow = OW()
 		ow.addClean(self)
 
 	def markClean(self):

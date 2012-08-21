@@ -1,12 +1,11 @@
-import mapper
-import Model.game
-import usermapper as UM
-import gametypemapper as GTM
-import mappererror
-import deferredcollection
 import MySQLdb as mdb
+from mapper import Mapp
 
-class GameMapper(mapper.Mapper):
+from usermapper import UserMapper
+from gametypemapper import GameTypeMapper
+from deferredcollection import DeferredCollection
+
+class GameMapper(Mapp):
 
 	def __init__(self):
 		super(GameMapper, self).__init__()
@@ -28,20 +27,30 @@ class GameMapper(mapper.Mapper):
 		
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
-		game_ = Model.game.Game(data["id"])
+		from Model.game import Game
+		from Model.deferreduser import DeferredUser
+		
+		game_ = Game(data["id"])
 
 		# get creator User object
-		UserMapper = UM.UserMapper()
-		try:
-			creator = UserMapper.find(data["creator"])
-			game_.setCreator(creator)
-		except:
-			pass
+		umapper = UserMapper()
+		game_.setCreator(umapper.find(data["creator"]))
+		#query = "SELECT * FROM users WHERE id = %s"
+		#params = (data["creator"],)
+		#creator = DeferredUser(data["creator"], UserMapper, query, params)
+		#game_.setCreator(creator)
 
-		GameTypeMapper = GTM.GameTypeMapper()
-		gametype = GameTypeMapper.find(data["game_type_id"])
+		# Build the game type information
+		gt_data = {}
+		gt_data["id"] = data["game_type_id"]
+		gt_data["name"] = data["game_type_name"]
+		GTM = GameTypeMapper()
+		gametype = GTM.createObject(gt_data)		# advantage is the object is added to the object watcher for future references
+		print gametype
+		print str(type(gametype))
 		game_.setGameType(gametype)
 
+		# set the rest of the information
 		game_.setName(data["name"])
 		game_.setTime(data["time"])
 		game_.setStartTime(data["start_time"])
@@ -103,4 +112,4 @@ class GameMapper(mapper.Mapper):
 					WHERE u.id = %s LIMIT %s, %s"""
 		params = (user.getId(), start, start+number)
 
-		return deferredcollection.DeferredCollection(self, query, params)
+		return DeferredCollection(self, query, params)

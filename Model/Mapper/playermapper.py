@@ -1,12 +1,11 @@
 import sys
 
-import deferredcollection
-import mapper
-import Model.player
-import usermapper
-import gamemapper
+from mapper import Mapp
+from deferredcollection import DeferredCollection
+from usermapper import UserMapper
+from gamemapper import GameMapper
 
-class PlayerMapper(mapper.Mapper):
+class PlayerMapper(Mapp):
 
 	def __init__(self):
 		super(PlayerMapper, self).__init__()
@@ -18,43 +17,44 @@ class PlayerMapper(mapper.Mapper):
 		return "players"
 
 	def _selectStmt(self):
-		return "SELECT * FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
+		return "SELECT * FROM players WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT * FROM "+self.tableName()+" LIMIT %s, %s"	
+		return "SELECT * FROM players LIMIT %s, %s"	
 
 	def _deleteStmt(self, obj):
-		return "DELETE FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
+		return "DELETE FROM players WHERE id = %s LIMIT 1"
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
-		player_ = Model.player.Player(data["id"])
+		from Model.player import Player
+		player_ = Player(data["id"])
 
-		GameMapper = gamemapper.GameMapper()
-		game_ = GameMapper.find(data["game_id"])
+		gmapper = GameMapper()
+		game_ = gmapper.find(data["game_id"])
 
 		# If the game is deleted and the player is still linked, then errors can occur
 		player_.setGame(game_)
 
-		UserMapper = usermapper.UserMapper()
-		user_ = UserMapper.find(data["user_id"])
+		umapper = UserMapper()
+		user_ = umapper.find(data["user_id"])
 
 		if user_ is not None:
 			player_.setUser(user_)
 
-			player_.setName(data["name"])
-			player_.setPhoto(data["photo"])
-			player_.setLat(data["lat"])
-			player_.setLon(data["lon"])
-			player_.setScore(data["score"])
-			player_.setTime(data["time"])
+		player_.setName(data["name"])
+		player_.setPhoto(data["photo"])
+		player_.setLat(data["lat"])
+		player_.setLon(data["lon"])
+		player_.setScore(data["score"])
+		player_.setTime(data["time"])
 
 		return player_
 
 	def _doInsert(self, obj):
 		# build query
 		# id, name, photo, game_id, user_id, lat, lon, score, time
-		query = "INSERT INTO "+self.tableName()+" VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
+		query = "INSERT INTO players VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
 
 		# convert boolean value to int bool
 		params = (obj.getName(), obj.getPhoto(), obj.getGame().getId(), 
@@ -105,4 +105,4 @@ class PlayerMapper(mapper.Mapper):
 		query = "SELECT * FROM players WHERE game_id = %s LIMIT %s, %s"
 		params = (game.getId(), start, number)
 
-		return deferredcollection.DeferredCollection(self, query, params)
+		return DeferredCollection(self, query, params)

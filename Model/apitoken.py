@@ -1,9 +1,8 @@
-import domainobject
-import domainexception
+from Model.domainobject import DomainObject
+from Model.domainexception import DomainException
 from Common import permissions
-import Model
 
-class Apitoken(domainobject.DomainObject):
+class Apitoken(DomainObject):
 
 	_token = None
 	_user = None
@@ -22,7 +21,7 @@ class Apitoken(domainobject.DomainObject):
 
 	def setToken(self, token):
 		if len(token) != 64:
-			raise domainexception.DomainException("That is not a valid API Token, should be a 64 character hash")
+			raise DomainException("That is not a valid API Token, should be a 64 character hash")
 
 		self._token = token
 
@@ -30,8 +29,10 @@ class Apitoken(domainobject.DomainObject):
 		return self._token
 
 	def setUser(self, user_):
-		if not isinstance(user_, Model.user.User):
-			raise domainexception.DomainException("Must reference a User object not a %s" % str(type(user_)))
+		from Model.user import User
+		
+		if not isinstance(user_, User):
+			raise DomainException("Must reference a User object not a %s" % str(type(user_)))
 
 		user_.setToken(self)
 		self._user = user_

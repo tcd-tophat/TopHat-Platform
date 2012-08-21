@@ -1,5 +1,5 @@
 
-class _Objectwatcher:
+class ObjectWatcher:
 	"""Singleton class that keeps track of every instance of a DomainObject in this system"""
 
 	_instance = None

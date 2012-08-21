@@ -1,6 +1,6 @@
-from Model.Mapper import mapper
+from mapper import Mapp
 
-class UserMapper(mapper.Mapper):
+class UserMapper(Mapp):
 
 	def __init__(self):
 		super(UserMapper, self).__init__()
@@ -77,4 +77,4 @@ class UserMapper(mapper.Mapper):
 		params = (email,)
 		query = "SELECT * FROM users WHERE email = %s"
 	
-		return self._getOne(query, params)
+		return self.getOne(query, params)

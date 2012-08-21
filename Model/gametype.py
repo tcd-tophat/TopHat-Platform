@@ -1,9 +1,7 @@
-from datetime import datetime
-import domainobject
-import user
-import domainexception
+from Model.domainobject import DomainObject
+from Model.domainexception import DomainException
 
-class GameType(domainobject.DomainObject):
+class GameType(DomainObject):
 
 	_name = "Unnamed Game Type"		# public name of the game type
 
@@ -11,14 +9,14 @@ class GameType(domainobject.DomainObject):
 		super(GameType, self).__init__(id_)
 
 	def __str__(self):
-		return str(self.getId()) + " " +self._name
+		return str(self.getId()) + " " + self._name
 
 	def getName(self):
 		return self._name
 
 	def setName(self, name):
 		if len(name) > 255:
-			raise domainexception.DomainException("The name of a game cannot be more than 255 characters")
+			raise DomainException("The name of a game cannot be more than 255 characters")
 
 		self._name = name
 
