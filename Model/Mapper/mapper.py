@@ -19,7 +19,7 @@ class Mapper:
 		except KeyError:
 			raise mdb.OperationalError("Cannot load database details from the config file")
 
-	def _getOne(self, query, params):
+	def getOne(self, query, params):
 		"""Given the SQL query with placeholders and the params to be bound get one object from the database. Returns made object."""
 		cursor = self.db.getCursor()
 		cursor.execute(query, params)			# bind the id to the query and run it
@@ -43,7 +43,7 @@ class Mapper:
 		query = self._selectStmt()
 		parameters = (id_,)
 
-		return self._getOne(query, parameters)
+		return self.getOne(query, parameters)
 
 	def createObject(self, data):
 		"""Turns results from the database into objects that the rest of the application understands"""

@@ -72,4 +72,4 @@ class UserMapper(mapper.Mapper):
 		params = (email,)
 		query = "SELECT * FROM users WHERE email = %s"
 	
-		return self._getOne(query, params)
+		return self.getOne(query, params)
