@@ -5,7 +5,7 @@ from requesterrors import ServerError, MethodNotAllowed, Unauthorised
 from response import Response
 
 from Networking.statuscodes import StatusCodes as CODE
-from Model.Mapper import apitokenmapper as ATM
+from Model.Mapper.apitokenmapper import ApitokenMapper as ATM
 import MySQLdb as mdb
 
 class Request:
@@ -42,7 +42,7 @@ class Request:
 
 		if key is not None:
 			try:
-				ATM_ = ATM.ApitokenMapper()
+				ATM_ = ATM()
 				apikey = ATM_.findByKey(key)
 				
 				if apikey is None:

@@ -3,9 +3,9 @@ from Request.requesterrors import NotFound, ServerError, BadRequest, Forbidden
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import require_login
 
-from Model.Mapper import usermapper as UM
-from Model.Mapper import gamemapper as GM
-from Model.Mapper import gametypemapper as GTM
+from Model.Mapper.usermapper import UserMapper
+from Model.Mapper.gamemapper import GameMapper
+from Model.Mapper.gametypemapper import GameTypeMapper
 from Model.game import Game
 import MySQLdb as mdb
 
@@ -24,12 +24,12 @@ class Games(Request):
 	def _doGet(self):
 		try:
 			
-			GameMapper = GM.GameMapper()
+			GM = GameMapper()
 			
 			if self.arg is not None:
 				if self.arg.isdigit():
 					# Get the user by ID
-					game = GameMapper.find(self.arg)
+					game = GM.find(self.arg)
 				elif self.arg == "types":
 					return self._response({}, CODE.UNIMPLEMENTED)
 				else:
@@ -43,7 +43,7 @@ class Games(Request):
 			else:
 
 				offset = 0
-				games = GameMapper.findAll(offset, offset+50)
+				games = GM.findAll(offset, offset+50)
 
 				if games is None:
 					raise NotFound("There are no games on this system.")
@@ -70,18 +70,18 @@ class Games(Request):
 
 		if "name" and "game_type_id" in dataObject:
 			try:
-				GameTypeMapper = GTM.GameTypeMapper()
+				GTM = GameTypeMapper()
 
 				if dataObject["game_type_id"] is not None and dataObject["game_type_id"].isdigit():
 					# Get the user by ID
-					gametype = GameTypeMapper.find(dataObject["game_type_id"])
+					gametype = GTM.find(dataObject["game_type_id"])
 
 					if gametype is None:
 						raise NotFound("The specified game type does not exist.")
 				else:
 					raise BadRequest("Argument provided for this game type is invalid.")
 
-				GameMapper = GM.GameMapper()
+				GM = GameMapper()
 
 				# Get the user by E-mail
 				game = Game()
@@ -90,7 +90,7 @@ class Games(Request):
 				game.setCreator(self.user)
 				game.setGameType(gametype)
 
-				GameMapper.insert(game)
+				GM.insert(game)
 
 				return self._response(game.dict(3), CODE.CREATED)
 				
@@ -108,11 +108,11 @@ class Games(Request):
 
 		if "name" or "game_type_id" in dataObject:
 			try:
-				GameMapper = GM.GameMapper()
+				GM = GameMapper()
 
 				if self.arg.isdigit():
-					# Get the user by ID
-					game = GameMapper.find(self.arg)
+					# Get the user b ID
+					game = GM.find(self.arg)
 				else:
 					raise BadRequest("Games must be requested by ID")
 
@@ -125,11 +125,11 @@ class Games(Request):
 
 				if "game_type_id" in dataObject:
 
-					GameTypeMapper = GTM.GameTypeMapper()
+					GTM = GameTypeMapper()
 
 					if dataObject["game_type_id"] is not None and dataObject["game_type_id"].isdigit():
 						# Get the user by ID
-						gametype = GameTypeMapper.find(dataObject["game_type_id"])
+						gametype = GTM.find(dataObject["game_type_id"])
 
 						if gametype is None:
 							raise NotFound("The specified game type does not exist.")
@@ -141,7 +141,7 @@ class Games(Request):
 				if "name" in dataObject:
 					game.setName(dataObject["name"])
 
-				GameMapper.update(game)
+				GTM.update(game)
 
 				return self._response(game.dict(3), CODE.CREATED)
 				
@@ -154,7 +154,7 @@ class Games(Request):
 	def _doDelete(self):
 		if self.arg is None:
 			raise BadRequest("You must provide the ID of the game to be deleted")
-		GameMapper = GM.GameMapper()
+		GM = GameMapper()
 
 		# get the user if it exists
 		try:
@@ -175,7 +175,7 @@ class Games(Request):
 			raise Forbidden("You do not have sufficient privileges to delete this game.")
 
 		# delete the user from the data base
-		result = GameMapper.delete(game)
+		result = GM.delete(game)
 
 		if result:
 			return self._response({"message": "Game Deleted Successfully."}, CODE.OK)

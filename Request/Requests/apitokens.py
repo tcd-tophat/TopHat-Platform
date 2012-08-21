@@ -1,5 +1,5 @@
-from Model.Mapper import usermapper as UM
-from Model.Mapper import apitokenmapper as ATM
+from Model.Mapper.usermapper import UserMapper
+from Model.Mapper.apitokenmapper import ApitokenMapper
 from Common.apikeygen import getKey
 from Common.passHash import checkHash
 from Networking.statuscodes import StatusCodes as CODE
@@ -27,8 +27,8 @@ class Apitokens(Request):
 			password = dataObject['password']
 
 			try:
-				UserMapper = UM.UserMapper()
-				selectedUser = UserMapper.getUserByEmail(username)
+				umapper = UserMapper()
+				selectedUser = umapper.getUserByEmail(username)
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
@@ -43,7 +43,7 @@ class Apitokens(Request):
 			# get API token from the database and return it
 			try:
 				rdata = {}
-				ATM_ = ATM.ApitokenMapper()
+				ATM_ = ApitokenMapper()
 				
 				rdata["apitoken"] = ATM_.findTokenByUserId(selectedUser.getId()).getToken()
 				rdata["user"] = selectedUser.dict(1)
@@ -59,21 +59,20 @@ class Apitokens(Request):
 
 			token = Apitoken()
 			token.setToken(getKey())
-
 			
 
 			blank = User()
 			blank.setToken(token)
 			token.setUser(blank)
 
-			UserMapper = UM.UserMapper()
-			ApitokenMapper = ATM.ApitokenMapper()
+			umapper = UserMapper()
+			ATM = ApitokenMapper()
 
 			blank.setRegistered(False)
 
 			# Save changes to user
 			try:
-				UserMapper.insert(blank)
+				umapper.insert(blank)
 
 			# handle the possibility the user already exists
 			except mdb.IntegrityError, e:
@@ -85,7 +84,7 @@ class Apitokens(Request):
 
 			# save the apitoken
 			try:
-				ApitokenMapper.insert(token)
+				ATM.insert(token)
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to save apitoken in the database (%s)" % e.args[1])
 

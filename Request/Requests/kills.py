@@ -2,9 +2,7 @@ from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 
-from Model.Mapper import usermapper as UM
-from Model.Mapper import gamemapper as GM
-from Model.Mapper import killmapper as KM
+from Model.Mapper.killmapper import KillMapper
 import MySQLdb as mdb
 
 # Decorator
@@ -25,12 +23,12 @@ class Kills(Request):
 	def _doGet(self):
 		try:
 			
-			KillMapper = KM.KillMapper()
+			KM = KillMapper()
 			
 			if self.arg is not None:
 				if self.arg.isdigit():
 					# Get the user by ID
-					kill = KillMapper.find(self.arg)
+					kill = KM.find(self.arg)
 				else:
 					raise BadRequest("Kill must be requested by ID")
 

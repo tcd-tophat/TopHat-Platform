@@ -2,9 +2,8 @@ from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, Unauthorised, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 
-from Model.Mapper import usermapper as UM
-from Model.Mapper import gamemapper as GM
-from Model.Mapper import playermapper as PM
+from Model.Mapper.gamemapper import GameMapper
+from Model.Mapper.playermapper import PlayerMapper
 from Model.player import Player
 import MySQLdb as mdb
 
@@ -27,12 +26,12 @@ class Players(Request):
 	def _doGet(self):
 		try:
 			
-			PlayerMapper = PM.PlayerMapper()
+			PM = PlayerMapper()
 			
 			if self.arg is not None:
 				if self.arg.isdigit():
 					# Get the user by ID
-					player = PlayerMapper.find(self.arg)
+					player = PM.find(self.arg)
 				else:
 					raise BadRequest("Players must be requested by ID")
 
@@ -44,7 +43,7 @@ class Players(Request):
 			else:
 
 				offset = 0
-				players = PlayerMapper.findAll(offset, offset+50)
+				players = PM.findAll(offset, offset+50)
 
 				if players is None:
 					raise NotFound("There are no players on this system.")
@@ -66,11 +65,11 @@ class Players(Request):
 
 		if "name" and "game" and "photo" in dataObject:
 			try:
-				GameMapper = GM.GameMapper()
+				GM = GameMapper()
 
 				if dataObject["game"] is not None and str(dataObject["game"]).isdigit():
 					# Get the user by ID
-					game = GameMapper.find(str(dataObject["game"]))
+					game = GM.find(str(dataObject["game"]))
 
 					if game is None:
 						raise NotFound("The specified player type does not exist.")
@@ -78,7 +77,7 @@ class Players(Request):
 					raise BadRequest("Argument provided for this player type is invalid.")
 
 				print "GAME GOOD "+str(game)
-				PlayerMapper = PM.PlayerMapper()
+				PM = PlayerMapper()
 
 				player = Player()
 
@@ -87,7 +86,7 @@ class Players(Request):
 				player.setPhoto(dataObject["photo"])
 				player.setUser(self.user)
 
-				PlayerMapper.insert(player)
+				PM.insert(player)
 				print "PLAYER GOOD "+str(player)
 
 				return self._response(player.dict(3), CODE.CREATED)
@@ -103,11 +102,11 @@ class Players(Request):
 		if  "id" and ("name" or "photo") in dataObject:
 			try:
 
-				PlayerMapper = PM.PlayerMapper()
+				PM = PlayerMapper()
 
 				if dataObject["id"] is not None and dataObject["id"].isdigit():
 					# Get the user by ID
-					player = PlayerMapper.find(dataObject["id"])
+					player = PM.find(dataObject["id"])
 
 					if player is None:
 						raise NotFound("The specified player type does not exist.")
@@ -121,7 +120,7 @@ class Players(Request):
 					if "photo" in dataObject:
 						player.setPhoto(dataObject["photo"])
 
-					PlayerMapper.update(player)
+					PM.update(player)
 
 				return self._response(player.dict(3), CODE.CREATED)
 				
@@ -135,13 +134,13 @@ class Players(Request):
 		if self.arg is None:
 			raise BadRequest("You must provide the ID of the player to be deleted")
 		
-		PlayerMapper = PM.PlayerMapper()
+		PM = PlayerMapper()
 
 		# get the user if it exists
 		try:
 			if self.arg.isdigit():
 				# Get the user by ID
-				player = PlayerMapper.find(self.arg)
+				player = PM.find(self.arg)
 			else:
 				raise BadRequest("Players must be requested by ID")
 
@@ -156,7 +155,7 @@ class Players(Request):
 			raise Unauthorised("You do not have sufficient privileges to delete this player.")
 
 		# delete the user from the data base
-		result = PlayerMapper.delete(player)
+		result = PM.delete(player)
 
 		if result:
 			return self._response({"message": "Player Deleted Successfully."}, CODE.OK)
