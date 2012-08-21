@@ -1,30 +1,37 @@
 import abc
-from Common.config import TopHatConfig
-import database
 import MySQLdb as mdb
-import mappererror
-from Model.Mapper import objectwatcher as OW
-from Model import domainobject
-import collection
-import identityobject
+from Common.config import TopHatConfig
 
-class Mapper:
+from database import Database
+from collection import Collection
+from objectwatcher import ObjectWatcher as OW
+from identityobject import IdentityObject
+
+from Model.domainobject import DomainObject
+
+class Mapp:
 	__metaclass__ = abc.ABCMeta
 	db = None
 
 	def __init__(self):
 		try:
 			cnf = TopHatConfig
-			self.db = database.Database(cnf.getKey("MySQLHost"), cnf.getKey("MySQLUser"), cnf.getKey("MySQLPass"), cnf.getKey("MySQLDatabase"))
+			self.db = Database(cnf.getKey("MySQLHost"), cnf.getKey("MySQLUser"), cnf.getKey("MySQLPass"), cnf.getKey("MySQLDatabase"))
 		except KeyError:
 			raise mdb.OperationalError("Cannot load database details from the config file")
 
-	def _getOne(self, query, params):
-		"""Given the SQL query with placeholders and the params to be bound get one object from the database. Returns made object."""
+	def getOneRaw(self, query, params):
+		"""Given an SQL param and params it will return the raw data output from the database"""
 		cursor = self.db.getCursor()
 		cursor.execute(query, params)			# bind the id to the query and run it
 		data = cursor.fetchone()					# fetch the one row from the DB
 		cursor.close()
+
+		return data
+
+	def getOne(self, query, params):
+		"""Given the SQL query with placeholders and the params to be bound get one object from the database. Returns made object."""
+		data = self.getOneRaw(query, params)
 
 		if data is None:	
 			return None
@@ -43,7 +50,7 @@ class Mapper:
 		query = self._selectStmt()
 		parameters = (id_,)
 
-		return self._getOne(query, parameters)
+		return self.getOne(query, parameters)
 
 	def createObject(self, data):
 		"""Turns results from the database into objects that the rest of the application understands"""
@@ -80,7 +87,7 @@ class Mapper:
 		cursor.close()
 
 		if rowsAffected > 0:								# check if there are results to be returned
-			return collection.Collection(data, self) 		# create a collection object for the results
+			return Collection(data, self) 		# create a collection object for the results
 		else:
 			return None
 
@@ -104,7 +111,7 @@ class Mapper:
 
 	def delete(self, obj):
 		"""Deletes a given object from the database"""
-		if not isinstance(obj, domainobject.DomainObject):
+		if not isinstance(obj, DomainObject):
 			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:
@@ -120,7 +127,7 @@ class Mapper:
 
 	def update(self, obj):
 		"""Updates a given object's records in the database"""
-		if not isinstance(obj, domainobject.DomainObject) :
+		if not isinstance(obj, DomainObject) :
 			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		if obj.getId() is -1:		# can't update an object that has not been inserted
@@ -133,7 +140,7 @@ class Mapper:
 
 	def insert(self, obj):
 		"""Inserts this object into the database as its records"""
-		if not isinstance(obj, domainobject.DomainObject):
+		if not isinstance(obj, DomainObject):
 			raise mdb.ProgrammingError("This function expects a DomainObject object as the input parameter")
 
 		print "Inserting new " + str(type(obj)) + " object " + str(obj.getId())
@@ -149,7 +156,7 @@ class Mapper:
 		"""Builds a dynamic query using the identityObject to collect the parameters"""
 
 		# check we get an instance of identityObject
-		if not isinstance(identityObj, identityobject.IdentityObject):
+		if not isinstance(identityObj, IdentityObject):
 			raise mdb.ProgrammingError("Must pass in an identityObject")
 
 		# Check the range parameters are valid
@@ -197,18 +204,18 @@ class Mapper:
 		cursor.close()										# close the cursor to the database
 
 		if rowsAffected > 0:								# check there were results to be returned
-			return collection.Collection(data, self)		# return a collection of the objects
+			return Collection(data, self)		# return a collection of the objects
 		else:
 			return None										# otherwise return nada
 
 	def getFromWatcher(self, id_):
 		"""Checks if the ObjectWatcher has an instance for this object with the given id and returns if it it does"""
-		watcher = OW._Objectwatcher()
+		watcher = OW()
 		return watcher.exists(self.targetClass(), id_)
 
 	def addToWatcher(self, obj):
 		"""Adds the given instance of an object to the ObjectWatcher's list of objects"""
-		watcher = OW._Objectwatcher()
+		watcher = OW()
 		watcher.add(obj)
 
 	# Abstract methods to be implemented by the concrete children of this class 

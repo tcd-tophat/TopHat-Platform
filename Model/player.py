@@ -1,10 +1,10 @@
 from datetime import datetime
-import domainobject
-import user
-import game
-import domainexception
+from Model.domainobject import DomainObject
+from Model.user import User
+from Model.game import Game
+from Model.domainexception import DomainException
 
-class Player(domainobject.DomainObject):
+class Player(DomainObject):
 
 	_name = "Anonymous" 
 	_photo = None 
@@ -24,27 +24,27 @@ class Player(domainobject.DomainObject):
 	# Setters #
 	def setName(self, name):
 		if len(name) > 60:
-			raise domainexception.DomainException("Name of player must be less than 60 characters")
+			raise DomainException("Name of player must be less than 60 characters")
 
 		self._name = name
 
 	def setPhoto(self, photo):
 		if photo is not None:
 			if len(photo) != 32:
-				raise domainexception.DomainException("Photo must be a 32 character string")
+				raise DomainException("Photo must be a 32 character string")
 
 		self._photo = photo
 
 	def setGame(self, game_):
 		if game_ is not None:
-			if not isinstance(game_, game.Game):
-				raise domainexception.DomainException("Game attribute must be a reference to another Game object")
+			if not isinstance(game_, Game):
+				raise DomainException("Game attribute must be a reference to another Game object")
 
 			self._game = game_
 
 	def setUser(self, user_):
-		if not isinstance(user_, user.User):
-			raise domainexception.DomainException("User attribute must be a reference to another User object")
+		if not isinstance(user_, User):
+			raise DomainException("User attribute must be a reference to another User object")
 
 		self._user = user_
 
@@ -60,17 +60,17 @@ class Player(domainobject.DomainObject):
 		try:
 			score = int(score)
 		except ValueError:
-			raise domainexception.DomainException("Score must be an integer")
+			raise DomainException("Score must be an integer")
 
 		if score > 99999 or score < -99999:
-			raise domainexception.DomainException("Score must be between -99999 and +99999")
+			raise DomainException("Score must be between -99999 and +99999")
 
 		self._score = score
 
 	def setTime(self, time_):
 		if time_ is not None:
 			if type(time_) is not datetime:
-				raise domainexception.DomainException("Time must a datetime object")
+				raise DomainException("Time must a datetime object")
 
 			self._time = time_
 
@@ -107,7 +107,7 @@ class Player(domainobject.DomainObject):
 		# User may have been deleted, ensure crash does not occur.
 		if self.getUser() is not None:
 			if depth < 0:
-				return { "id" : self.getId() }
+				return { "id": self.getId() }
 			else:
 				return {
 					"id": self.getId(),

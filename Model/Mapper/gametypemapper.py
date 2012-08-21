@@ -1,10 +1,7 @@
-import mapper
-import Model.gametype
-import usermapper as UM
-import mappererror
-import deferredcollection
+from mapper import Mapp
+from usermapper import UserMapper
 
-class GameTypeMapper(mapper.Mapper):
+class GameTypeMapper(Mapp):
 
 	def __init__(self):
 		super(GameTypeMapper, self).__init__()
@@ -16,26 +13,27 @@ class GameTypeMapper(mapper.Mapper):
 		return "game_types"
 
 	def _selectStmt(self):
-		return "SELECT t.* FROM "+self.tableName()+" t WHERE t.id = %s LIMIT 1"
+		return "SELECT * FROM game_types WHERE id = %s LIMIT 1"
 
 	def _selectAllStmt(self):
-		return "SELECT t.* FROM "+self.tableName()+" t LIMIT %s, %s"	
+		return "SELECT * FROM game_types LIMIT %s, %s"	
 
 	def _deleteStmt(self, obj):
-		return "DELETE FROM "+self.tableName()+" WHERE id = %s LIMIT 1"
+		return "DELETE FROM game_types WHERE id = %s LIMIT 1"
 		
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
-		game_type_ = Model.gametype.GameType(data["id"])
+		from Model.gametype import GameType
+		
+		game_type = GameType(data["id"])
+		game_type.setName(data["name"])
 
-		game_type_.setName(data["name"])
-
-		return game_type_
+		return game_type
 
 	def _doInsert(self, obj):
 		# build query
 		# id, name, game_type_id, creator
-		query = "INSERT INTO "+self.tableName()+" VALUES(NULL, %s)"
+		query = "INSERT INTO game_types VALUES(NULL, %s)"
 
 		# convert boolean value to int bool
 		params = (obj.getName())
@@ -58,8 +56,8 @@ class GameTypeMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE games SET name = %s, game_type_id = %s, creator = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getGameTypeId(), obj.getCreator().getId(), obj.getId())
+		query = "UPDATE game_types SET name = %s WHERE id = %s LIMIT 1"
+		params = (obj.getName(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()

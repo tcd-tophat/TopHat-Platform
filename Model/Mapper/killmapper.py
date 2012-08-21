@@ -1,11 +1,8 @@
-import mapper
 import time
+from mapper import Mapp
+from playermapper import PlayerMapper
 
-import Model.kill
-import playermapper as PM
-#from deferredobject import DeferredObject
-
-class KillMapper(mapper.Mapper):
+class KillMapper(Mapp):
 
 	def __init__(self):
 		super(KillMapper, self).__init__()
@@ -27,11 +24,12 @@ class KillMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the kill object using the raw data provided from the database"""
-		kill_ = Model.kill.Kill(data["id"])
+		from Model.kill import Kill
+		kill_ = Kill(data["id"])
 
-		PlayerMapper = PM.PlayerMapper()
-		killer = PlayerMapper.find(data["killer_player_id"])
-		victim = PlayerMapper.find(data["victim_player_id"])
+		pmapper = PlayerMapper()
+		killer = pmapper.find(data["killer_player_id"])
+		victim = pmapper.find(data["victim_player_id"])
 
 		kill_.setKiller(killer)
 		kill_.setVictim(victim)

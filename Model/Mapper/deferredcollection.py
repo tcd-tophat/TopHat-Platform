@@ -1,6 +1,6 @@
-import collection
+from collection import Collection
 
-class DeferredCollection(collection.Collection):
+class DeferredCollection(Collection):
 
 	_run = False
 	_query = ""
