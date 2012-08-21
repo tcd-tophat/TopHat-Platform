@@ -86,7 +86,7 @@ class Game(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			playerlist = []
 			players = self.getPlayers()
