@@ -4,7 +4,6 @@ from datetime import datetime
 from Model import domainobject
 from Model import domainexception
 from Model import metadomainobject
-from Model.game import Game
 from Model.apitoken import Apitoken
 from Common.passHash import makeHash
 
