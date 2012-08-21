@@ -93,9 +93,13 @@ class Game(DomainObject):
 			playerlist = []
 			players = self.getPlayers()
 			if players:
-				
 				for player in players:
 					playerlist.append(player.dict(depth-1))
+
+			if self.getStartTime() > datetime.now():
+				started = True
+			else:
+				started = False
 
 			if self.getTime() is not None:
 				return {
@@ -104,7 +108,10 @@ class Game(DomainObject):
 					"game_type": self.getGameType().dict(depth-1),
 					"time": str(self.getTime()),
 					"players": playerlist,
-					"creator": self.getCreator().dict(depth-1)
+					"creator": self.getCreator().dict(depth-1),
+					"start_time": str(self.getStartTime()),
+					"end_time": str(self.getEndTime()),
+					"started": started
 				}
 			else:
 				return {
@@ -112,5 +119,8 @@ class Game(DomainObject):
 					"name": self.getName(),
 					"game_type": self.getGameType().dict(depth-1),
 					"players": playerlist,
-					"creator": self.getCreator().dict(depth-1)
+					"creator": self.getCreator().dict(depth-1),
+					"start_time": str(self.getStartTime()),
+					"end_time": str(self.getEndTime()),
+					"started": started
 				}

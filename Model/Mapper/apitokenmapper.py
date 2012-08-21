@@ -1,6 +1,6 @@
 from mapper import Mapp
 
-from Mapper.usermapper import UserMapper
+from usermapper import UserMapper
 
 class ApitokenMapper(Mapp):
 

@@ -8,51 +8,45 @@ def main():
 	TopHatConfig(**kwargs)
 
 	# do the other stuff
-	import Model.user
-	import Model.usermetadata
-	import Model.user
-	import Model.kill
-	import Model.usermetadata
-	import Model.apitoken
-	from Model.Mapper import gamemapper as GM
-	from Model.Mapper import usermapper as UM
-	from Model.Mapper import killmapper as KM
-	from Model.Mapper import playermapper as PM
-	from Model.Mapper import apitokenmapper as ATM
-	from Model.Mapper import objectwatcher as OW
+	from Model.Mapper.gamemapper import GameMapper
+	from Model.Mapper.usermapper import UserMapper
+	from Model.Mapper.killmapper import KillMapper
+	from Model.Mapper.playermapper import PlayerMapper
+	from Model.Mapper.apitokenmapper import ApitokenMapper
+	from Model.Mapper.objectwatcher import ObjectWatcher
 
 	# Get All the current Users from the database
-	UserMapper = UM.UserMapper()
-	users = UserMapper.findAll()
+	UM = UserMapper()
+	users = UM.findAll()
 	for usr in users:
 		print usr
 
-	KillMapper = KM.KillMapper()
-	kills = KillMapper.findAll()
+	KM = KillMapper()
+	kills = KM.findAll()
 
 	for kill_ in kills:
 		print kill_
 
-	PlayerMapper = PM.PlayerMapper()
-	players = PlayerMapper.findAll()
+	PM = PlayerMapper()
+	players = PM.findAll()
 
 	for player_ in players:
 		print player_
 
-	GameMapper = GM.GameMapper()
-	games = GameMapper.findAll()
+	GM = GameMapper()
+	games = GM.findAll()
 	for game_ in games:
 		print game_
 
-	ATM_ = ATM.ApitokenMapper()
-	tokens = ATM_.findAll()
+	ATM = ApitokenMapper()
+	tokens = ATM.findAll()
 	for token in tokens:
 		print token
 
-	usr1 = UserMapper.find(1)
+	usr1 = UM.find(1)
 	#usr1.setEmail("kevin@tophat.ie")
 
-	UserMapper.update(usr1)
+	#UserMapper.update(usr1)
 
 	# Testing Identity Object
 	#from Mapper import identityobject
