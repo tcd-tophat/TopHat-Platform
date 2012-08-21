@@ -5,8 +5,8 @@ from Model.authentication import require_login, require_super_user
 from Common.apikeygen import getKey
 from Common.utils import checkEmail
 
-from Model.Mapper import usermapper as UM
-from Model.Mapper import apitokenmapper as ATM
+from Model.Mapper.usermapper import UserMapper
+from Model.Mapper.apitokenmapper import ApitokenMapper
 from Model.user import User
 from Model.apitoken import Apitoken
 import MySQLdb as mdb
@@ -25,16 +25,16 @@ class Users(Request):
 	@require_login
 	def _doGet(self):
 		try:
-			UserMapper = UM.UserMapper()
+			UM = UserMapper()
 
 			if self.arg is not None:
 
 				if self.arg.isdigit():
 					# Get the user by ID
-					user = UserMapper.find(self.arg)
+					user = UM.find(self.arg)
 				else:
 					# Get the user by E-mail
-					user = UserMapper.getUserByEmail(self.arg)
+					user = UM.getUserByEmail(self.arg)
 
 				if user is None:
 					raise NotFound("This user does not exist")
@@ -47,7 +47,7 @@ class Users(Request):
 			else:
 				if self.user.accessLevel("super_user"):
 					offset = 0
-					users = UserMapper.findAll(offset, offset+50)
+					users = UM.findAll(offset, offset+50)
 
 					userslist = []
 
@@ -66,8 +66,8 @@ class Users(Request):
 	def _doPost(self, dataObject):
 
 		if "email" in dataObject and "password" in dataObject:
-			UserMapper = UM.UserMapper()
-			ApitokenMapper = ATM.ApitokenMapper()
+			UM = UserMapper()
+			ATM = ApitokenMapper()
 
 			# Build user and token objects
 			user = User()
@@ -86,7 +86,7 @@ class Users(Request):
 
 			# Save changes to user
 			try:
-				UserMapper.insert(user)
+				UM.insert(user)
 
 			# handle the possibility the user already exists
 			except mdb.IntegrityError, e:
@@ -98,7 +98,7 @@ class Users(Request):
 
 			# save the apitoken
 			try:
-				ApitokenMapper.insert(token)
+				ATM.insert(token)
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to save apitoken in the database (%s)" % e.args[1])
 
@@ -112,14 +112,14 @@ class Users(Request):
 		if "name" in dataObject or "email" in dataObject or "photo" in dataObject:
 			try:
 
-				UserMapper = UM.UserMapper()
+				UM = UserMapper()
 
 				if self.arg.isdigit():
 					# Get the user by ID
-					user = UserMapper.find(self.arg)
+					user = UM.find(self.arg)
 				else:
 					# Get the user by E-mail
-					user = UserMapper.getUserByEmail(self.arg)
+					user = UM.getUserByEmail(self.arg)
 
 				if user is not None:
 					if self.user.getId() is user.getId() or self.user.accessLevel("super_user"):
@@ -152,13 +152,13 @@ class Users(Request):
 		
 		# get the user if it exists
 		try:
-			UserMapper = UM.UserMapper()
+			UM = UserMapper()
 
 			if self.arg.isdigit():
-				user = UserMapper.find(self.arg)
+				user = UM.find(self.arg)
 			else:
 				# Get the user by E-mail
-				user = UserMapper.getUserByEmail(self.arg)
+				user = UM.getUserByEmail(self.arg)
 		except mdb.DatabaseError, e:
 			raise ServerError("Unable to search the user database (%s: %s)" % e.args[0], e.args[1])
 
@@ -170,10 +170,9 @@ class Users(Request):
 			raise Forbidden()
 
 		# delete the user from the data base
-		result = UserMapper.delete(user)
+		result = UM.delete(user)
 
 		if result:
 			return self._response({"message": "User Deleted Successfully."}, CODE.OK)
 		else:
 			raise ServerError("Unable to delete the user")
-			

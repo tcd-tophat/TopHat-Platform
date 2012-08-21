@@ -3,10 +3,7 @@ from Request.requesterrors import NotFound, ServerError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 from Model.authentication import require_login
 
-from Model.Mapper import usermapper as UM
-from Model.Mapper import gamemapper as GM
-from Model.Mapper import gametypemapper as GTM
-from Model.gametype import GameType
+from Model.Mapper.gametypemapper import GameTypeMapper
 import MySQLdb as mdb
 
 class Gametypes(Request):
@@ -24,12 +21,12 @@ class Gametypes(Request):
 	def _doGet(self):
 		try:
 			
-			GameTypeMapper = GTM.GameTypeMapper()
+			GTM = GameTypeMapper()
 			
 			if self.arg is not None:
 				if self.arg.isdigit():
 					# Get the user by ID
-					gametype = GameTypeMapper.find(self.arg)
+					gametype = GTM.find(self.arg)
 
 					if gametype is not None:
 						return self._response(gametype.dict(3), CODE.OK)
@@ -40,7 +37,7 @@ class Gametypes(Request):
 			else:
 
 				offset = 0
-				games = GameTypeMapper.findAll(offset, offset+50)
+				games = GTM.findAll(offset, offset+50)
 
 				if games is None:
 					raise NotFound("There are no game types on this system.")
