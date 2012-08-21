@@ -60,10 +60,36 @@ class Apitokens(Request):
 			token = Apitoken()
 			token.setToken(getKey())
 
-			rdata["apitoken"] = token.getToken()
+			
 
 			blank = User()
 			blank.setToken(token)
+			token.setUser(blank)
+
+			UserMapper = UM.UserMapper()
+			ApitokenMapper = ATM.ApitokenMapper()
+
+			blank.setRegistered(False)
+
+			# Save changes to user
+			try:
+				UserMapper.insert(blank)
+
+			# handle the possibility the user already exists
+			except mdb.IntegrityError, e:
+				raise Conflict(CODE.CONFLICT, "A unexpected conflict occurred when trying to create your anonymous login token.")
+
+			# handle all other DB errors
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to create user in the database (%s)" % e.args[1])
+
+			# save the apitoken
+			try:
+				ApitokenMapper.insert(token)
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to save apitoken in the database (%s)" % e.args[1])
+
+			rdata["apitoken"] = token.getToken()
 			rdata["user"] = blank.dict()
 
 			return self._response(rdata, CODE.CREATED)

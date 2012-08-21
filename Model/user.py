@@ -1,7 +1,13 @@
 import re
 from datetime import datetime
+<<<<<<< HEAD
 from Model.domainobject import DomainObject
 from Model.domainexception import DomainException
+=======
+from Model import domainobject
+from Model import domainexception
+from Model import metadomainobject
+>>>>>>> supermaster/master
 from Model.apitoken import Apitoken
 from Common.passHash import makeHash
 
@@ -13,6 +19,7 @@ class User(DomainObject):
 	_password = None
 	_token = None
 	_time = datetime.now()
+	_registered = False
 
 	# collection vars
 	_games = None
@@ -42,11 +49,13 @@ class User(DomainObject):
 		self._photo = photo
 
 	def setEmail(self, email):
-		email = str(email)
 
-		pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-		if not re.match(pattern, email):
-			raise DomainException("'%s' is not a valid email address" % email)
+		if email is not None:
+			email = str(email)
+
+			pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+			if not re.match(pattern, email):
+				raise DomainException("'%s' is not a valid email address" % email)
 
 		# email checking needs to be added to user
 		self._email = email
@@ -73,6 +82,9 @@ class User(DomainObject):
 				raise DomainException("Token must be an API Token Model Object")
 
 		self._token = token
+
+	def setRegistered(self, reg):
+		self._registered = reg
 
 	def setAccessLevel(self, level):
 		if self._token is not None:
@@ -102,6 +114,9 @@ class User(DomainObject):
 	def getToken(self):
 		return self._token
 
+	def getRegistered(self):
+		return self._registered
+
 	def getGames(self):
 		if self._games is None:
 			# load games data
@@ -128,5 +143,6 @@ class User(DomainObject):
 				"email": self.getEmail(),
 				"created": str(self.getTime()),
 				"photo": str(self.getPhoto()),
-				"joined_games": gameslist
+				"joined_games": gameslist,
+				"registered": self.getRegistered()
 			}
