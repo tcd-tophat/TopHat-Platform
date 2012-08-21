@@ -28,7 +28,6 @@ class GameMapper(Mapp):
 	def _doCreateObject(self, data):
 		"""Builds the game object given the draw data returned from the database query"""
 		from Model.game import Game
-		from Model.deferreduser import DeferredUser
 		
 		game_ = Game(data["id"])
 
