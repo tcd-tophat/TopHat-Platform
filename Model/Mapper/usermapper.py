@@ -1,6 +1,6 @@
-from Model.Mapper import mapper
+from mapper import Mapp
 
-class UserMapper(mapper.Mapper):
+class UserMapper(Mapp):
 
 	def __init__(self):
 		super(UserMapper, self).__init__()

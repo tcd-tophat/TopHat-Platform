@@ -8,15 +8,13 @@ def main():
 	TopHatConfig(path="/home/specialk/Dev/tophat/config.py")
 
 	# do the other stuff
-	import Model.user
-	from Model.Mapper import usermapper as UM
 	from Model.Mapper import gamemapper as GM
-
-	Mapper = UM.UserMapper()
+	
+	Mapper = GM.GameMapper()
 	u = Mapper.find(1)
 
 	from pprint import pprint
-	pprint(u.dict(3))
+	pprint(u.dict(2))
 
 if __name__ == "__main__":
     main()

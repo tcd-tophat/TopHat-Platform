@@ -1,8 +1,8 @@
-import domainobject
-import player
-import domainexception
+from Model.domainobject import DomainObject
+from Model.player import Player
+from Model.domainexception import DomainException
 
-class Kill(domainobject.DomainObject):
+class Kill(DomainObject):
 	
 	_killer = None	
 	_victim = None
@@ -24,14 +24,14 @@ class Kill(domainobject.DomainObject):
 
 	# Setters #
 	def setKiller(self, killer):
-		if not isinstance(killer, player.Player):
-			raise domainexception.DomainException("Killer must be a Player object")
+		if not isinstance(killer, Player):
+			raise DomainException("Killer must be a Player object")
 
 		self._killer = killer
 
 	def setVictim(self, victim):
-		if not isinstance(victim, player.Player):
-			raise domainexception.DomainException("Victim must be a Player object")
+		if not isinstance(victim, Player):
+			raise DomainException("Victim must be a Player object")
 
 		self._victim = victim
 
@@ -39,29 +39,21 @@ class Kill(domainobject.DomainObject):
 		try:
 			value = bool(value)				# converts it to boolean type (1 = True and 0 = False)
 		except NameError:
-			raise domainexception.DomainException("You can only set verified to true or false")
+			raise DomainException("You can only set verified to true or false")
 
 		self._verified = value
 
 	def setTime(self, time_):
 		if type(time_) is "<type 'datetime.datetime'>":
-			raise domainexception.DomainException("Time must a datetime object")
+			raise DomainException("Time must a datetime object")
 
 		self._time = time_
 
 	# Getters #
 	def getKiller(self):
-		if isinstance(self._killer, int):
-			from Model.Mapper.playermapper import PlayerMapper
-			self._killer = PlayerMapper().find(self._killer)
-
 		return self._killer
 
 	def getVictim(self):
-		if isinstance(self._victim, int):
-			from Model.Mapper.playermapper import PlayerMapper
-			self._victim = PlayerMapper().find(self._victim)
-
 		return self._victim
 
 	def getVerified(self):
@@ -72,7 +64,7 @@ class Kill(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			return {
 				"id": self.getId(),

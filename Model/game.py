@@ -1,11 +1,8 @@
 from datetime import datetime
-import domainobject
-import user
-import gametype
-import domainexception
-from Model.Mapper.playermapper import PlayerMapper
+from Model.domainobject import DomainObject
+from Model.domainexception import DomainException
 
-class Game(domainobject.DomainObject):
+class Game(DomainObject):
 
 	_name = "Unnamed Game"		# public name of the game 
 	_creator = None 			# user who created the game
@@ -42,43 +39,48 @@ class Game(domainobject.DomainObject):
 
 	def setName(self, name):
 		if len(name) > 255:
-			raise domainexception.DomainException("The name of a game cannot be more than 255 characters")
+			raise DomainException("The name of a game cannot be more than 255 characters")
 
 		self._name = name
 
 	def setCreator(self, creator):
-		if not isinstance(creator, user.User):
-			raise domainexception.DomainException("Creator must be an instance of the User object")
+		from Model.user import User
+
+		if not isinstance(creator, User):
+			raise DomainException("Creator must be an instance of the User object")
 
 		self._creator = creator
 
 	def setGameType(self, gameType):
-		if not isinstance(gameType, gametype.GameType):
-			raise domainexception.DomainException("gametype must be an instance of the GameType object")
+		from Model.gametype import GameType
+
+		if not isinstance(gameType, GameType):
+			raise DomainException("gametype must be an instance of the GameType object")
 
 		self._gameType = gameType
 
 	def setTime(self, time):
 		if type(time) is not datetime:
-			raise domainexception.DomainException("Time attribute must be a datetime object not a %s" % str(type(time)))
+			raise DomainException("Time attribute must be a datetime object not a %s" % str(type(time)))
 
 		self._time = time
 
 	def setStartTime(self, time):
 		if type(time) is not datetime and time is not None:
-			raise domainexception.DomainException("The start time must be either empty or a datetime object not %s" % str(type(time)))
+			raise DomainException("The start time must be either empty or a datetime object not %s" % str(type(time)))
 
 		self._startTime = time
 
 	def setEndTime(self, time):
 		if type(time) is not datetime and time is not None:
-			raise domainexception.DomainException("The end time must be either empty or a datetime object not %s" % str(type(time)))
+			raise DomainException("The end time must be either empty or a datetime object not %s" % str(type(time)))
 
 		self._endTime = time
 
 	def getPlayers(self):
 		# check have we gotten the list already
 		if self._players is None:
+			from Model.Mapper.playermapper import PlayerMapper
 			PM = PlayerMapper()
 			self._players = PM.getPlayersInGame(self)
 
@@ -86,7 +88,7 @@ class Game(domainobject.DomainObject):
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			playerlist = []
 			players = self.getPlayers()

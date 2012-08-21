@@ -1,8 +1,7 @@
-import mapper
-import Model.apitoken
-import usermapper as UM
+from mapper import Mapp
+from Mapper.usermapper import UserMapper
 
-class ApitokenMapper(mapper.Mapper):
+class ApitokenMapper(Mapp):
 
 	def __init__(self):
 		super(ApitokenMapper, self).__init__()
@@ -24,19 +23,22 @@ class ApitokenMapper(mapper.Mapper):
 
 	def _doCreateObject(self, data):
 		"""Builds the Apitoken object using the raw data provided from the database"""
-		apitoken_ = Model.apitoken.Apitoken(data["id"])
+		from Model.apitoken import Apitoken
+
+		apitoken_ = Apitoken(data["id"])
 
 		apitoken_.setToken(data["key"])
 		apitoken_.setGroup(data["group_id"])
-		UserMapper = UM.UserMapper()
-		apitoken_.setUser(UserMapper.find(data["user_id"]))
+		
+		umapper = UserMapper()
+		apitoken_.setUser(umapper.find(data["user_id"]))
 
 		return apitoken_
 
 	def _doInsert(self, obj):
 		# build query
 		# id, key, group_id
-		query = "INSERT INTO " + self.tableName() + " VALUES(NULL, %s, %s, %s)"
+		query = "INSERT INTO api_keys VALUES(NULL, %s, %s, %s)"
 
 		params = (obj.getToken(), obj.getGroup(), obj.getUser().getId())
 
@@ -58,7 +60,7 @@ class ApitokenMapper(mapper.Mapper):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE " + self.tableName() + " SET key = %s, user_id = %s, group_id = %s WHERE id = %s LIMIT 1"
+		query = "UPDATE api_keys SET key = %s, user_id = %s, group_id = %s WHERE id = %s LIMIT 1"
 		params = (obj.getToken(), obj.getUser().getId(), obj.getGroup(), obj.getId())
 
 		# run the query
@@ -72,13 +74,13 @@ class ApitokenMapper(mapper.Mapper):
 			return False
 
 	def findTokenByUserId(self, user_id):
-		query = "SELECT * FROM " + self.tableName() + " WHERE user_id = %s LIMIT 1"
+		query = "SELECT * FROM api_keys WHERE user_id = %s LIMIT 1"
 		params = (user_id,)
 	
 		return self.getOne(query, params)
 
 	def findByKey(self, token_id):
-		query = "SELECT * FROM " + self.tableName() + " WHERE api_keys.key = %s LIMIT 1"
+		query = "SELECT * FROM api_keys WHERE api_keys.key = %s LIMIT 1"
 		params = (token_id,)
 	
 		return self.getOne(query, params)

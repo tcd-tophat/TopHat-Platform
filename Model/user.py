@@ -1,14 +1,11 @@
 import re
-import Model
 from datetime import datetime
-from Model import domainobject
-from Model import domainexception
-from Model import metadomainobject
-from Model.game import Game
+from Model.domainobject import DomainObject
+from Model.domainexception import DomainException
 from Model.apitoken import Apitoken
 from Common.passHash import makeHash
 
-class User(metadomainobject.MetaDomainObject):
+class User(DomainObject):
 
 	_name = "Anonymous"
 	_photo = None
@@ -33,14 +30,14 @@ class User(metadomainobject.MetaDomainObject):
 	# setters #
 	def setName(self, name):
 		if len(name) > 60:
-			raise domainexception.DomainException("User's name must be less than 60 characters")
+			raise DomainException("User's name must be less than 60 characters")
 
 		self._name = name
 
 	def setPhoto(self, photo):
 		if photo is not None:
 			if len(photo) is not 32:
-				raise domainexception.DomainException("That is not a photo")
+				raise DomainException("That is not a photo")
 
 		self._photo = photo
 
@@ -49,7 +46,7 @@ class User(metadomainobject.MetaDomainObject):
 
 		pattern = r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
 		if not re.match(pattern, email):
-			raise domainexception.DomainException("That is not a valid email address")
+			raise DomainException("'%s' is not a valid email address" % email)
 
 		# email checking needs to be added to user
 		self._email = email
@@ -66,14 +63,14 @@ class User(metadomainobject.MetaDomainObject):
 
 	def setTime(self, time):
 		if type(time) is not datetime:
-			raise domainexception.DomainException("Time must be a datetime object, not a %s" % type(time))
+			raise DomainException("Time must be a datetime object, not a %s" % type(time))
 
 		self._time = time
 
 	def setToken(self, token):
 		if token is not None:
-			if not isinstance(token, Model.apitoken.Apitoken):
-				raise domainexception.DomainException("Token must be an API Token Model Object")
+			if not isinstance(token, Apitoken):
+				raise DomainException("Token must be an API Token Model Object")
 
 		self._token = token
 
@@ -105,25 +102,18 @@ class User(metadomainobject.MetaDomainObject):
 	def getToken(self):
 		return self._token
 
-	def _loadGames(self):
-		from Model.Mapper.gamemapper import GameMapper
-		GM = GameMapper()
-		self._games = GM.findByUser(self)
-
 	def getGames(self):
 		if self._games is None:
-			self._loadGames()
+			# load games data
+			from Mapper.gamemapper import GameMapper
+			GM = GameMapper()
+			self._games = GM.findByUser(self)
+
 		return self._games
-
-	def addGame(self, game_):
-		if not isinstance(game_, Model.game.Game):
-			raise domainexception.DomainException("Must be an instance of the Game Model object")
-
-		self._games.add(game_)
 
 	def dict(self, depth=0):
 		if depth < 0:
-			return self.getId()
+			return { "id": self.getId() }
 		else:
 			# build a list of the games' dict
 			gameslist = []

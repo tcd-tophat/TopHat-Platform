@@ -1,4 +1,4 @@
-import field
+from field import Field
 
 class IdentityObject:
 
@@ -50,7 +50,7 @@ class IdentityObject:
 			self.currentField = self.fields[name]
 
 		else:
-			self.currentField = field.Field(name)			# create new field
+			self.currentField = Field(name)			# create new field
 			self.fields[name] = self.currentField			# add new field to dict of fields using key as
 
 		return self
