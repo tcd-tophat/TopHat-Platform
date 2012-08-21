@@ -1,5 +1,7 @@
 from mapper import Mapp
 
+from Mapper.usermapper import UserMapper
+
 class ApitokenMapper(Mapp):
 
 	def __init__(self):
@@ -23,7 +25,6 @@ class ApitokenMapper(Mapp):
 	def _doCreateObject(self, data):
 		"""Builds the Apitoken object using the raw data provided from the database"""
 		from Model.apitoken import Apitoken
-		from Model.Mapper.usermapper import UserMapper
 
 		apitoken_ = Apitoken(data["id"])
 
