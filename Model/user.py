@@ -1,13 +1,7 @@
 import re
 from datetime import datetime
-<<<<<<< HEAD
 from Model.domainobject import DomainObject
 from Model.domainexception import DomainException
-=======
-from Model import domainobject
-from Model import domainexception
-from Model import metadomainobject
->>>>>>> supermaster/master
 from Model.apitoken import Apitoken
 from Common.passHash import makeHash
 
