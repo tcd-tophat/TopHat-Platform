@@ -2,9 +2,11 @@ from Request.request import Request
 from Request.requesterrors import NotFound, ServerError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 
+from Model.kill import Kill
 from Model.Mapper.killmapper import KillMapper
 from Model.Mapper.gamemapper import GameMapper
 from Model.Mapper.playermapper import PlayerMapper
+from Common.utils import parseDateTime
 import MySQLdb as mdb
 
 # Decorator
@@ -67,33 +69,46 @@ class Kills(Request):
 				GM = GameMapper()
 				PM = PlayerMapper()
 
-				if dataObject["killer"] is not None and str(dataObject["game"]).isdigit():
-					# Get the user by ID
-					
+				if dataObject["killer"] is not None and dataObject["victim"] is not None:
 
-					if game is None:
-						raise NotFound("The specified player type does not exist.")
+					if "id" in dataObject["killer"] and "id" in dataObject["victim"]:
+						# Get the user by ID
+						killer = PM.find(dataObject["killer"]["id"])
+
+						victim = PM.find(dataObject["victim"]["id"])
+
+						try:
+							proptime = parseDateTime(dataObject["time"])
+						except:
+							raise BadRequest("""Invalid Time object sent, acceptable formats: 	Acceptable formats are: "YYYY-MM-DD HH:MM:SS.ssssss+HH:MM",
+							"YYYY-MM-DD HH:MM:SS.ssssss",
+							"YYYY-MM-DD HH:MM:SS+HH:MM",
+							"YYYY-MM-DD HH:MM:SS" """)
+
+						if killer is None or victim is None:
+							raise NotFound("Either the victim or the killer were invalid player objects")
+					else:
+						raise BadRequest("Arguments provided for this kill are invalid.")
+
 				else:
-					raise BadRequest("Argument provided for this player type is invalid.")
+					raise BadRequest("Arguments provided for this kill are invalid.")
 
-				PM = PlayerMapper()
+				kill = Kill()
 
-				player = Player()
+				kill.setKiller(killer)
+				kill.setVictim(victim)
+				kill.setVerified(False)
 
-				player.setName(dataObject["name"])
-				player.setGame(game)
-				player.setPhoto(dataObject["photo"])
-				player.setUser(self.user)
+				kill.setTime(proptime)
 
-				PM.insert(player)
-				print "PLAYER GOOD "+str(player)
+				KM.insert(kill)
 
-				return self._response(player.dict(3), CODE.CREATED)
+				return self._response(kill.dict(3), CODE.CREATED)
 				
 			except mdb.DatabaseError, e:
 				raise ServerError("Unable to search the user database (%s)" % e.args[1])
 		else:
-			raise BadRequest("Required params name, game and photo not sent")
+			raise BadRequest("Killer, victim and time were not submitted")
 
 	@require_login
 	def _doPut(self, dataObject):
