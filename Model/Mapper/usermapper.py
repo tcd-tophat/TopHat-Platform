@@ -39,9 +39,14 @@ class UserMapper(Mapp):
 		return user_
 
 	def _doInsert(self, obj):
+		if obj.getRegistered():
+			registered = 1
+		else:
+			registered = 0
+
 		# build query
 		query = "INSERT INTO users VALUES(NULL, %s, %s, %s, %s, NULL, %s)"
-		params = (obj.getName(), obj.getPhoto(), obj.getEmail(), obj.getPassword(), obj.getRegistered())
+		params = (obj.getName(), obj.getPhoto(), obj.getEmail(), obj.getPassword(), registered)
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -59,9 +64,14 @@ class UserMapper(Mapp):
 			return False
 
 	def _doUpdate(self, obj):
+		if obj.getRegistered():
+			registered = 1
+		else:
+			registered = 0
+
 		# build the query
 		query = "UPDATE users SET name = %s, email = %s, photo = %s, password = %s, registered = %s WHERE id = %s LIMIT 1"
-		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId(), obj.getRegistered())
+		params = (obj.getName(), obj.getEmail(), obj.getPhoto(), obj.getPassword(), obj.getId(), registered)
 
 		# run the query
 		cursor = self.db.getCursor()
