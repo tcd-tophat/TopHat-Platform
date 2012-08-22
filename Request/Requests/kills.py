@@ -40,7 +40,7 @@ class Kills(Request):
 			else:
 
 				offset = 0
-				kills = KillMapper.findAll(offset, offset+50)
+				kills = KM.findAll(offset, offset+50)
 
 				killslist = []
 
@@ -58,7 +58,39 @@ class Kills(Request):
 
 	@require_login
 	def _doPost(self, dataObject):
-		return self._response({}, CODE.UNIMPLEMENTED)
+
+		if "killer" and "victim" and "time" in dataObject:
+			try:
+				KM = KillMapper()
+
+				if dataObject["killer"] is not None and str(dataObject["game"]).isdigit():
+					# Get the user by ID
+					game = GM.find(str(dataObject["game"]))
+
+					if game is None:
+						raise NotFound("The specified player type does not exist.")
+				else:
+					raise BadRequest("Argument provided for this player type is invalid.")
+
+				print "GAME GOOD "+str(game)
+				PM = PlayerMapper()
+
+				player = Player()
+
+				player.setName(dataObject["name"])
+				player.setGame(game)
+				player.setPhoto(dataObject["photo"])
+				player.setUser(self.user)
+
+				PM.insert(player)
+				print "PLAYER GOOD "+str(player)
+
+				return self._response(player.dict(3), CODE.CREATED)
+				
+			except mdb.DatabaseError, e:
+				raise ServerError("Unable to search the user database (%s)" % e.args[1])
+		else:
+			raise BadRequest("Required params name, game and photo not sent")
 
 	@require_login
 	def _doPut(self, dataObject):

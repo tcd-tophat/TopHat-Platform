@@ -30,20 +30,23 @@ class Kill(DomainObject):
 
 	# Setters #
 	def setGame(self, game):
-		if not isinstance(game, Game):
-			raise DomainException("Game must be a Game object")
+		if game is not None:
+			if not isinstance(game, Game):
+				raise DomainException("Game must be a Game object")
 
 		self._game = game
 
 	def setKiller(self, killer):
-		if not isinstance(killer, Player):
-			raise DomainException("Killer must be a Player object")
+		if killer is not None:
+			if not isinstance(killer, Player):
+				raise DomainException("Killer must be a Player object")
 
 		self._killer = killer
 
 	def setVictim(self, victim):
-		if not isinstance(victim, Player):
-			raise DomainException("Victim must be a Player object")
+		if victim is not None:
+			if not isinstance(victim, Player):
+				raise DomainException("Victim must be a Player object")
 
 		self._victim = victim
 
@@ -81,11 +84,15 @@ class Kill(DomainObject):
 		if depth < 0:
 			return { "id": self.getId() }
 		else:
-			return {
+			rdata = {
 				"id": self.getId(),
 				"verified": self.getVerified(),
 				"time": str(self.getTime()),
 				"victim": self.getVictim().dict(depth-1),
 				"killer": self.getKiller().dict(depth-1),
-				"game": self.getGame().dict(depth-1)
 			}
+
+			if self.getGame() is not None:
+				rdata["game"] = self.getGame().dict(depth-1)
+
+			return rdata
