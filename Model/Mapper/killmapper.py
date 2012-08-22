@@ -1,6 +1,7 @@
 import time
 from mapper import Mapp
 from playermapper import PlayerMapper
+from gamemapper import GameMapper
 
 class KillMapper(Mapp):
 
@@ -34,6 +35,11 @@ class KillMapper(Mapp):
 		kill_.setKiller(killer)
 		kill_.setVictim(victim)
 
+		gmapper = GameMapper()
+		game = gmapper.find(data["game_id"])
+
+		kill_.setGame(game)
+
 		kill_.setVerified(data["verified"])
 		kill_.setTime(data["time"])
 
@@ -42,14 +48,14 @@ class KillMapper(Mapp):
 	def _doInsert(self, obj):
 		# build query
 		# id, killer, victim, time, verified
-		query = "INSERT INTO kills VALUES(NULL, %s, %s, %s, %s)"
+		query = "INSERT INTO kills VALUES(NULL, %s, %s, %s, %s, %s)"
 
 		# convert boolean value to int bool
 		if obj.getVerified():
 			verfied = 1
 		else:
 			verfied = 0
-		params = (obj.getKiller().getId(), obj.getVictim().getId(), obj.getTime(), verfied)
+		params = (obj.getGame().getId(), obj.getKiller().getId(), obj.getVictim().getId(), obj.getTime(), verfied)
 
 		# run the query
 		cursor = self.db.getCursor()
@@ -69,8 +75,8 @@ class KillMapper(Mapp):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE kills SET killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
-		params = (obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())
+		query = "UPDATE kills SET game_id = %s, killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
+		params = (obj.getGame().getId(), obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())
 
 		# run the query
 		cursor = self.db.getCursor()
