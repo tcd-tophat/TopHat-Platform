@@ -1,6 +1,7 @@
 from datetime import datetime
 from Model.domainobject import DomainObject
 from Model.player import Player
+from Model.game import Game
 from Model.domainexception import DomainException
 
 class Kill(DomainObject):
@@ -8,10 +9,13 @@ class Kill(DomainObject):
 	_killer = None	
 	_victim = None
 	_verified = False
-	_time = datetime.now()
+	_time = None
 
 	def __init__(self, id_=None):
 		super(Kill, self).__init__(id_)
+
+		self._time = datetime.now()
+
 
 	def __str__(self):
 		string = self._killer.getName() + " killed " + self._victim.getName() + " the kill is "
@@ -24,15 +28,18 @@ class Kill(DomainObject):
 		return string
 
 	# Setters #
+
 	def setKiller(self, killer):
-		if not isinstance(killer, Player):
-			raise DomainException("Killer must be a Player object")
+		if killer is not None:
+			if not isinstance(killer, Player):
+				raise DomainException("Killer must be a Player object")
 
 		self._killer = killer
 
 	def setVictim(self, victim):
-		if not isinstance(victim, Player):
-			raise DomainException("Victim must be a Player object")
+		if victim is not None:
+			if not isinstance(victim, Player):
+				raise DomainException("Victim must be a Player object")
 
 		self._victim = victim
 
@@ -51,6 +58,7 @@ class Kill(DomainObject):
 		self._time = time_
 
 	# Getters #
+
 	def getKiller(self):
 		return self._killer
 
@@ -67,10 +75,12 @@ class Kill(DomainObject):
 		if depth < 0:
 			return { "id": self.getId() }
 		else:
-			return {
+			rdata = {
 				"id": self.getId(),
 				"verified": self.getVerified(),
 				"time": str(self.getTime()),
 				"victim": self.getVictim().dict(depth-1),
 				"killer": self.getKiller().dict(depth-1),
 			}
+
+			return rdata

@@ -1,6 +1,7 @@
 import time
 from mapper import Mapp
 from playermapper import PlayerMapper
+from gamemapper import GameMapper
 
 class KillMapper(Mapp):
 
@@ -69,7 +70,7 @@ class KillMapper(Mapp):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE kills SET killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
+		query = "UPDATE kills SET killer_player_id = %s, victim_player_id = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
 		params = (obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())
 
 		# run the query
