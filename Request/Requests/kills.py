@@ -3,6 +3,8 @@ from Request.requesterrors import NotFound, ServerError, BadRequest
 from Networking.statuscodes import StatusCodes as CODE
 
 from Model.Mapper.killmapper import KillMapper
+from Model.Mapper.gamemapper import GameMapper
+from Model.Mapper.playermapper import PlayerMapper
 import MySQLdb as mdb
 
 # Decorator
@@ -62,17 +64,18 @@ class Kills(Request):
 		if "killer" and "victim" and "time" in dataObject:
 			try:
 				KM = KillMapper()
+				GM = GameMapper()
+				PM = PlayerMapper()
 
 				if dataObject["killer"] is not None and str(dataObject["game"]).isdigit():
 					# Get the user by ID
-					game = GM.find(str(dataObject["game"]))
+					
 
 					if game is None:
 						raise NotFound("The specified player type does not exist.")
 				else:
 					raise BadRequest("Argument provided for this player type is invalid.")
 
-				print "GAME GOOD "+str(game)
 				PM = PlayerMapper()
 
 				player = Player()

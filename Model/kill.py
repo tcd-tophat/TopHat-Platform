@@ -10,7 +10,6 @@ class Kill(DomainObject):
 	_victim = None
 	_verified = False
 	_time = None
-	_game = None
 
 	def __init__(self, id_=None):
 		super(Kill, self).__init__(id_)
@@ -29,12 +28,6 @@ class Kill(DomainObject):
 		return string
 
 	# Setters #
-	def setGame(self, game):
-		if game is not None:
-			if not isinstance(game, Game):
-				raise DomainException("Game must be a Game object")
-
-		self._game = game
 
 	def setKiller(self, killer):
 		if killer is not None:
@@ -65,8 +58,6 @@ class Kill(DomainObject):
 		self._time = time_
 
 	# Getters #
-	def getGame(self):
-		return self._game
 
 	def getKiller(self):
 		return self._killer
@@ -91,8 +82,5 @@ class Kill(DomainObject):
 				"victim": self.getVictim().dict(depth-1),
 				"killer": self.getKiller().dict(depth-1),
 			}
-
-			if self.getGame() is not None:
-				rdata["game"] = self.getGame().dict(depth-1)
 
 			return rdata
