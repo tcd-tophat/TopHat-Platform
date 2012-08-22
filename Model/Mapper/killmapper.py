@@ -75,7 +75,7 @@ class KillMapper(Mapp):
 
 	def _doUpdate(self, obj):
 		# build the query
-		query = "UPDATE kills SET game_id = %s, killer = %s, victim = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
+		query = "UPDATE kills SET game_id = %s, killer_player_id = %s, victim_player_id = %s, time = %s, verified = %s WHERE id = %s LIMIT 1"
 		params = (obj.getGame().getId(), obj.getKiller.getId(), obj.getVictim().getId(), obj.getPhoto(), obj.getId())
 
 		# run the query
